@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 17:22:26 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/09 02:26:09 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/10 00:50:48 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,5 +54,6 @@ int			vardefs(t_pipex *vars, char **argv, int argc);
 void		triplepointeralloc(t_pipex *vars, int argc);
 int			checkpaths(t_pipex *vars);
 int			pipex(int argc, char **argv, char **envp);
+int			dstrlen(char **strofstr);
 
 #endif

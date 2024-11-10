@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 01:58:02 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/09 02:42:57 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/10 02:37:40 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,28 @@ int	alonecmdcall(int fdin, char **cmd, char *path, t_mini *mini)
 	return (0);
 }
 
+char **preppipex(char *buf, char *infile, char *outfile)
+{
+	//ls -la | wc -l
+	char	**res;
+	char	**tmp;
+	int		i;
+
+	i = -1;
+	if (!infile)
+		infile = ft_strdup("/dev/stdin");
+	if (!outfile)
+		outfile = ft_strdup("/dev/stdout");
+	tmp = ft_split(buf, '|');
+	res = malloc(sizeof(char *) * dstrlen(tmp) + 3);
+	res[1] = infile;
+	res[0] = ft_strdup("a");
+	while (tmp[++i])
+		res [i + 2] = tmp[i];
+	res[i + 2] = outfile;
+	return (res);
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	char	**buf;
@@ -70,6 +92,15 @@ int	main(int argc, char **argv, char **envp)
 	mini->envp = envp;
 	buf2 = get_next_line(0);
 	buf2[ft_strlen(buf2) - 1] = '\0';
-	buf = ft_split(buf2, ' ');
-	alonecmdcall(0, buf, pathseek(buf, envp), mini);
+	if (ft_strchr(buf2, '|') != NULL)
+	{
+		buf = preppipex(buf2, NULL, NULL);
+		printf("%d", dstrlen(buf));
+		pipex(dstrlen(buf), buf, envp);
+	}
+	else
+	{
+		buf = ft_split(buf2, ' ');
+		alonecmdcall(0, buf, pathseek(buf, envp), mini);
+	}
 }

@@ -23,7 +23,7 @@ NAME = mini
 
 LIBFTA = libft_ext/libft.a
 
-all: mario $(NAME)
+all: $(NAME)
 
 %.o: %.c
 	@$(CC) $(CCFLAGS) -I/libft/libft.h -I/usr/include -c $< -o $@

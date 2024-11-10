@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 19:34:41 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/09 01:45:25 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/10 02:39:00 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,4 +67,14 @@ int	normalcmdcall(t_pipex *var, char **cmd, char *path)
 				var->paths[var->actcmd + 1]));
 	}
 	return (0);
+}
+
+int	dstrlen(char **strofstr)
+{
+	int	i;
+
+	i = 0;
+	while (strofstr[i] != NULL)
+		i++;
+	return (--i);
 }

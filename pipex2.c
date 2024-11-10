@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 20:20:50 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/09 02:37:02 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/10 02:29:49 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ char	*pathseek(char **args, char **envp)
 		close(fd[WRITE_FD]);
 		wait(NULL);
 		tmp = get_next_line(fd[READ_FD]);
-		tmp[ft_strlen(tmp) - 1] = '\0';
 		return (close(fd[READ_FD]), tmp);
 	}
 	return (NULL);
@@ -59,9 +58,9 @@ int	checks(char **argv, t_pipex *var)
 	i = -1;
 	while (++i < var->numcmds)
 		if (!var->paths[i] || access(var->paths[i], X_OK) != 0)
-			return (-1);
+			return (printf("%s path", var->paths[i]), -1);
 	if (access(argv[1], R_OK) != 0)
-		return (-1);
+		return (printf("access"), -1);
 	return (0);
 }
 
