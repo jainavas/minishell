@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 16:54:34 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/09 02:26:37 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/11 22:18:45 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,18 +96,17 @@ int	pipex(int argc, char **argv, char **envp)
 {
 	t_pipex	*vars;
 	int		i;
+	int		s;
 
 	i = -1;
+	s = 0;
 	vars = ft_calloc(1, sizeof(t_pipex));
 	vars->envp = envp;
 	if (argc < 5)
 		return (free(vars), 2);
-	if (vardefs(vars, argv, argc) != 0)
-		return (printf("mal vardefs"), freepipex(vars), 2);
-	if (checks(argv, vars) != 0)
-		return (printf("mal checks"), freepipex(vars), 2);
-	if (firstcmdcall(vars, vars->cmds[0], vars->paths[0]) != 0)
-		return (printf("mal cmdcalls"), freepipex(vars), 2);
+	s = limornot(argc, argv, vars);
+	if (s != 0)
+		return (s);
 	close(STDOUT_FILENO);
 	close(STDERR_FILENO);
 	while (++i < vars->numcmds)

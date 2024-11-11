@@ -13,7 +13,7 @@ CCFLAGS = -Wall -Wextra -Werror -g3
 
 SRC_DIR = src
 
-SRC = pipex.c pipex2.c pipex3.c minish.c\
+SRC = pipex.c pipex2.c pipex3.c pipex4.c minish.c minish2.c\
 
 OBJ = $(SRC:.c=.o)
 
@@ -31,7 +31,7 @@ all: $(NAME)
 $(NAME): $(OBJ)
 	@cd libft_ext && make
 	@$(CC) $(CCFLAGS) $(OBJ) -Ilibft_ext $(LIBFTA) -o $(NAME)
-	@echo "$(YELLOW)        ||>>    $(BLUE)pipex $(YELLOW)compiled!!    <<||$(RESET)"
+	@echo "$(YELLOW)        ||>>    $(BLUE)minishell $(YELLOW)compiled!!    <<||$(RESET)"
 
 clean:
 	@$(RM) $(OBJ)
@@ -42,35 +42,5 @@ fclean:
 	@cd libft_ext && make fclean
 
 re: fclean all
-
-mario:
-	@echo "    ░░        ░░    ░░      $(RESET)██████░░      ░░░░    $(RESET)██████      ░░░░  ░░░░░░    ░░  "
-	@echo "              ░░          $(RESET)██      ██        ░░  $(RESET)██      ██                      ░░"
-	@echo "░░          ░░░░░░      ░░$(RESET)██      ██          ░░$(RESET)██      ██                      ░░"
-	@echo "          ░░    ░░    ░░  $(RESET)██        ██      ░░$(RESET)██        ██                      ░░"
-	@echo "░░░░░░░░░░░░░░░░    ░░░░    $(RESET)██      ██░░░░░░░░$(RESET)██      ██  ░░░░░░░░░░░░░░░░░░░░░░░░"
-	@echo "    ░░░░░░░░░░        ░░      $(RESET)██      ██░░░░$(RESET)██      ██░░  ░░              ░░░░░░░░"
-	@echo "  ░░░░░░░░░░              ░░$(RESET)██$(RED)▒▒$(RESET)██      ████      $(RESET)██$(RED)▒▒$(RESET)██              ░░  ░░░░░░░░"
-	@echo "  ░░░░░░░░░░    ░░  ░░░░    $(RESET)██$(RED)▒▒▒▒$(RESET)██            $(RESET)██$(RED)▒▒$(RESET)██$(RESET)██            ░░░░░░░░░░░░  "
-	@echo "░░░░░░░░░░        ░░░░    $(RESET)██$(RED)▒▒$(RESET)██$(RED)▒▒▒▒$(RESET)██        $(RESET)██$(RED)▒▒▒▒▒▒▒▒$(RESET)██            ░░░░░░░░    "
-	@echo "░░░░░░░░░░        ░░░░  ░░$(RESET)██$(RED)▒▒▒▒▒▒▒▒▒▒$(RESET)████████$(RED)▒▒▒▒▒▒▒▒▒▒$(RESET)██  ░░░░░░░░░░  ░░░░  ░░  "
-	@echo "  ░░              ░░      $(RESET)██$(RED)▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒$(RESET)██                  ░░    "
-	@echo "                        ░░  $(RESET)██$(RED)▒▒▒▒▒▒▒▒$(RESET)████$(RED)▒▒▒▒▒▒$(RESET)████$(RED)▒▒$(RESET)██            ░░  ░░        "
-	@echo "        ░░      ░░      ░░░░$(RESET)██$(RESET)████$(RED)▒▒▒▒▒▒▒▒▒▒▒▒▒▒$(RESET)████$(RED)▒▒$(RESET)██░░░░░░    ░░  ░░    ░░    "
-	@echo "  ░░    ░░            ░░      $(RESET)████$(RED)▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒$(RESET)████░░          ░░      ░░    ░░"
-	@echo "  ░░    ░░░░░░  ░░    ░░░░      ░░$(RESET)████████████████                ░░  ░░  ░░░░    "
-	@echo "  ░░    ░░      ░░            ░░░░    $(RESET)██▒▒▒▒██    ░░  ░░░░  ░░    ░░        ░░  ░░"
-	@echo "$(RESET)              ░░$(GREEN)████████████████████████████████████████████████████$(RESET)░░░░░░        "
-	@echo "$(RESET)        ░░  ░░  $(GREEN)██░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░██$(RESET)░░░░    ░░░░  "
-	@echo "$(RESET)        ░░    ░░$(GREEN)██▒▒▒▒▓▓▒▒░░░░░░░░▒▒▒▒▓▓▒▒▒▒▒▒▒▒▓▓▒▒▒▒▒▒▒▒▒▒▓▓▒▒▒▒██$(RESET)              "
-	@echo "$(RESET)          ░░░░░░$(GREEN)██░░░░▒▒▒▒░░░░░░░░▒▒░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░▒▒░░░░░░▒▒██$(RESET)              "
-	@echo "$(RESET)            ░░  $(GREEN)██░░░░▓▓▒▒░░░░░░░░▒▒░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓░░▓▓░░░░▓▓██$(RESET)        ░░    "
-	@echo "$(RESET)  ░░      ░░  ░░$(GREEN)██░░░░▒▒▓▓░░░░░░░░▓▓░░░░▒▒▒▒▒▒▓▓▒▒▒▒▒▒░░▒▒░░░░░░▓▓██$(RESET)        ░░░░░░"
-	@echo "$(RESET)      ░░░░  ░░  $(GREEN)██░░░░▒▒▒▒░░░░░░░░▓▓░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓░░▓▓░░░░▒▒██$(RESET)        ░░░░  "
-	@echo "$(RESET)    ░░░░░░░░  ░░$(GREEN)██░░░░▒▒▒▒░░░░░░░░▒▒░░░░▓▓▒▒▒▒▒▒▒▒▒▒▒▒░░▒▒░░░░░░▓▓██$(RESET)    ░░░░░░░░░░"
-	@echo "$(RESET)░░░░░░░░░░      ░░$(GREEN)████████████████████████████████████████████████$(RESET)░░░░  ░░░░░░░░  "
-	@echo "$(RESET)░░░░░░░░    ░░    $(GREEN)██░░░░▓▓▓▓▒▒░░░░▓▓░░▓▓▓▓▒▒▒▒▓▓▓▓▓▓▒▒▓▓▓▓░░▓▓░░██$(RESET)░░  ░░░░░░░░░░  "
-	@echo "$(RESET)░░░░░░░░          $(GREEN)██░░░░▒▒▒▒▒▒░░░░▒▒░░▓▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓░░░░██$(RESET)      ░░░░░░    "
-
 
 .PHONY: all clean fclean re

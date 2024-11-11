@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 20:20:50 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/10 02:29:49 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/11 20:27:49 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,23 @@
 
 void	freepipex(t_pipex *vars)
 {
-	int	i;
+	int		i;
+	char	*buf;
 
 	i = -1;
+	buf = NULL;
+	close(vars->fdin);
+	if (vars->pwd)
+	{
+		buf = ft_strjoin_gnl(vars->pwd, vars->filein);
+		unlink(buf);
+		free(buf);
+	}
 	while (++i < vars->numcmds)
 		freedoublepointer(vars->cmds[i]);
 	free(vars->cmds);
+	free(vars->lim);
+	free(vars->filein);
 	freedoublepointer(vars->paths);
 	freedoublepointer((char **)vars->fd);
 	free(vars);
@@ -46,6 +57,7 @@ char	*pathseek(char **args, char **envp)
 		close(fd[WRITE_FD]);
 		wait(NULL);
 		tmp = get_next_line(fd[READ_FD]);
+		tmp[ft_strlen(tmp) - 1] = '\0';
 		return (close(fd[READ_FD]), tmp);
 	}
 	return (NULL);
@@ -58,15 +70,18 @@ int	checks(char **argv, t_pipex *var)
 	i = -1;
 	while (++i < var->numcmds)
 		if (!var->paths[i] || access(var->paths[i], X_OK) != 0)
-			return (printf("%s path", var->paths[i]), -1);
+			return (-1);
 	if (access(argv[1], R_OK) != 0)
-		return (printf("access"), -1);
+		return (-1);
 	return (0);
 }
 
 void	fdtofile(t_pipex *var, char *filename)
 {
-	var->fdout = open(filename, O_RDWR | O_CREAT | O_TRUNC, 0644);
+	if (var->lim && access(filename, F_OK) != -1)
+		var->fdout = open(filename, O_WRONLY | O_APPEND);
+	else
+		var->fdout = open(filename, O_RDWR | O_CREAT | O_TRUNC, 0644);
 	var->buf = get_next_line(var->fd[var->numcmds - 1][READ_FD]);
 	while (var->buf)
 	{

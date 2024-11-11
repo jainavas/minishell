@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 17:22:26 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/10 00:50:48 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/11 19:25:46 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,9 @@ typedef struct pipex
 	int		numcmds;
 	int		actcmd;
 	char	**envp;
+	char	*lim;
+	char	*pwd;
+	char	*filein;
 }	t_pipex;
 
 void		freepipex(t_pipex *vars);
@@ -53,7 +56,10 @@ int			firstcmdcall(t_pipex *var, char **cmd, char *path);
 int			vardefs(t_pipex *vars, char **argv, int argc);
 void		triplepointeralloc(t_pipex *vars, int argc);
 int			checkpaths(t_pipex *vars);
+void		limmitator(char *lim, int fdin);
+int			limvardefs(t_pipex *vars, char **argv, int argc);
+char		*pwdseek(t_pipex *var);
+int			limornot(int argc, char **argv, t_pipex *vars);
 int			pipex(int argc, char **argv, char **envp);
-int			dstrlen(char **strofstr);
 
 #endif
