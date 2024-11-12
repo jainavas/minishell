@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 15:56:12 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/11 23:06:07 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/12 21:44:53 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,11 @@ int	recread(t_mini *mini)
 	fdin = 0;
 	buf2 = get_next_line(0);
 	buf2[ft_strlen(buf2) - 1] = '\0';
-	if (ft_strchr(buf2, '<') != NULL && ft_strchr(buf2, '<')[1] == '<')
+	if (checkkill(buf2))
+		return (free(buf2), 1);
+	if (ft_strncmp("cd ", buf2, 3) == 0)
+		return (docd(&buf2[3]), free(buf2), 0);
+	if ((ft_strchr(buf2, '<') != NULL && ft_strchr(buf2, '<')[1] == '<') && ft_strchr(buf2, '|') != NULL)
 	{
 		buf = preppipexlim(buf2);
 		pipex(((ft_strcount(buf2, '|') + 1) + 4), buf, mini->envp);
@@ -32,6 +36,7 @@ int	recread(t_mini *mini)
 		mini->infile = ft_substr(buf2, 0, ft_strchr(buf2, '<') - buf2 - 1);
 	if (ft_strchr(buf2, '>') != NULL)
 		mini->fileout = ft_substr(buf2, ft_strchr(buf2, '>') - buf2 + 2, ft_strlen(buf2) - (ft_strchr(buf2, '>') - buf2));
+	mini->appendout = 0;
 	if (ft_strchr(buf2, '>') != NULL && ft_strchr(buf2, '>')[1] == '>')
 		mini->appendout = 1;
 	if (ft_strchr(buf2, '|') != NULL)
@@ -43,6 +48,7 @@ int	recread(t_mini *mini)
 	else
 	{
 		buf = ft_split(debugbuffer(buf2, mini), ' ');
+		fdin = 0;
 		if (mini->infile)
 			fdin = open(mini->infile, O_RDONLY);
 		alonecmdcall(fdin, buf, pathseek(buf, mini->envp), mini);
@@ -57,21 +63,11 @@ int	diffindex(char *buf, char *a, char *b)
 
 int	recursiva(t_mini *mini)
 {
-	int	pid;
 	int	x;
 
-	x = 1;
-	pid = fork();
-	if (pid == 0)
-		recread(mini);
-	else
-	{
-		wait(NULL);
-		if (x == 0)
-			return (recursiva(mini));
-		else
-			return (0);
-	}
+	x = 0;
+	while (x == 0)
+		x = recread(mini);
 	return (0);
 }
 

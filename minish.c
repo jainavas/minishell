@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 01:58:02 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/11 23:12:59 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/12 21:36:32 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,15 +20,20 @@ int	checkkill(char *buf)
 		return (0);
 }
 
-void	anyfdtofile(int	fd, char *filename, int out)
+void	anyfdtofile(int	fd, char *filename, int out, int app)
 {
 	char	*buf;
 	int		fdo;
 
 	if (out == 1)
 	{
-		if (access(filename, F_OK) != -1) //fix case >>
-			fdo = open(filename, O_WRONLY | O_APPEND);
+		if (access(filename, F_OK) != -1)
+		{
+			if (app == 1)
+				fdo = open(filename, O_WRONLY | O_APPEND);
+			else
+				fdo = open(filename, O_WRONLY);
+		}
 		else
 			fdo = open(filename, O_RDWR | O_CREAT | O_TRUNC, 0644);
 	}
@@ -70,7 +75,7 @@ int	alonecmdcall(int fdin, char **cmd, char *path, t_mini *mini)
 		freedoublepointer(cmd);
 		if (mini->fileout)
 			mini->out = 1;
-		return (free(path), anyfdtofile(fd[READ_FD], mini->fileout, mini->out), 0);
+		return (free(path), anyfdtofile(fd[READ_FD], mini->fileout, mini->out, mini->appendout), 0);
 	}
 	return (0);
 }
