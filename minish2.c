@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 15:56:12 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/13 22:28:38 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/13 23:48:53 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,19 @@ int	recread(t_mini *mini)
 		buf = preppipexlim(buf2);
 		pid = fork();
 		if (pid == 0)
+		{
 			pipex(((ft_strcount(buf2, '|') + 1) + 4), buf, mini->envp, mini);
+			free(mini->fileout);
+			free(mini->infile);
+			return (free(buf2), freedoublepointer(buf), 1);
+		}
 		else
+		{
 			wait(NULL);
-		return (free(buf2), freedoublepointer(buf), 0);
+			free(mini->fileout);
+			free(mini->infile);
+			return (free(buf2), freedoublepointer(buf), 0);
+		}
 	}
 	else if (ft_strchr(buf2, '|') != NULL)
 	{
@@ -61,7 +70,7 @@ int	recread(t_mini *mini)
 		else
 		{
 			wait(NULL);
-			return (free(buf2), freedoublepointer(buf), 0);
+			return (free(buf2), freedoublepointer(buf), free(buf2), freedoublepointer(buf), 0);
 		}
 	}
 	else
@@ -69,6 +78,8 @@ int	recread(t_mini *mini)
 		buf = ft_split(debugbuffer(buf2), ' ');
 		if (mini->infile)
 			fdin = open(mini->infile, O_RDONLY);
+		if (access(buf[0], F_OK) != 0)
+			return (write(1, "Unknown command\n", 16), 0);
 		alonecmdcall(fdin, buf, pathseek(buf, mini->envp), mini);
 		free(mini->fileout);
 		free(mini->infile);
