@@ -6,11 +6,12 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 16:54:34 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/11 22:18:45 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/13 22:11:38 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
+#include "mini.h"
 
 void	closeanddupinput(int fd[2])
 {
@@ -39,7 +40,7 @@ int	lastcmdcall(t_pipex *var, char **cmd, char *path)
 		close(var->fd[var->actcmd - 1][READ_FD]);
 		close(var->fd[var->actcmd][WRITE_FD]);
 		close(var->fdout);
-		return (fdtofile(var, var->output), 0);
+		return (anyfdtofile(var->fd[var->numcmds - 1][READ_FD], var->output, var->out, var->app), 0);
 	}
 	return (0);
 }
@@ -92,7 +93,7 @@ int	vardefs(t_pipex *vars, char **argv, int argc)
 	return (0);
 }
 
-int	pipex(int argc, char **argv, char **envp)
+int	pipex(int argc, char **argv, char **envp, t_mini *mini)
 {
 	t_pipex	*vars;
 	int		i;
@@ -102,6 +103,8 @@ int	pipex(int argc, char **argv, char **envp)
 	s = 0;
 	vars = ft_calloc(1, sizeof(t_pipex));
 	vars->envp = envp;
+	vars->out = mini->out;
+	vars->app = mini->appendout;
 	if (argc < 5)
 		return (free(vars), 2);
 	s = limornot(argc, argv, vars);

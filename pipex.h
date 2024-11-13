@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 17:22:26 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/11 19:25:46 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/13 21:02:58 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ typedef struct pipex
 	char	***cmds;
 	int		numcmds;
 	int		actcmd;
+	int		out;
+	int		app;
 	char	**envp;
 	char	*lim;
 	char	*pwd;
@@ -60,6 +62,6 @@ void		limmitator(char *lim, int fdin);
 int			limvardefs(t_pipex *vars, char **argv, int argc);
 char		*pwdseek(t_pipex *var);
 int			limornot(int argc, char **argv, t_pipex *vars);
-int			pipex(int argc, char **argv, char **envp);
+void		anyfdtofile(int	fd, char *filename, int out, int app);
 
 #endif

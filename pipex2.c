@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 20:20:50 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/11 20:27:49 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/13 21:38:51 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ void	freepipex(t_pipex *vars)
 	while (++i < vars->numcmds)
 		freedoublepointer(vars->cmds[i]);
 	free(vars->cmds);
-	free(vars->lim);
+	if (vars->lim)
+		free(vars->lim);
 	free(vars->filein);
 	freedoublepointer(vars->paths);
 	freedoublepointer((char **)vars->fd);
@@ -57,6 +58,8 @@ char	*pathseek(char **args, char **envp)
 		close(fd[WRITE_FD]);
 		wait(NULL);
 		tmp = get_next_line(fd[READ_FD]);
+		if (!tmp)
+			return (NULL);
 		tmp[ft_strlen(tmp) - 1] = '\0';
 		return (close(fd[READ_FD]), tmp);
 	}

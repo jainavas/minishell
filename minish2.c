@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 15:56:12 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/12 21:44:53 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/13 22:28:38 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,41 +17,61 @@ int	recread(t_mini *mini)
 	char	**buf;
 	char	*buf2;
 	int		fdin;
+	int		pid;
 
 	write(1, "minishell% ", 12);
 	fdin = 0;
 	buf2 = get_next_line(0);
+	buf = NULL;
 	buf2[ft_strlen(buf2) - 1] = '\0';
 	if (checkkill(buf2))
 		return (free(buf2), 1);
 	if (ft_strncmp("cd ", buf2, 3) == 0)
 		return (docd(&buf2[3]), free(buf2), 0);
-	if ((ft_strchr(buf2, '<') != NULL && ft_strchr(buf2, '<')[1] == '<') && ft_strchr(buf2, '|') != NULL)
-	{
-		buf = preppipexlim(buf2);
-		pipex(((ft_strcount(buf2, '|') + 1) + 4), buf, mini->envp);
-		return (free(buf2), freedoublepointer(buf), 0);
-	}
 	if (ft_strchr(buf2, '<') != NULL && ft_strchr(buf2, '<')[1] != '<')
 		mini->infile = ft_substr(buf2, 0, ft_strchr(buf2, '<') - buf2 - 1);
+	else
+		mini->infile = ft_strdup("/dev/stdin");
 	if (ft_strchr(buf2, '>') != NULL)
 		mini->fileout = ft_substr(buf2, ft_strchr(buf2, '>') - buf2 + 2, ft_strlen(buf2) - (ft_strchr(buf2, '>') - buf2));
+	else
+		mini->fileout = ft_strdup("/dev/stdout");
 	mini->appendout = 0;
 	if (ft_strchr(buf2, '>') != NULL && ft_strchr(buf2, '>')[1] == '>')
 		mini->appendout = 1;
-	if (ft_strchr(buf2, '|') != NULL)
+	if ((ft_strchr(buf2, '<') != NULL && ft_strchr(buf2, '<')[1] == '<') && ft_strchr(buf2, '|') != NULL)
+	{
+		buf = preppipexlim(buf2);
+		pid = fork();
+		if (pid == 0)
+			pipex(((ft_strcount(buf2, '|') + 1) + 4), buf, mini->envp, mini);
+		else
+			wait(NULL);
+		return (free(buf2), freedoublepointer(buf), 0);
+	}
+	else if (ft_strchr(buf2, '|') != NULL)
 	{
 		buf = preppipex(buf2, mini->infile, mini->fileout);
-		pipex(((ft_strcount(buf2, '|') + 1) + 3), buf, mini->envp);
-		freedoublepointer(buf);
+		pid = fork();
+		if (pid == 0)
+		{
+			pipex(((ft_strcount(buf2, '|') + 1) + 3), buf, mini->envp, mini);
+			return (free(buf2), freedoublepointer(buf), 1);
+		}
+		else
+		{
+			wait(NULL);
+			return (free(buf2), freedoublepointer(buf), 0);
+		}
 	}
 	else
 	{
-		buf = ft_split(debugbuffer(buf2, mini), ' ');
-		fdin = 0;
+		buf = ft_split(debugbuffer(buf2), ' ');
 		if (mini->infile)
 			fdin = open(mini->infile, O_RDONLY);
 		alonecmdcall(fdin, buf, pathseek(buf, mini->envp), mini);
+		free(mini->fileout);
+		free(mini->infile);
 	}
 	return (free(buf2), 0);
 }
@@ -65,28 +85,30 @@ int	recursiva(t_mini *mini)
 {
 	int	x;
 
-	x = 0;
+	mini->infile = NULL;
+	mini->fileout = NULL;
+	x = recread(mini);
 	while (x == 0)
+	{
+		mini->infile = NULL;
+		mini->fileout = NULL;
 		x = recread(mini);
+	}
 	return (0);
 }
 
-char	*debugbuffer(char *buf, t_mini *mini)
+char	*debugbuffer(char *buf)
 {
 	char	*tmp;
 
 	tmp = NULL;
-	if (!mini->infile)
-		mini->infile = ft_strdup("/dev/stdin");
-	else
+	if (ft_strchr(buf, '<'))
 	{
 		tmp = ft_substr(buf, ft_strchr(buf, '<') - buf + 2, ft_strlen(buf) - (ft_strchr(buf, '<') - buf + 2));
 		free(buf);
 		buf = tmp;
 	}
-	if (!mini->fileout)
-		mini->fileout = ft_strdup("/dev/stdout");
-	else
+	if (ft_strchr(buf, '>'))
 	{
 		tmp = ft_substr(buf, 0, ft_strlen(buf) - (ft_strlen(buf) - (ft_strchr(buf, '>') - buf - 1)));
 		free(buf);
@@ -118,9 +140,10 @@ char **preppipexlim(char *buf)
 			res [i + 4] = tmp[i];
 		free(tmp2);
 	}
-	tmp2 = ft_substr(buf, (ft_strchr(buf, '>') - buf + 3), ft_strlen(buf));
 	if (ft_strchr(buf, '>') == NULL)
 	 	tmp2 = ft_strdup("/dev/stdout");
+	else
+		tmp2 = ft_substr(buf, (ft_strchr(buf, '>') - buf + 3), ft_strlen(buf));
 	res[(ft_strcount(buf, '|') + 1) + 3] = tmp2;
 	return (res[(ft_strcount(buf, '|') + 1) + 4] = NULL, res);
 }

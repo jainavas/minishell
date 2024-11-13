@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 02:16:09 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/12 21:44:47 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/13 22:18:33 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,10 @@ int		alonecmdcall(int fdin, char **cmd, char *path, t_mini *mini);
 void	anyfdtofile(int	fd, char *filename, int out, int app);
 int		checkkill(char *buf);
 int		recursiva(t_mini *mini);
-char	*debugbuffer(char *buf, t_mini *mini);
+char	*debugbuffer(char *buf);
 char 	**preppipexlim(char *buf);
 void	docd(char *path);
+int		pipex(int argc, char **argv, char **envp, t_mini *mini);
+
 
 #endif

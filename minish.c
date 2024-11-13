@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 01:58:02 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/12 21:36:32 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/13 22:22:22 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,13 +87,9 @@ char **preppipex(char *buf, char *infile, char *outfile)
 	int		i;
 
 	i = -1;
-	if (!infile)
-		infile = ft_strdup("/dev/stdin");
-	else
+	if (ft_strchr(buf, '<'))
 		buf = ft_substr(buf, ft_strchr(buf, '<') - buf + 2, ft_strlen(buf) - (ft_strchr(buf, '<') - buf + 2));
-	if (!outfile)
-		outfile = ft_strdup("/dev/stdout");
-	else
+	if (ft_strchr(buf, '>'))
 		buf = ft_substr(buf, 0, ft_strlen(buf) - (ft_strlen(buf) - (ft_strchr(buf, '>') - buf - 1)));
 	tmp = ft_split(buf, '|');
 	res = ft_calloc((ft_strcount(buf, '|') + 1) + 4, sizeof(char *));
@@ -114,10 +110,6 @@ int	main(int argc, char **argv, char **envp)
 	mini->argc = argc;
 	mini->argv = argv;
 	mini->envp = envp;
-	mini->infile = NULL;
-	mini->fileout = NULL;
 	recursiva(mini);
-	free(mini->fileout);
-	free(mini->infile);
 	free(mini);
 }
