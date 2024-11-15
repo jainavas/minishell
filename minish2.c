@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 15:56:12 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/13 23:48:53 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/15 17:52:12 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,17 +28,7 @@ int	recread(t_mini *mini)
 		return (free(buf2), 1);
 	if (ft_strncmp("cd ", buf2, 3) == 0)
 		return (docd(&buf2[3]), free(buf2), 0);
-	if (ft_strchr(buf2, '<') != NULL && ft_strchr(buf2, '<')[1] != '<')
-		mini->infile = ft_substr(buf2, 0, ft_strchr(buf2, '<') - buf2 - 1);
-	else
-		mini->infile = ft_strdup("/dev/stdin");
-	if (ft_strchr(buf2, '>') != NULL)
-		mini->fileout = ft_substr(buf2, ft_strchr(buf2, '>') - buf2 + 2, ft_strlen(buf2) - (ft_strchr(buf2, '>') - buf2));
-	else
-		mini->fileout = ft_strdup("/dev/stdout");
-	mini->appendout = 0;
-	if (ft_strchr(buf2, '>') != NULL && ft_strchr(buf2, '>')[1] == '>')
-		mini->appendout = 1;
+	debuginout(buf2, mini);
 	if ((ft_strchr(buf2, '<') != NULL && ft_strchr(buf2, '<')[1] == '<') && ft_strchr(buf2, '|') != NULL)
 	{
 		buf = preppipexlim(buf2);
@@ -70,16 +60,19 @@ int	recread(t_mini *mini)
 		else
 		{
 			wait(NULL);
-			return (free(buf2), freedoublepointer(buf), free(buf2), freedoublepointer(buf), 0);
+			return (free(buf2), freedoublepointer(buf), 0);
 		}
 	}
 	else
 	{
-		buf = ft_split(debugbuffer(buf2), ' ');
+		buf2 = debugbuffer(buf2);
+		buf = ft_split(buf2, ' ');
+		free(buf2);
+		buf2 = pathseek(buf, mini->envp);
 		if (mini->infile)
 			fdin = open(mini->infile, O_RDONLY);
-		if (access(buf[0], F_OK) != 0)
-			return (write(1, "Unknown command\n", 16), 0);
+		if (!buf2)
+			return (write(1, "Unknown command\n", 16), free(mini->infile), free(mini->fileout), freedoublepointer(buf), 0);
 		alonecmdcall(fdin, buf, pathseek(buf, mini->envp), mini);
 		free(mini->fileout);
 		free(mini->infile);
@@ -154,7 +147,12 @@ char **preppipexlim(char *buf)
 	if (ft_strchr(buf, '>') == NULL)
 	 	tmp2 = ft_strdup("/dev/stdout");
 	else
-		tmp2 = ft_substr(buf, (ft_strchr(buf, '>') - buf + 3), ft_strlen(buf));
+	{
+		if (ft_strchr(buf, '>')[1] == '>')
+			tmp2 = ft_substr(buf, (ft_strchr(buf, '>') - buf + 3), ft_strlen(buf));
+		else
+			tmp2 = ft_substr(buf, (ft_strchr(buf, '>') - buf + 2), ft_strlen(buf));
+	}
 	res[(ft_strcount(buf, '|') + 1) + 3] = tmp2;
 	return (res[(ft_strcount(buf, '|') + 1) + 4] = NULL, res);
 }

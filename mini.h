@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 02:16:09 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/13 22:18:33 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/15 17:22:47 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ char	*debugbuffer(char *buf);
 char 	**preppipexlim(char *buf);
 void	docd(char *path);
 int		pipex(int argc, char **argv, char **envp, t_mini *mini);
+void	debuginout(char *buf2, t_mini *mini);
 
 
 #endif

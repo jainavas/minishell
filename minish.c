@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 01:58:02 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/13 22:22:22 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/15 17:37:43 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	anyfdtofile(int	fd, char *filename, int out, int app)
 
 	if (out == 1)
 	{
-		if (access(filename, F_OK) != -1)
+		if (access(filename, F_OK) == 0)
 		{
 			if (app == 1)
 				fdo = open(filename, O_WRONLY | O_APPEND);

@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 19:34:43 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/11 20:52:27 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/15 18:04:03 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,11 @@ int	limvardefs(t_pipex *vars, char **argv, int argc)
 	vars->output = argv[argc - 1];
 	i = -1;
 	while (++i < argc - 4)
+	{
 		vars->paths[i] = pathseek(vars->cmds[i], vars->envp);
+		if (!vars->paths[i])
+			break;
+	}
 	vars->paths[i] = NULL;
 	if (checkpaths(vars) == -1)
 		return (-1);
@@ -75,11 +79,11 @@ int	limornot(int argc, char **argv, t_pipex *vars)
 	else
 	{
 		if (vardefs(vars, argv, argc) != 0)
-			return (printf("mal vardefs"), freepipex(vars), 2);
+			return (freepipex(vars), 2);
 		if (checks(argv, vars) != 0)
-			return (printf("mal checks"), freepipex(vars), 2);
+			return (freepipex(vars), 2);
 		if (firstcmdcall(vars, vars->cmds[0], vars->paths[0]) != 0)
-			return (printf("mal cmdcalls"), freepipex(vars), 2);
+			return (freepipex(vars), 2);
 	}
 	return (0);
 }
