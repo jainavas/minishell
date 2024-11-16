@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 01:58:02 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/15 17:37:43 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/16 18:27:04 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	checkkill(char *buf)
 {
-	if (ft_strncmp(buf, "q", 2) == 0 || ft_strncmp(buf, "kill", 5) == 0)
+	if (ft_strncmp(buf, "exit", 5) == 0 || ft_strncmp(buf, "kill", 5) == 0)
 		return (1);
 	else
 		return (0);

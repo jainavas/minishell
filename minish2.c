@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 15:56:12 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/15 17:52:12 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/16 19:13:11 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,12 @@ int	recread(t_mini *mini)
 	int		fdin;
 	int		pid;
 
-	write(1, "minishell% ", 12);
 	fdin = 0;
-	buf2 = get_next_line(0);
+	buf2 = readline("minishell% ");
+	add_history(buf2);
 	buf = NULL;
-	buf2[ft_strlen(buf2) - 1] = '\0';
 	if (checkkill(buf2))
-		return (free(buf2), 1);
+		return (free(buf2), rl_clear_history(), 1);
 	if (ft_strncmp("cd ", buf2, 3) == 0)
 		return (docd(&buf2[3]), free(buf2), 0);
 	debuginout(buf2, mini);

@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 02:16:09 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/15 17:22:47 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/16 19:47:50 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 # include "pipex.h"
 # include <signal.h>
+# include <readline/readline.h>
+# include <readline/history.h>
 
 typedef struct mini
 {
@@ -39,6 +41,6 @@ char 	**preppipexlim(char *buf);
 void	docd(char *path);
 int		pipex(int argc, char **argv, char **envp, t_mini *mini);
 void	debuginout(char *buf2, t_mini *mini);
-
+char	**ft_split_cmds(char *str);
 
 #endif
