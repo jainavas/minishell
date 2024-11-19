@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 19:23:59 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/16 19:55:32 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/19 15:56:56 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,20 +21,20 @@ static int	count_cmds(char *str)
 	i = 0;
 	while (str[i] != '\0')
 	{
-		if ((ft_isalnum(str[i + 1]) == 0 || str[i + 1] == '\0' || str[i + 1] == ' ')
-			&& !(ft_isalnum(str[i]) == 0 || str[i] == '\0' || str[i] == ' '))
+		if (((ft_isalnum(str[i + 1]) == 0 && str[i + 1] != ' ' && str[i + 1] != '-') || str[i + 1] == '\0')
+			&& !((ft_isalnum(str[i]) == 0 && str[i] != ' ' && str[i] != '-') || str[i] == '\0'))
 			words++;
 		i++;
 	}
 	return (words);
 }
 
-static void	write_cmd(char *dest, char *from)
+static void	write_cmd(char *dest, char *from, int j)
 {
-	int	i;
+	int		i;
 
 	i = 0;
-	while (!(ft_isalnum(from[i]) == 0 || from[i] == '\0' || from[i] == ' '))
+	while (i < j)
 	{
 		dest[i] = from[i];
 		i++;
@@ -52,17 +52,17 @@ static int	write_splitcmd(char **split, char *str)
 	i = 0;
 	while (str[i] != '\0')
 	{
-		if (ft_isalnum(str[i]) == 0 || str[i] == '\0' || str[i] == ' ')
+		if ((ft_isalnum(str[i]) == 0 && str[i] != ' ' && str[i] != '-') || str[i] == '\0')
 			i++;
 		else
 		{
 			j = 0;
-			while (!(ft_isalnum(str[i + j]) == 0 || str[i + j] == '\0' || str[i + j] == ' '))
+			while (!((ft_isalnum(str[i + j]) == 0 && str[i + j] != ' ' && str[i + j] != '-') || str[i + j] == '\0'))
 				j++;
 			split[word] = (char *)malloc(sizeof(char) * (j + 1));
 			if (split[word] == NULL)
 				return (1);
-			write_cmd(split[word], str + i);
+			write_cmd(split[word], str + i, j);
 			i += j;
 			word++;
 		}
@@ -83,6 +83,7 @@ static void	protectsplit(char **split)
 char	**ft_split_cmds(char *str)
 {
 	char	**split;
+	char	*tmp;
 	int		words;
 
 	if (!str)
@@ -94,5 +95,24 @@ char	**ft_split_cmds(char *str)
 	split[words] = 0;
 	if (write_splitcmd(split, str) == 1)
 		protectsplit(split);
+	words = -1;
+	while (split[++words])
+	{
+		tmp = ft_strtrim(split[words], " ");
+		free(split[words]);
+		split[words] = tmp;
+	}
 	return (split);
 }
+
+// int main(void)
+// {
+// 	int	i = -1;
+// 	char **buf = ft_split_cmds("grep a << lim | wc");
+// 	while(buf[++i])
+// 	{
+// 		printf("|%s|", buf[i]);
+// 		free(buf[i]);
+// 	}
+// 	free(buf);
+// }

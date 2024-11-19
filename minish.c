@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 01:58:02 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/16 18:27:04 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/19 15:54:42 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,25 +80,31 @@ int	alonecmdcall(int fdin, char **cmd, char *path, t_mini *mini)
 	return (0);
 }
 
-char **preppipex(char *buf, char *infile, char *outfile)
+char **preppipex(char *buf, char *infile, char *outfile, char **buf2)
 {
 	char	**res;
-	char	**tmp;
 	int		i;
 
 	i = -1;
-	if (ft_strchr(buf, '<'))
-		buf = ft_substr(buf, ft_strchr(buf, '<') - buf + 2, ft_strlen(buf) - (ft_strchr(buf, '<') - buf + 2));
-	if (ft_strchr(buf, '>'))
-		buf = ft_substr(buf, 0, ft_strlen(buf) - (ft_strlen(buf) - (ft_strchr(buf, '>') - buf - 1)));
-	tmp = ft_split(buf, '|');
 	res = ft_calloc((ft_strcount(buf, '|') + 1) + 4, sizeof(char *));
 	res[1] = infile;
+	if (ft_strncmp(res[1], "/dev/stdin", 11) != 0)
+		i++;
 	res[0] = ft_strdup("a");
-	while (tmp[++i])
-		res [i + 2] = tmp[i];
-	res[i + 2] = outfile;
-	free(tmp);
+	if (ft_strncmp(outfile, "/dev/stdout", 12) == 0)
+	{
+		while (buf2[++i])
+			res [i + 2] = buf2[i];
+		res[i + 2] = outfile;
+		res[i + 3] = NULL;
+	}
+	else
+	{
+		while (buf2[++i])
+			res [i + 2] = buf2[i];
+		res[i + 3] = NULL;
+	}
+	free(buf2);
 	return (res);
 }
 

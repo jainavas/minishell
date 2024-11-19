@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 02:16:09 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/16 19:47:50 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/19 16:33:04 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,16 +31,18 @@ typedef struct mini
 }	t_mini;
 
 int		recread(t_mini *mini);
-char 	**preppipex(char *buf, char *infile, char *outfile);
+char	**preppipex(char *buf, char *infile, char *outfile, char **buf2);
 int		alonecmdcall(int fdin, char **cmd, char *path, t_mini *mini);
 void	anyfdtofile(int	fd, char *filename, int out, int app);
 int		checkkill(char *buf);
 int		recursiva(t_mini *mini);
 char	*debugbuffer(char *buf);
-char 	**preppipexlim(char *buf);
+int 	ft_dstrlen(char **s);
+char	**preppipexlim(char *buf, char **antbuf);
 void	docd(char *path);
 int		pipex(int argc, char **argv, char **envp, t_mini *mini);
-void	debuginout(char *buf2, t_mini *mini);
+void	debuginout(char *buf2, char **buf, t_mini *mini);
 char	**ft_split_cmds(char *str);
+int		dolimitonecmd(char **buf, t_mini *mini);
 
 #endif

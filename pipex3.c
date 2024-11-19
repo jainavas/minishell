@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 19:34:41 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/15 17:56:01 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/19 16:40:28 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	triplepointeralloc(t_pipex *vars, int argc)
 	vars->cmds = malloc(sizeof(char **) * (argc - 2));
 	vars->paths = malloc(sizeof(char *) * (argc - 2));
 	vars->numcmds = argc - 3;
-	vars->fd = malloc(sizeof(int *) * vars->numcmds + 1);
+	vars->fd = ft_calloc(sizeof(int *), vars->numcmds + 1);
 	while (i < vars->numcmds)
 		vars->fd[i++] = malloc(sizeof(int) * 2);
 }
@@ -72,11 +72,13 @@ void	limmitator(char *lim, int fdin)
 {
 	char	*buf;
 
+	write(1, "> ", 2);
 	buf = get_next_line(0);
 	while (ft_strncmp(buf, lim, ft_strlen(lim) - 1) != 0)
 	{
 		write(fdin, buf, ft_strlen(buf));
 		free(buf);
+		write(1, "> ", 2);
 		buf = get_next_line(0);
 	}
 	free(buf);

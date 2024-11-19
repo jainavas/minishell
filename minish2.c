@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 15:56:12 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/16 19:13:11 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/19 16:43:14 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,11 @@ int	recread(t_mini *mini)
 		return (free(buf2), rl_clear_history(), 1);
 	if (ft_strncmp("cd ", buf2, 3) == 0)
 		return (docd(&buf2[3]), free(buf2), 0);
-	debuginout(buf2, mini);
+	buf = ft_split_cmds(buf2);
+	debuginout(buf2, buf, mini);
 	if ((ft_strchr(buf2, '<') != NULL && ft_strchr(buf2, '<')[1] == '<') && ft_strchr(buf2, '|') != NULL)
 	{
-		buf = preppipexlim(buf2);
+		buf = preppipexlim(buf2, buf);
 		pid = fork();
 		if (pid == 0)
 		{
@@ -49,7 +50,7 @@ int	recread(t_mini *mini)
 	}
 	else if (ft_strchr(buf2, '|') != NULL)
 	{
-		buf = preppipex(buf2, mini->infile, mini->fileout);
+		buf = preppipex(buf2, mini->infile, mini->fileout, buf);
 		pid = fork();
 		if (pid == 0)
 		{
@@ -64,6 +65,8 @@ int	recread(t_mini *mini)
 	}
 	else
 	{
+		if (ft_strcount(buf2, '<') == 2)
+			return (free(buf2), dolimitonecmd(buf, mini));
 		buf2 = debugbuffer(buf2);
 		buf = ft_split(buf2, ' ');
 		free(buf2);
@@ -120,38 +123,29 @@ char	*debugbuffer(char *buf)
 	return (buf);
 }
 
-char **preppipexlim(char *buf)
+char **preppipexlim(char *buf, char **antbuf)
 {
 	char	**res;
-	char	**tmp;
-	char	*tmp2;
 	int		i;
 
 	i = -1;
 	res = ft_calloc((ft_strcount(buf, '|') + 1) + 5, sizeof(char *));
 	res[0] = ft_strdup("a");
 	res[1] = ft_strdup("here_doc");
-	res[2] = ft_substr(buf, (ft_strchr(buf, '<') - buf + 3), (ft_strchr(buf, '|') - buf - (ft_strchr(buf, '<') - buf + 4)));
-	res[3] = ft_substr(buf, 0, (ft_strchr(buf, '<') - buf - 1));
+	res[2] = antbuf[1];
+	res[3] = antbuf[0];
 	if (ft_strcount(buf, '|') == 1)
-		res[4] = ft_substr(buf, (ft_strchr(buf, '|') - buf + 1), diffindex(buf, ft_strchr(buf, '|') - 1, ft_strchr(buf, '>') - 3));
+		res[4] = antbuf[2];
 	else
 	{
-		tmp2 = ft_substr(buf, (ft_strchr(buf, '|') - buf + 1), (ft_strchr(buf, '>') - buf - (ft_strchr(buf, '|') - buf) - 1));
-		tmp = ft_split(tmp2, '|');
-		while (tmp[++i])
-			res [i + 4] = tmp[i];
-		free(tmp2);
+		while (++i + 2 < ft_dstrlen(antbuf))
+			res[i + 4] = antbuf[i + 2];
 	}
 	if (ft_strchr(buf, '>') == NULL)
-	 	tmp2 = ft_strdup("/dev/stdout");
+	 	res[(ft_strcount(buf, '|') + 1) + 3] = ft_strdup("/dev/stdout");
 	else
-	{
-		if (ft_strchr(buf, '>')[1] == '>')
-			tmp2 = ft_substr(buf, (ft_strchr(buf, '>') - buf + 3), ft_strlen(buf));
-		else
-			tmp2 = ft_substr(buf, (ft_strchr(buf, '>') - buf + 2), ft_strlen(buf));
-	}
-	res[(ft_strcount(buf, '|') + 1) + 3] = tmp2;
-	return (res[(ft_strcount(buf, '|') + 1) + 4] = NULL, res);
+		res[(ft_strcount(buf, '|') + 1) + 3] = antbuf[ft_dstrlen(antbuf) - 1];
+	res[(ft_strcount(buf, '|') + 1) + 4] = NULL;
+	free(antbuf);
+	return (res);
 }

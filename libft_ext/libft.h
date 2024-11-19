@@ -63,6 +63,7 @@ int					ft_tolower(int c);
 int					ft_toupper(int c);
 int					ft_strcount(const char *s, int c);
 void				freedoublepointer(char **split);
+void				freedp(int **dp);
 
 // BONUSSSSSSSSSSSSSSS
 

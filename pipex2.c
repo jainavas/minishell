@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 20:20:50 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/13 21:38:51 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/19 16:10:40 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	freepipex(t_pipex *vars)
 		free(vars->lim);
 	free(vars->filein);
 	freedoublepointer(vars->paths);
-	freedoublepointer((char **)vars->fd);
+	freedp(vars->fd);
 	free(vars);
 }
 

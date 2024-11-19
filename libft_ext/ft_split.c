@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 18:45:49 by jainavas          #+#    #+#             */
-/*   Updated: 2024/10/16 20:03:30 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/19 15:40:11 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,12 @@ int	count_words(char *str, char charset)
 	return (words);
 }
 
-void	write_word(char *dest, char *from, char charset)
+void	write_word(char *dest, char *from, int j)
 {
 	int	i;
 
 	i = 0;
-	while (!(from[i] == charset || from[i] == '\0'))
+	while (i < j)
 	{
 		dest[i] = from[i];
 		i++;
@@ -50,9 +50,9 @@ int	write_split(char **split, char *str, char charset)
 
 	word = 0;
 	i = 0;
-	while (str[i] != '\0')
+	while (str && str[i] != '\0')
 	{
-		if (str[i] == charset || str[i] == '\0')
+		if (str[i] && (str[i] == charset || str[i] == '\0'))
 			i++;
 		else
 		{
@@ -62,7 +62,7 @@ int	write_split(char **split, char *str, char charset)
 			split[word] = (char *)malloc(sizeof(char) * (j + 1));
 			if (split[word] == NULL)
 				return (1);
-			write_word(split[word], str + i, charset);
+			write_word(split[word], str + i, j);
 			i += j;
 			word++;
 		}

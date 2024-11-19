@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 18:35:30 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/09 01:42:05 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/19 16:04:58 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,4 +20,14 @@ void	freedoublepointer(char **split)
 	while (split[i])
 		free(split[i++]);
 	free(split);
+}
+
+void	freedp(int **dp)
+{
+	int	i;
+
+	i = 0;
+	while (dp[i])
+		free(dp[i++]);
+	free(dp);
 }
