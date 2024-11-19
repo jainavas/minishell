@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 21:06:20 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/19 16:42:26 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/19 17:33:01 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,5 @@ int dolimitonecmd(char **buf, t_mini *mini)
 	free(buf2);
 	freedoublepointer(buf);
 	free(mini->infile);
-	free(mini->fileout);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 15:56:12 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/19 16:43:14 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/19 18:46:51 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,13 +68,12 @@ int	recread(t_mini *mini)
 		if (ft_strcount(buf2, '<') == 2)
 			return (free(buf2), dolimitonecmd(buf, mini));
 		buf2 = debugbuffer(buf2);
-		buf = ft_split(buf2, ' ');
 		free(buf2);
 		buf2 = pathseek(buf, mini->envp);
 		if (mini->infile)
 			fdin = open(mini->infile, O_RDONLY);
 		if (!buf2)
-			return (write(1, "Unknown command\n", 16), free(mini->infile), free(mini->fileout), freedoublepointer(buf), 0);
+			return (write(1, "Unknown command\n", 16), free(mini->infile), free(mini->fileout), freedoublepointer(buf), free(buf2), 0);
 		alonecmdcall(fdin, buf, pathseek(buf, mini->envp), mini);
 		free(mini->fileout);
 		free(mini->infile);
