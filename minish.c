@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 01:58:02 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/19 15:54:42 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/19 20:32:25 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,12 @@ int	checkkill(char *buf)
 		return (0);
 }
 
-void	anyfdtofile(int	fd, char *filename, int out, int app)
+void	anyfdtofile(int fd, char *filename, int out, int app)
 {
 	char	*buf;
 	int		fdo;
 
+	fdo = 1;
 	if (out == 1)
 	{
 		if (access(filename, F_OK) == 0)
@@ -37,8 +38,6 @@ void	anyfdtofile(int	fd, char *filename, int out, int app)
 		else
 			fdo = open(filename, O_RDWR | O_CREAT | O_TRUNC, 0644);
 	}
-	else
-		fdo = 1;
 	buf = get_next_line(fd);
 	while (buf)
 	{
@@ -55,8 +54,7 @@ int	alonecmdcall(int fdin, char **cmd, char *path, t_mini *mini)
 	int	fd[2];
 	int	pid;
 
-	if (pipe(fd) == -1)
-		return (printf("pipe1"), -1);
+	pipe(fd);
 	pid = fork();
 	if (pid == 0)
 	{
@@ -64,8 +62,7 @@ int	alonecmdcall(int fdin, char **cmd, char *path, t_mini *mini)
 		close(fdin);
 		dup2(fd[WRITE_FD], STDOUT_FILENO);
 		closeanddupinput(fd);
-		if (execve(path, cmd, mini->envp) == -1)
-			return (printf("execcmd1"), -1);
+		execve(path, cmd, mini->envp);
 	}
 	else
 	{
@@ -75,12 +72,13 @@ int	alonecmdcall(int fdin, char **cmd, char *path, t_mini *mini)
 		freedoublepointer(cmd);
 		if (mini->fileout)
 			mini->out = 1;
-		return (free(path), anyfdtofile(fd[READ_FD], mini->fileout, mini->out, mini->appendout), 0);
+		return (free(path), anyfdtofile(fd[READ_FD], mini->fileout,
+				mini->out, mini->appendout), 0);
 	}
 	return (0);
 }
 
-char **preppipex(char *buf, char *infile, char *outfile, char **buf2)
+char	**preppipex(char *buf, char *infile, char *outfile, char **buf2)
 {
 	char	**res;
 	int		i;

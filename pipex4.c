@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 19:34:43 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/15 18:04:03 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/19 20:25:43 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	limvardefs(t_pipex *vars, char **argv, int argc)
 	{
 		vars->paths[i] = pathseek(vars->cmds[i], vars->envp);
 		if (!vars->paths[i])
-			break;
+			break ;
 	}
 	vars->paths[i] = NULL;
 	if (checkpaths(vars) == -1)

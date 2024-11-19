@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 21:06:20 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/19 17:33:01 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/19 20:35:31 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	docd(char *path)
 		printf("cd: no such file or directory: %s\n", path);
 }
 
-int ft_dstrchr(char **s, char *s2)
+int	ft_dstrchr(char **s, char *s2)
 {
 	int	i;
 
@@ -30,12 +30,12 @@ int ft_dstrchr(char **s, char *s2)
 	while (s[++i])
 	{
 		if (ft_strncmp(s[i], s2, ft_strlen(s[i])) == 0)
-				return (i);
+			return (i);
 	}
 	return (-1);
 }
 
-int ft_dstrlen(char **s)
+int	ft_dstrlen(char **s)
 {
 	int	i;
 
@@ -65,7 +65,7 @@ void	debuginout(char *buf2, char **buf, t_mini *mini)
 		mini->appendout = 1;
 }
 
-int dolimitonecmd(char **buf, t_mini *mini)
+int	dolimitonecmd(char **buf, t_mini *mini)
 {
 	int		fd;
 	char	*buf2;

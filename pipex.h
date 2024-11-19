@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 17:22:26 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/13 21:02:58 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/19 20:23:06 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,6 @@ void		limmitator(char *lim, int fdin);
 int			limvardefs(t_pipex *vars, char **argv, int argc);
 char		*pwdseek(t_pipex *var);
 int			limornot(int argc, char **argv, t_pipex *vars);
-void		anyfdtofile(int	fd, char *filename, int out, int app);
+void		anyfdtofile(int fd, char *filename, int out, int app);
 
 #endif

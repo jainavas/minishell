@@ -13,7 +13,7 @@ CCFLAGS = -Wall -Wextra -Werror -g3
 
 SRC_DIR = src
 
-SRC = pipex.c pipex2.c pipex3.c pipex4.c minish.c minish2.c minish3.c ft_cmdsplitter.c\
+SRC = pipex.c pipex2.c pipex3.c pipex4.c minish.c minish2.c minish3.c minish4.c ft_cmdsplitter.c\
 
 OBJ = $(SRC:.c=.o)
 
