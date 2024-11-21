@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 20:05:57 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/21 12:37:51 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/21 12:52:03 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,8 @@ int	dopipes(char *buf2, char **buf, t_mini *mini)
 
 int	docmd(char *buf2, char **buf, t_mini *mini)
 {
-	int	fdin;
-	char **aux;
+	int		fdin;
+	char	**aux;
 
 	fdin = 0;
 	if (ft_strcount(buf2, '<') == 2)
