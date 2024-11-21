@@ -6,11 +6,12 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 19:34:41 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/19 16:40:28 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/21 12:47:28 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
+#include "readline/readline.h"
 
 void	triplepointeralloc(t_pipex *vars, int argc)
 {
@@ -72,14 +73,13 @@ void	limmitator(char *lim, int fdin)
 {
 	char	*buf;
 
-	write(1, "> ", 2);
-	buf = get_next_line(0);
-	while (ft_strncmp(buf, lim, ft_strlen(lim) - 1) != 0)
+	buf = readline("> ");
+	while (ft_strncmp(buf, lim, ft_strlen(lim)) != 0)
 	{
 		write(fdin, buf, ft_strlen(buf));
+		write(fdin, "\n", 1);
 		free(buf);
-		write(1, "> ", 2);
-		buf = get_next_line(0);
+		buf = readline("> ");
 	}
 	free(buf);
 }

@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 20:05:57 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/19 20:35:44 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/21 12:37:51 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ int	dolimwithpipe(char *buf2, char **buf, t_mini *mini)
 int	dopipes(char *buf2, char **buf, t_mini *mini)
 {
 	int	pid;
+	int	status;
 
 	buf = preppipex(buf2, mini->infile, mini->fileout, buf);
 	pid = fork();
@@ -48,7 +49,7 @@ int	dopipes(char *buf2, char **buf, t_mini *mini)
 	}
 	else
 	{
-		wait(NULL);
+		wait(&status);
 		return (free(buf2), freedoublepointer(buf), 0);
 	}
 }
@@ -56,14 +57,13 @@ int	dopipes(char *buf2, char **buf, t_mini *mini)
 int	docmd(char *buf2, char **buf, t_mini *mini)
 {
 	int	fdin;
+	char **aux;
 
 	fdin = 0;
 	if (ft_strcount(buf2, '<') == 2)
 		return (free(buf2), dolimitonecmd(buf, mini));
 	free(buf2);
 	buf2 = ft_strdup(buf[0]);
-	freedoublepointer(buf);
-	buf = ft_split(buf2, ' ');
 	free(buf2);
 	buf2 = pathseek(buf, mini->envp);
 	if (mini->infile)
@@ -71,9 +71,9 @@ int	docmd(char *buf2, char **buf, t_mini *mini)
 	if (!buf2)
 		return (write(1, "Unknown command\n", 16), free(mini->infile),
 			free(mini->fileout), freedoublepointer(buf), free(buf2), 0);
-	alonecmdcall(fdin, buf, pathseek(buf, mini->envp), mini);
+	aux = ft_split(buf[0], ' ');
+	alonecmdcall(fdin, aux, pathseek(aux, mini->envp), mini);
 	free(mini->fileout);
 	free(mini->infile);
-	free(buf2);
-	return (0);
+	return (free(buf2), freedoublepointer(aux), freedoublepointer(buf), 0);
 }

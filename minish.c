@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 01:58:02 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/19 20:32:25 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/21 12:19:12 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	anyfdtofile(int fd, char *filename, int out, int app)
 			else
 				fdo = open(filename, O_WRONLY);
 		}
-		else
+		else if (filename)
 			fdo = open(filename, O_RDWR | O_CREAT | O_TRUNC, 0644);
 	}
 	buf = get_next_line(fd);
@@ -69,7 +69,6 @@ int	alonecmdcall(int fdin, char **cmd, char *path, t_mini *mini)
 		close(fdin);
 		close(fd[WRITE_FD]);
 		mini->out = 0;
-		freedoublepointer(cmd);
 		if (mini->fileout)
 			mini->out = 1;
 		return (free(path), anyfdtofile(fd[READ_FD], mini->fileout,
@@ -100,7 +99,7 @@ char	**preppipex(char *buf, char *infile, char *outfile, char **buf2)
 	{
 		while (buf2[++i])
 			res [i + 2] = buf2[i];
-		res[i + 3] = NULL;
+		res[i + 2] = NULL;
 	}
 	free(buf2);
 	return (res);

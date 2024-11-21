@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 21:06:20 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/19 20:35:31 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/21 12:22:28 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,11 @@ int	ft_dstrlen(char **s)
 void	debuginout(char *buf2, char **buf, t_mini *mini)
 {
 	if (ft_strchr(buf2, '<') != NULL && ft_strchr(buf2, '<')[1] != '<')
-		mini->infile = buf[0];
+		mini->infile = ft_strdup(buf[0]);
 	else
 		mini->infile = ft_strdup("/dev/stdin");
 	if (ft_strchr(buf2, '>') != NULL)
-		mini->fileout = buf[ft_dstrlen(buf) - 1];
+		mini->fileout = ft_strdup(buf[ft_dstrlen(buf) - 1]);
 	else
 		mini->fileout = ft_strdup("/dev/stdout");
 	mini->out = 0;

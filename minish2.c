@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 15:56:12 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/19 20:34:26 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/21 12:50:07 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ int	recread(t_mini *mini)
 	char	*buf2;
 
 	buf2 = readline("minishell% ");
+	if (buf2[0] == '\0')
+		return (free(buf2), 0);
 	add_history(buf2);
 	buf = NULL;
 	if (checkkill(buf2))
