@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 02:16:09 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/19 20:33:49 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/25 17:55:28 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,15 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
+typedef struct envvar
+{
+	char			*name;
+	char			*content;
+	struct envvar	*next;
+	struct envvar	*prev;
+}	t_envar;
+
+
 typedef struct mini
 {
 	int		argc;
@@ -27,6 +36,8 @@ typedef struct mini
 	char	*fileout;
 	int		appendout;
 	char	*infile;
+	char	*quotesbuf;
+	t_envar	**envars;
 	t_pipex	*pipex;
 }	t_mini;
 
@@ -41,10 +52,15 @@ char	**preppipexlim(char *buf, char **antbuf);
 void	docd(char *path);
 int		pipex(int argc, char **argv, char **envp, t_mini *mini);
 void	debuginout(char *buf2, char **buf, t_mini *mini);
-char	**ft_split_cmds(char *str);
+char	**ft_splitchars(char *str, char *charset);
 int		dolimitonecmd(char **buf, t_mini *mini);
 int		dolimwithpipe(char *buf2, char **buf, t_mini *mini);
 int		dopipes(char *buf2, char **buf, t_mini *mini);
 int		docmd(char *buf2, char **buf, t_mini *mini);
+void	doecho(char *buf);
+void	entvars(t_envar **head, char *var, char *content);
+char	*checkenvvars(char *buf, t_mini *mini);
+void	freelist(t_envar **lst);
+int		checkquotes(char *buf, t_mini *mini);
 
 #endif

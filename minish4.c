@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 20:05:57 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/21 12:52:03 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/25 18:37:21 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,66 +14,92 @@
 
 int	dolimwithpipe(char *buf2, char **buf, t_mini *mini)
 {
-	int	pid;
-
 	buf = preppipexlim(buf2, buf);
-	pid = fork();
-	if (pid == 0)
-	{
-		pipex(((ft_strcount(buf2, '|') + 1) + 4), buf, mini->envp, mini);
-		free(mini->fileout);
-		free(mini->infile);
-		return (free(buf2), freedoublepointer(buf), 1);
-	}
-	else
-	{
-		wait(NULL);
-		free(mini->fileout);
-		free(mini->infile);
-		return (free(buf2), freedoublepointer(buf), 0);
-	}
-	return (0);
+	pipex(((ft_strcount(buf2, '|') + 1) + 4), buf, mini->envp, mini);
+	free(mini->fileout);
+	free(mini->infile);
+	return (free(buf2), freedoublepointer(buf), 0);
 }
 
 int	dopipes(char *buf2, char **buf, t_mini *mini)
 {
-	int	pid;
-	int	status;
-
 	buf = preppipex(buf2, mini->infile, mini->fileout, buf);
-	pid = fork();
-	if (pid == 0)
-	{
-		pipex(((ft_strcount(buf2, '|') + 1) + 3), buf, mini->envp, mini);
-		return (free(buf2), freedoublepointer(buf), 1);
-	}
-	else
-	{
-		wait(&status);
-		return (free(buf2), freedoublepointer(buf), 0);
-	}
+	pipex(((ft_strcount(buf2, '|') + 1) + 3), buf, mini->envp, mini);
+	return (free(buf2), freedoublepointer(buf), 0);
 }
 
 int	docmd(char *buf2, char **buf, t_mini *mini)
 {
+	int		pid;
 	int		fdin;
 	char	**aux;
 
-	fdin = 0;
 	if (ft_strcount(buf2, '<') == 2)
 		return (free(buf2), dolimitonecmd(buf, mini));
-	free(buf2);
-	buf2 = ft_strdup(buf[0]);
-	free(buf2);
-	buf2 = pathseek(buf, mini->envp);
-	if (mini->infile)
-		fdin = open(mini->infile, O_RDONLY);
-	if (!buf2)
-		return (write(1, "Unknown command\n", 16), free(mini->infile),
-			free(mini->fileout), freedoublepointer(buf), free(buf2), 0);
-	aux = ft_split(buf[0], ' ');
-	alonecmdcall(fdin, aux, pathseek(aux, mini->envp), mini);
-	free(mini->fileout);
-	free(mini->infile);
-	return (free(buf2), freedoublepointer(aux), freedoublepointer(buf), 0);
+	pid = fork();
+	if (pid == 0)
+	{
+		fdin = 0;
+		if (ft_strncmp(mini->infile, "/dev/stdin", 10) != 0)
+		{
+			if (access(mini->infile, R_OK) != 0)
+				return (write(1, "wrong file\n", 11), freedoublepointer(buf),
+						free(mini->infile), free(mini->fileout), free(buf2), 1);
+			fdin = open(mini->infile, O_RDONLY);
+			aux = ft_split(buf[1], ' ');
+		}
+		else
+			aux = ft_split(buf[0], ' ');
+		free(buf2);
+		buf2 = pathseek(aux, mini->envp);
+		if (!buf2)
+			return (write(1, "Unknown command\n", 16), free(mini->infile),
+				free(mini->fileout), freedoublepointer(buf),
+				freedoublepointer(aux), free(buf2), 1);
+		alonecmdcall(fdin, aux, pathseek(aux, mini->envp), mini);
+		return (free(mini->infile), free(mini->fileout),
+				freedoublepointer(aux), freedoublepointer(buf), free(buf2), 1);
+	}
+	wait(NULL);
+	return (free(mini->infile), free(mini->fileout),
+			freedoublepointer(buf), free(buf2), 0);
+}
+
+int	checkquotes(char *buf, t_mini *mini)
+{
+	char	*tmp;
+	char	*tmp2;
+	char	*aux;
+
+	if (!buf)
+		return (0);
+	tmp = ft_strchrtwo(buf, '"', 39);
+	aux = checkenvvars(ft_substr(buf, 0, tmp - buf), mini);
+	mini->quotesbuf = ft_strjoin_gnl(mini->quotesbuf, aux);
+	free(aux);
+	if (tmp && tmp[0] == 39)
+	{
+		tmp2 = ft_strchr(tmp + 1, 39);
+		if (!tmp2)
+			return (-1);
+		tmp = ft_substr(buf, tmp - buf + 1, tmp2 - tmp - 1);
+		mini->quotesbuf = ft_strjoin_gnl(mini->quotesbuf, tmp);
+		free(tmp);
+		return (checkquotes(++tmp2, mini));
+	}
+	if (tmp && tmp[0] == '"')
+	{
+		tmp2 = ft_strchr(tmp + 1, '"');
+		if (!tmp2)
+			return (-1);
+		tmp = ft_substr(buf, tmp - buf + 1, tmp2 - tmp - 1);
+		mini->quotesbuf = ft_strjoin_gnl(mini->quotesbuf, tmp);
+		free(tmp);
+		mini->quotesbuf = checkenvvars(mini->quotesbuf, mini);
+		return (checkquotes(++tmp2, mini));
+	}
+	aux = checkenvvars(ft_substr(buf, 0, tmp - buf), mini);
+	mini->quotesbuf = ft_strjoin_gnl(mini->quotesbuf, aux);
+	free(aux);
+	return (1);
 }

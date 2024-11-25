@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 16:54:34 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/19 20:22:50 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/24 16:39:28 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ int	lastcmdcall(t_pipex *var, char **cmd, char *path)
 		close(var->fd[var->actcmd - 1][WRITE_FD]);
 		close(var->fd[var->actcmd - 1][READ_FD]);
 		close(var->fd[var->actcmd][WRITE_FD]);
-		close(var->fdout);
 		return (anyfdtofile(var->fd[var->numcmds - 1][READ_FD],
 			var->output, var->out, var->app), 0);
 	}
@@ -111,8 +110,6 @@ int	pipex(int argc, char **argv, char **envp, t_mini *mini)
 	s = limornot(argc, argv, vars);
 	if (s != 0)
 		return (s);
-	close(STDOUT_FILENO);
-	close(STDERR_FILENO);
 	while (++i < vars->numcmds)
 		wait(NULL);
 	freepipex(vars);

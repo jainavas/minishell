@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 15:56:12 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/21 18:56:20 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/25 18:31:53 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,33 @@ int	recread(t_mini *mini)
 	if (buf2[0] == '\0')
 		return (free(buf2), 0);
 	add_history(buf2);
+	if (ft_strchrtwo(buf2, '"', 39))
+	{
+		if (checkquotes(buf2, mini) == -1)
+			return (write(1, "Error\n", 6), free(buf2),
+					free(mini->quotesbuf), mini->quotesbuf = NULL, 0);
+		free(buf2);
+		buf2 = ft_strdup(mini->quotesbuf);
+		free(mini->quotesbuf);
+		mini->quotesbuf = NULL;
+	}
+	else
+		buf2 = checkenvvars(buf2, mini);
 	buf = NULL;
 	if (checkkill(buf2))
 		return (free(buf2), rl_clear_history(), 1);
 	if (ft_strncmp("cd ", buf2, 3) == 0)
 		return (docd(&buf2[3]), free(buf2), 0);
-	buf = ft_split_cmds(buf2);
+	if (ft_strncmp("echo ", buf2, 5) == 0)
+		return (doecho(buf2), 0);
+	if (ft_strchr(buf2, '=') && ft_strchr(buf2, '=')[-1] != ' '
+		&& ft_strchr(buf2, '=')[1] != ' ')
+	{
+		entvars(mini->envars, ft_substr(buf2, 0,
+			ft_strchr(buf2, '=') - buf2), ft_strdup(ft_strchr(buf2, '=') + 1));
+		return (free(buf2), 0);
+	}
+	buf = ft_splitchars(buf2, "<>|");
 	debuginout(buf2, buf, mini);
 	if ((ft_strchr(buf2, '<') != NULL && ft_strchr(buf2, '<')[1] == '<') &&
 		ft_strchr(buf2, '|') != NULL)

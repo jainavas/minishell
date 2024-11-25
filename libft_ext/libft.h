@@ -46,6 +46,7 @@ void				ft_putnbr_fd(int n, int fd);
 void				ft_putstr_fd(char *s, int fd);
 char				**ft_split(char const *s, char c);
 char				*ft_strchr(const char *s, int c);
+char				*ft_revstrchr(const char *s, int c, char first);
 char				*ft_strdup(const char *s1);
 char				*ft_strjoin(char *s1, char const *s2);
 size_t				ft_strlcat(char *dst, const char *src, size_t dstsize);
@@ -64,6 +65,9 @@ int					ft_toupper(int c);
 int					ft_strcount(const char *s, int c);
 void				freedoublepointer(char **split);
 void				freedp(int **dp);
+char				*ft_strfilterdup(const char *s, char filter);
+char				*ft_strinsertdup(char *s, char *var, char *content);
+char				*ft_strchrtwo(const char *s, int c, int k);
 
 // BONUSSSSSSSSSSSSSSS
 

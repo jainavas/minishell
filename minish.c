@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 01:58:02 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/21 18:56:31 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/25 18:07:35 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,8 @@ void	anyfdtofile(int fd, char *filename, int out, int app)
 		free(buf);
 		buf = get_next_line(fd);
 	}
-	close(fdo);
+	if (fdo != 0 && fdo != 1 && fdo != 2)
+		close(fdo);
 	close(fd);
 }
 
@@ -66,6 +67,7 @@ int	alonecmdcall(int fdin, char **cmd, char *path, t_mini *mini)
 	}
 	else
 	{
+		wait(NULL);
 		close(fdin);
 		close(fd[WRITE_FD]);
 		mini->out = 0;
@@ -81,28 +83,33 @@ char	**preppipex(char *buf, char *infile, char *outfile, char **buf2)
 {
 	char	**res;
 	int		i;
+	int		k;
 
 	i = -1;
 	res = ft_calloc((ft_strcount(buf, '|') + 1) + 4, sizeof(char *));
 	res[1] = infile;
 	if (ft_strncmp(res[1], "/dev/stdin", 11) != 0)
+	{
 		i++;
+		k = 1;
+	}
+	else
+		k = 2;
 	res[0] = ft_strdup("a");
 	if (ft_strncmp(outfile, "/dev/stdout", 12) == 0)
 	{
 		while (buf2[++i])
-			res [i + 2] = buf2[i];
-		res[i + 2] = outfile;
-		res[i + 3] = NULL;
+			res [i + k] = ft_strdup(buf2[i]);
+		res[i + k] = outfile;
+		res[i + k + 1] = NULL;
 	}
 	else
 	{
 		while (buf2[++i])
-			res [i + 2] = buf2[i];
-		res[i + 2] = NULL;
+			res [i + k] = ft_strdup(buf2[i]);
+		res[i + k] = NULL;
 	}
-	free(buf2);
-	return (res);
+	return (freedoublepointer(buf2), res);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -113,6 +120,10 @@ int	main(int argc, char **argv, char **envp)
 	mini->argc = argc;
 	mini->argv = argv;
 	mini->envp = envp;
+	mini->envars = ft_calloc(1, sizeof(t_envar *));
+	*(mini->envars) = NULL;
 	recursiva(mini);
+	freelist(mini->envars);
+	free(mini->envars);
 	free(mini);
 }

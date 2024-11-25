@@ -29,7 +29,44 @@ char	*ft_strchr(const char *s, int c)
 		return ((char *)&s[i]);
 	return (NULL);
 }
-// #include <stdio.h>
+
+char	*ft_revstrchr(const char *s, int c, char first)
+{
+	int	i;
+
+	i = 0;
+	while (s[i] != first)
+	{
+		if (s[i] == c)
+		{
+			return ((char *)&s[i]);
+		}
+		i--;
+	}
+	if (c == 0)
+		return ((char *)&s[i]);
+	return (NULL);
+}
+
+char	*ft_strchrtwo(const char *s, int c, int k)
+{
+	int	i;
+
+	i = 0;
+	while (s[i] != '\0')
+	{
+		if (s[i] == c || s[i] == k)
+		{
+			return ((char *)&s[i]);
+		}
+		i++;
+	}
+	if (c == 0 || k == 0)
+		return ((char *)&s[i]);
+	return (NULL);
+}
+
+#include <stdio.h>
 // int main (){
-// 	printf("%s", ft_strchr("htrhrh %c rg45g4", '%'));
+// 	printf("%s", ft_revstrchr(ft_strchr("htrhrha%c rg45g4", '%'), 'h'));
 // }
