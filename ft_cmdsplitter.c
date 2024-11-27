@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 19:23:59 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/19 20:27:02 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/27 13:41:15 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,13 +55,13 @@ static int	write_splitcmd(char **split, char *str)
 	while (str[i] != '\0')
 	{
 		if ((ft_isalnum(str[i]) == 0 && str[i] != ' '
-				&& str[i] != '-') || str[i] == '\0')
+				&& str[i] != '-' && str[i] == '.') || str[i] == '\0')
 			i++;
 		else
 		{
 			j = 0;
 			while (!((ft_isalnum(str[i + j]) == 0 && str[i + j] != ' '
-						&& str[i + j] != '-') || str[i + j] == '\0'))
+				&& str[i + j] != '-' && str[i] == '.') || str[i + j] == '\0'))
 				j++;
 			split[word] = (char *)malloc(sizeof(char) * (j + 1));
 			if (split[word] == NULL)

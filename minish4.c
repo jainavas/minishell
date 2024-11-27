@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 20:05:57 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/21 12:52:03 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/27 13:40:55 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,15 +65,16 @@ int	docmd(char *buf2, char **buf, t_mini *mini)
 	free(buf2);
 	buf2 = ft_strdup(buf[0]);
 	free(buf2);
-	buf2 = pathseek(buf, mini->envp);
+	aux = ft_split(buf[0], ' ');
+	buf2 = pathseek(aux, mini->envp);
 	if (mini->infile)
 		fdin = open(mini->infile, O_RDONLY);
 	if (!buf2)
 		return (write(1, "Unknown command\n", 16), free(mini->infile),
-			free(mini->fileout), freedoublepointer(buf), free(buf2), 0);
-	aux = ft_split(buf[0], ' ');
-	alonecmdcall(fdin, aux, pathseek(aux, mini->envp), mini);
+			free(mini->fileout), freedoublepointer(aux),
+			freedoublepointer(buf), free(buf2), 0);
+	alonecmdcall(fdin, aux, buf2, mini);
 	free(mini->fileout);
 	free(mini->infile);
-	return (free(buf2), freedoublepointer(aux), freedoublepointer(buf), 0);
+	return (freedoublepointer(aux), freedoublepointer(buf), 0);
 }
