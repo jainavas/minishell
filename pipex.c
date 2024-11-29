@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 16:54:34 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/24 16:39:28 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/28 20:57:09 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,7 @@ int	lastcmdcall(t_pipex *var, char **cmd, char *path)
 		close(var->fd[var->actcmd - 1][WRITE_FD]);
 		close(var->fd[var->actcmd - 1][READ_FD]);
 		close(var->fd[var->actcmd][WRITE_FD]);
-		return (anyfdtofile(var->fd[var->numcmds - 1][READ_FD],
-			var->output, var->out, var->app), 0);
+		return (fdtomfiles(var->mini, var->fd[var->numcmds - 1][READ_FD]), 0);
 	}
 	return (0);
 }
@@ -77,12 +76,11 @@ int	vardefs(t_pipex *vars, char **argv, int argc)
 
 	i = -1;
 	triplepointeralloc(vars, argc);
-	while (argv[++i + 3])
+	while (argv[++i + 2])
 		vars->cmds[i] = ft_split(argv[i + 2], ' ');
 	vars->cmds[i] = NULL;
-	vars->output = argv[argc - 1];
 	i = -1;
-	while (++i < argc - 3)
+	while (++i < argc - 2)
 		vars->paths[i] = pathseek(vars->cmds[i], vars->envp);
 	vars->paths[i] = NULL;
 	if (checkpaths(vars) == -1)
@@ -103,9 +101,8 @@ int	pipex(int argc, char **argv, char **envp, t_mini *mini)
 	s = 0;
 	vars = ft_calloc(1, sizeof(t_pipex));
 	vars->envp = envp;
-	vars->out = mini->out;
-	vars->app = mini->appendout;
-	if (argc < 5)
+	vars->mini = mini;
+	if (argc < 4)
 		return (free(vars), 2);
 	s = limornot(argc, argv, vars);
 	if (s != 0)

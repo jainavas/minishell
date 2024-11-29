@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 01:58:02 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/25 18:07:35 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/28 21:16:40 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,24 +20,21 @@ int	checkkill(char *buf)
 		return (0);
 }
 
-void	anyfdtofile(int fd, char *filename, int out, int app)
+void	anyfdtofile(int fd, char *filename, int app)
 {
 	char	*buf;
 	int		fdo;
 
 	fdo = 1;
-	if (out == 1)
+	if (access(filename, F_OK) == 0)
 	{
-		if (access(filename, F_OK) == 0)
-		{
-			if (app == 1)
-				fdo = open(filename, O_WRONLY | O_APPEND);
-			else
-				fdo = open(filename, O_WRONLY);
-		}
-		else if (filename)
-			fdo = open(filename, O_RDWR | O_CREAT | O_TRUNC, 0644);
+		if (app == 1)
+			fdo = open(filename, O_WRONLY | O_APPEND);
+		else
+			fdo = open(filename, O_WRONLY);
 	}
+	else if (filename)
+		fdo = open(filename, O_RDWR | O_CREAT | O_TRUNC, 0644);
 	buf = get_next_line(fd);
 	while (buf)
 	{
@@ -47,7 +44,8 @@ void	anyfdtofile(int fd, char *filename, int out, int app)
 	}
 	if (fdo != 0 && fdo != 1 && fdo != 2)
 		close(fdo);
-	close(fd);
+	if (fd != -1)
+		close(fd);
 }
 
 int	alonecmdcall(int fdin, char **cmd, char *path, t_mini *mini)
@@ -73,13 +71,12 @@ int	alonecmdcall(int fdin, char **cmd, char *path, t_mini *mini)
 		mini->out = 0;
 		if (mini->fileout)
 			mini->out = 1;
-		return (free(path), anyfdtofile(fd[READ_FD], mini->fileout,
-				mini->out, mini->appendout), 0);
+		return (free(path), fdtomfiles(mini, fd[READ_FD]), 0);
 	}
 	return (0);
 }
 
-char	**preppipex(char *buf, char *infile, char *outfile, char **buf2)
+char	**preppipex(char *buf, char *infile, char **buf2)
 {
 	char	**res;
 	int		i;
@@ -96,19 +93,11 @@ char	**preppipex(char *buf, char *infile, char *outfile, char **buf2)
 	else
 		k = 2;
 	res[0] = ft_strdup("a");
-	if (ft_strncmp(outfile, "/dev/stdout", 12) == 0)
-	{
-		while (buf2[++i])
-			res [i + k] = ft_strdup(buf2[i]);
-		res[i + k] = outfile;
-		res[i + k + 1] = NULL;
-	}
-	else
-	{
-		while (buf2[++i])
-			res [i + k] = ft_strdup(buf2[i]);
-		res[i + k] = NULL;
-	}
+	while (buf2[++i])
+		res [i + k] = ft_strdup(buf2[i]);
+	res[i + k] = NULL;
+	res[i + k + 1] = NULL;
+	i = -1;
 	return (freedoublepointer(buf2), res);
 }
 
@@ -122,8 +111,12 @@ int	main(int argc, char **argv, char **envp)
 	mini->envp = envp;
 	mini->envars = ft_calloc(1, sizeof(t_envar *));
 	*(mini->envars) = NULL;
+	mini->mfilesout = ft_calloc(1, sizeof(t_fout *));
+	*(mini->mfilesout) = NULL;
 	recursiva(mini);
 	freelist(mini->envars);
+	freeoutfiles(mini->mfilesout);
+	free(mini->mfilesout);
 	free(mini->envars);
 	free(mini);
 }

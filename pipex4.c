@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 19:34:43 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/19 20:25:43 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/29 18:28:50 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,10 @@ int	limvardefs(t_pipex *vars, char **argv, int argc)
 	int		i;
 
 	i = -1;
-	triplepointeralloc(vars, argc - 1);
-	while (argv[++i + 4])
+	triplepointeralloc(vars, argc - 2);
+	while (argv[++i + 3])
 		vars->cmds[i] = ft_split(argv[i + 3], ' ');
 	vars->cmds[i] = NULL;
-	vars->output = argv[argc - 1];
 	i = -1;
 	while (++i < argc - 4)
 	{
@@ -79,11 +78,11 @@ int	limornot(int argc, char **argv, t_pipex *vars)
 	else
 	{
 		if (vardefs(vars, argv, argc) != 0)
-			return (freepipex(vars), 2);
+			return (write(1, "vardefs", 7), freepipex(vars), 2);
 		if (checks(argv, vars) != 0)
-			return (freepipex(vars), 2);
+			return (write(1, "checks", 6), freepipex(vars), 2);
 		if (firstcmdcall(vars, vars->cmds[0], vars->paths[0]) != 0)
-			return (freepipex(vars), 2);
+			return (write(1, "cdmcall", 7), freepipex(vars), 2);
 	}
 	return (0);
 }

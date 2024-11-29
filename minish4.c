@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 20:05:57 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/25 18:37:21 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/29 18:08:55 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,14 @@ int	dolimwithpipe(char *buf2, char **buf, t_mini *mini)
 {
 	buf = preppipexlim(buf2, buf);
 	pipex(((ft_strcount(buf2, '|') + 1) + 4), buf, mini->envp, mini);
-	free(mini->fileout);
 	free(mini->infile);
 	return (free(buf2), freedoublepointer(buf), 0);
 }
 
 int	dopipes(char *buf2, char **buf, t_mini *mini)
 {
-	buf = preppipex(buf2, mini->infile, mini->fileout, buf);
-	pipex(((ft_strcount(buf2, '|') + 1) + 3), buf, mini->envp, mini);
+	buf = preppipex(buf2, mini->infile, buf);
+	pipex(((ft_strcount(buf2, '|') + 1) + 2), buf, mini->envp, mini);
 	return (free(buf2), freedoublepointer(buf), 0);
 }
 
@@ -44,7 +43,7 @@ int	docmd(char *buf2, char **buf, t_mini *mini)
 		{
 			if (access(mini->infile, R_OK) != 0)
 				return (write(1, "wrong file\n", 11), freedoublepointer(buf),
-						free(mini->infile), free(mini->fileout), free(buf2), 1);
+						free(mini->infile), free(buf2), 1);
 			fdin = open(mini->infile, O_RDONLY);
 			aux = ft_split(buf[1], ' ');
 		}
@@ -54,14 +53,14 @@ int	docmd(char *buf2, char **buf, t_mini *mini)
 		buf2 = pathseek(aux, mini->envp);
 		if (!buf2)
 			return (write(1, "Unknown command\n", 16), free(mini->infile),
-				free(mini->fileout), freedoublepointer(buf),
+				freedoublepointer(buf),
 				freedoublepointer(aux), free(buf2), 1);
 		alonecmdcall(fdin, aux, pathseek(aux, mini->envp), mini);
-		return (free(mini->infile), free(mini->fileout),
+		return (free(mini->infile),
 				freedoublepointer(aux), freedoublepointer(buf), free(buf2), 1);
 	}
 	wait(NULL);
-	return (free(mini->infile), free(mini->fileout),
+	return (free(mini->infile),
 			freedoublepointer(buf), free(buf2), 0);
 }
 

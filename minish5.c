@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 22:28:59 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/25 18:38:53 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/28 18:47:17 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,8 @@ void	entvars(t_envar **head, char *var, char *content)
 		*head = new;
 	else
 	{
-		(*head)->next = new;
-		new->prev = *head;
+		(envarlast(*head))->next = new;
+		new->prev = envarlast(*head);
 	}
 	free(content);
 	free(var);
@@ -92,4 +92,24 @@ void	freelist(t_envar **lst)
 		free(new->name);
 		free(new);
 	}
+}
+
+void	newfileout(t_fout **head, char *file, int app)
+{
+	t_fout	*new;
+
+	new = ft_calloc(1, sizeof(t_fout));
+	new->file = ft_strtrim(file, " >");
+	new->out = 1;
+	new->appendout = app;
+	new->next = NULL;
+	new->prev = NULL;
+	if (!*head)
+		*head = new;
+	else
+	{
+		(foutlast(*head))->next = new;
+		new->prev = foutlast(*head);
+	}
+	free(file);
 }

@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 15:56:12 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/25 18:31:53 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/29 17:56:26 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,8 @@ int	recread(t_mini *mini)
 			ft_strchr(buf2, '=') - buf2), ft_strdup(ft_strchr(buf2, '=') + 1));
 		return (free(buf2), 0);
 	}
-	buf = ft_splitchars(buf2, "<>|");
-	debuginout(buf2, buf, mini);
+	buf2 = debuginout(buf2, mini);
+	buf = ft_splitchars(buf2, "<|");
 	if ((ft_strchr(buf2, '<') != NULL && ft_strchr(buf2, '<')[1] == '<') &&
 		ft_strchr(buf2, '|') != NULL)
 		return (dolimwithpipe(buf2, buf, mini));
@@ -86,7 +86,7 @@ char	**preppipexlim(char *buf, char **antbuf)
 	int		i;
 
 	i = -1;
-	res = ft_calloc((ft_strcount(buf, '|') + 1) + 5, sizeof(char *));
+	res = ft_calloc((ft_strcount(buf, '|') + 1) + 4, sizeof(char *));
 	res[0] = ft_strdup("a");
 	res[1] = ft_strdup("here_doc");
 	res[2] = antbuf[1];
@@ -95,14 +95,10 @@ char	**preppipexlim(char *buf, char **antbuf)
 		res[4] = antbuf[2];
 	else
 	{
-		while (++i + 2 < ft_dstrlen(antbuf))
+		while (++i + 1 < ft_dstrlen(antbuf))
 			res[i + 4] = antbuf[i + 2];
 	}
-	if (ft_strchr(buf, '>') == NULL)
-		res[(ft_strcount(buf, '|') + 1) + 3] = ft_strdup("/dev/stdout");
-	else
-		res[(ft_strcount(buf, '|') + 1) + 3] = antbuf[ft_dstrlen(antbuf) - 1];
-	res[(ft_strcount(buf, '|') + 1) + 4] = NULL;
+	res[(ft_strcount(buf, '|') + 1) + 3] = NULL;
 	free(antbuf);
 	return (res);
 }

@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 21:06:20 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/21 12:22:28 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/28 20:45:56 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,22 +47,30 @@ int	ft_dstrlen(char **s)
 	return (i);
 }
 
-void	debuginout(char *buf2, char **buf, t_mini *mini)
+char	*debuginout(char *buf2, t_mini *mini)
 {
-	if (ft_strchr(buf2, '<') != NULL && ft_strchr(buf2, '<')[1] != '<')
-		mini->infile = ft_strdup(buf[0]);
+	char	*tmp;
+	int		i;
+
+	tmp = NULL;
+	tmp = ft_strchr(buf2, '<');
+	i = 1;
+	if (tmp != NULL && tmp[1] != '<')
+	{
+		while (ft_isalnum(tmp[i]) || tmp[i] == '.' || tmp[i] == ' ')
+			i++;
+		tmp = ft_substr(buf2, (tmp + 1) - buf2, i);
+		mini->infile = ft_strtrim(tmp, " ");
+		free(tmp);
+	}
 	else
 		mini->infile = ft_strdup("/dev/stdin");
 	if (ft_strchr(buf2, '>') != NULL)
-		mini->fileout = ft_strdup(buf[ft_dstrlen(buf) - 1]);
+		return (handlemfilesout(mini, buf2),
+				tmp = ft_substr(buf2, 0, ft_strchr(buf2, '>') - buf2),
+				free(buf2), tmp);
 	else
-		mini->fileout = ft_strdup("/dev/stdout");
-	mini->out = 0;
-	if (ft_strchr(buf2, '>') != NULL)
-		mini->out = 1;
-	mini->appendout = 0;
-	if (ft_strchr(buf2, '>') != NULL && ft_strchr(buf2, '>')[1] == '>')
-		mini->appendout = 1;
+		return (newfileout(mini->mfilesout, ft_strdup("/dev/stdout"), 0), buf2);
 }
 
 int	dolimitonecmd(char **buf, t_mini *mini)

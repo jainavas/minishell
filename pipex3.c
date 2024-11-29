@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 19:34:41 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/21 12:47:28 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/29 18:27:37 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,9 @@ void	triplepointeralloc(t_pipex *vars, int argc)
 	int	i;
 
 	i = 0;
-	vars->cmds = malloc(sizeof(char **) * (argc - 2));
-	vars->paths = malloc(sizeof(char *) * (argc - 2));
-	vars->numcmds = argc - 3;
+	vars->cmds = malloc(sizeof(char **) * (argc - 1));
+	vars->paths = malloc(sizeof(char *) * (argc - 1));
+	vars->numcmds = argc - 2;
 	vars->fd = ft_calloc(sizeof(int *), vars->numcmds + 1);
 	while (i < vars->numcmds)
 		vars->fd[i++] = malloc(sizeof(int) * 2);
@@ -31,7 +31,7 @@ int	checkpaths(t_pipex *vars)
 	int	i;
 
 	i = -1;
-	while (++i < vars->numcmds)
+	while (++i < vars->numcmds - 1)
 	{
 		if (!vars->paths[i])
 			return (ft_printf("zsh: command not found: %s\n",
