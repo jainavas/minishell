@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 15:56:12 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/29 17:56:26 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/30 20:20:17 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,18 +37,20 @@ int	recread(t_mini *mini)
 	if (checkkill(buf2))
 		return (free(buf2), rl_clear_history(), 1);
 	if (ft_strncmp("cd ", buf2, 3) == 0)
-		return (docd(&buf2[3]), free(buf2), 0);
+		return (buf2 = checkenvvars(buf2, mini), docd(&buf2[3]), free(buf2), 0);
 	if (ft_strncmp("echo ", buf2, 5) == 0)
-		return (doecho(buf2), 0);
+		return (buf2 = checkenvvars(buf2, mini), doecho(buf2), 0);
 	if (ft_strchr(buf2, '=') && ft_strchr(buf2, '=')[-1] != ' '
 		&& ft_strchr(buf2, '=')[1] != ' ')
 	{
+		buf2 = checkenvvars(buf2, mini);
 		entvars(mini->envars, ft_substr(buf2, 0,
 			ft_strchr(buf2, '=') - buf2), ft_strdup(ft_strchr(buf2, '=') + 1));
 		return (free(buf2), 0);
 	}
 	buf2 = debuginout(buf2, mini);
 	buf = ft_splitchars(buf2, "<|");
+	dpcheckenvars(buf, mini);
 	if ((ft_strchr(buf2, '<') != NULL && ft_strchr(buf2, '<')[1] == '<') &&
 		ft_strchr(buf2, '|') != NULL)
 		return (dolimwithpipe(buf2, buf, mini));

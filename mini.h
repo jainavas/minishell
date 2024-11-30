@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 02:16:09 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/28 21:17:00 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/30 20:21:42 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,5 +76,7 @@ void	handlemfilesout(t_mini *mini, char *buf);
 void	freeoutfiles(t_fout **lst);
 t_envar	*envarlast(t_envar *lst);
 t_fout	*foutlast(t_fout *lst);
+int		counttmps(t_envar **lst);
+void	dpcheckenvars(char **buf, t_mini *mini);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 20:05:57 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/29 18:08:55 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/30 20:34:49 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,9 @@ int	docmd(char *buf2, char **buf, t_mini *mini)
 		else
 			aux = ft_split(buf[0], ' ');
 		free(buf2);
+		if (!aux)
+			return (write(1, "Unknown command\n", 16), free(mini->infile),
+				freedoublepointer(buf), 1);
 		buf2 = pathseek(aux, mini->envp);
 		if (!buf2)
 			return (write(1, "Unknown command\n", 16), free(mini->infile),
@@ -66,9 +69,9 @@ int	docmd(char *buf2, char **buf, t_mini *mini)
 
 int	checkquotes(char *buf, t_mini *mini)
 {
-	char	*tmp;
-	char	*tmp2;
-	char	*aux;
+	char		*tmp;
+	char		*tmp2;
+	char		*aux;
 
 	if (!buf)
 		return (0);
@@ -82,9 +85,11 @@ int	checkquotes(char *buf, t_mini *mini)
 		if (!tmp2)
 			return (-1);
 		tmp = ft_substr(buf, tmp - buf + 1, tmp2 - tmp - 1);
+		entvars(mini->envars, ft_strdup("holatmp_0"), tmp);
+		mini->quotesbuf = ft_strjoin_gnl(mini->quotesbuf, "$");
+		tmp = ft_strtrim(envarlast(*mini->envars)->name, " ");
 		mini->quotesbuf = ft_strjoin_gnl(mini->quotesbuf, tmp);
-		free(tmp);
-		return (checkquotes(++tmp2, mini));
+		return (free(tmp), checkquotes(++tmp2, mini));
 	}
 	if (tmp && tmp[0] == '"')
 	{
@@ -92,13 +97,12 @@ int	checkquotes(char *buf, t_mini *mini)
 		if (!tmp2)
 			return (-1);
 		tmp = ft_substr(buf, tmp - buf + 1, tmp2 - tmp - 1);
+		tmp = checkenvvars(tmp, mini);
+		entvars(mini->envars, ft_strdup("holatmp_0"), tmp);
+		mini->quotesbuf = ft_strjoin_gnl(mini->quotesbuf, "$");
+		tmp = ft_strtrim(envarlast(*mini->envars)->name, " ");
 		mini->quotesbuf = ft_strjoin_gnl(mini->quotesbuf, tmp);
-		free(tmp);
-		mini->quotesbuf = checkenvvars(mini->quotesbuf, mini);
-		return (checkquotes(++tmp2, mini));
+		return (free(tmp), checkquotes(++tmp2, mini));
 	}
-	aux = checkenvvars(ft_substr(buf, 0, tmp - buf), mini);
-	mini->quotesbuf = ft_strjoin_gnl(mini->quotesbuf, aux);
-	free(aux);
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 22:28:59 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/28 18:47:17 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/11/30 20:26:05 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 void	doecho(char *buf)
 {
-
 	if (ft_strncmp(buf, "echo -n ", 8) != 0)
 	{
 		write(1, &buf[5], ft_strlen(&buf[5]));
@@ -32,6 +31,8 @@ void	entvars(t_envar **head, char *var, char *content)
 
 	new = ft_calloc(1, sizeof(t_envar));
 	new->content = ft_strdup(content);
+	if (ft_strncmp(var, "holatmp_", 8) == 0)
+		var[8] = '0' + counttmps(head);
 	new->name = malloc(ft_strlen(var) + 2);
 	ft_strlcpy(new->name, var, ft_strlen(var) + 1);
 	ft_strlcat(new->name, " ", ft_strlen(var) + 2);
@@ -52,32 +53,32 @@ char	*checkenvvars(char *buf, t_mini *mini)
 {
 	t_envar	*var;
 	char	*tmp;
+	int		i;
 
 	var = *(mini->envars);
 	tmp = NULL;
 	tmp = ft_strchr(buf, '$');
-	if (var && tmp)
+	while (var)
 	{
-		while (var)
+		if (tmp && ft_strncmp(tmp + 1, var->name, ft_strlen(var->name) - 1) == 0 && ft_isalnum(tmp[ft_strlen(var->name)]) == 0 )
 		{
-			if (ft_strncmp(tmp + 1, var->name, ft_strlen(var->name) - 1) == 0 && ft_isalnum(tmp[ft_strlen(var->name)]) == 0 )
-			{
-				buf = ft_strinsertdup(buf, var->name, var->content);
-				return (checkenvvars(buf, mini));
-			}
-			var = var->next;
+			i = (tmp - buf) + ft_strlen(var->content);
+			buf = ft_strinsertdup(buf, var->name, var->content);
+			var = *(mini->envars);
+			tmp = ft_strchr(&buf[i], '$');
 		}
-		if (ft_strchr(tmp + 1, '$'))
-		{
-			tmp = ft_strjoin_gnl(ft_substr(buf, 0, tmp - buf), ft_substr(ft_strchr(tmp + 1, '$'), 0, ft_strlen(ft_strchr(tmp + 1, '$'))));
-			return (free(buf), checkenvvars(tmp, mini));
-		}
-		else
-			tmp = ft_substr(buf, 0, tmp - buf);
-		free(buf);
-		return (tmp);
+		var = var->next;
 	}
-	return (buf);
+	if (tmp && ft_strchr(tmp + 1, '$'))
+	{
+		tmp = ft_strjoin_gnl(ft_substr(buf, 0, tmp - buf), ft_substr(ft_strchr(tmp + 1, '$'), 0, ft_strlen(ft_strchr(tmp + 1, '$'))));
+		return (free(buf), checkenvvars(tmp, mini));
+	}
+	else if (!tmp)
+		return (buf);
+	tmp = ft_substr(buf, 0, tmp - buf);
+	free(buf);
+	return (tmp);
 }
 
 void	freelist(t_envar **lst)
