@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 01:58:02 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/28 21:16:40 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/02 17:22:48 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,9 +68,6 @@ int	alonecmdcall(int fdin, char **cmd, char *path, t_mini *mini)
 		wait(NULL);
 		close(fdin);
 		close(fd[WRITE_FD]);
-		mini->out = 0;
-		if (mini->fileout)
-			mini->out = 1;
 		return (free(path), fdtomfiles(mini, fd[READ_FD]), 0);
 	}
 	return (0);
@@ -80,24 +77,14 @@ char	**preppipex(char *buf, char *infile, char **buf2)
 {
 	char	**res;
 	int		i;
-	int		k;
 
 	i = -1;
 	res = ft_calloc((ft_strcount(buf, '|') + 1) + 4, sizeof(char *));
 	res[1] = infile;
-	if (ft_strncmp(res[1], "/dev/stdin", 11) != 0)
-	{
-		i++;
-		k = 1;
-	}
-	else
-		k = 2;
 	res[0] = ft_strdup("a");
 	while (buf2[++i])
-		res [i + k] = ft_strdup(buf2[i]);
-	res[i + k] = NULL;
-	res[i + k + 1] = NULL;
-	i = -1;
+		res [i + 2] = ft_strdup(buf2[i]);
+	res[i + 2] = NULL;
 	return (freedoublepointer(buf2), res);
 }
 

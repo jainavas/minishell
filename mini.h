@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 02:16:09 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/30 20:21:42 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/02 17:51:21 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,6 @@ typedef struct mini
 	char	**argv;
 	char	**envp;
 	t_fout	**mfilesout;
-	int		out;
-	char	*fileout;
-	int		appendout;
 	char	*infile;
 	char	*quotesbuf;
 	t_envar	**envars;
@@ -78,5 +75,6 @@ t_envar	*envarlast(t_envar *lst);
 t_fout	*foutlast(t_fout *lst);
 int		counttmps(t_envar **lst);
 void	dpcheckenvars(char **buf, t_mini *mini);
+int		checkinfile(t_mini *mini);
 
 #endif

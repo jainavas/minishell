@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 21:06:20 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/28 20:45:56 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/02 17:36:21 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,10 +57,16 @@ char	*debuginout(char *buf2, t_mini *mini)
 	i = 1;
 	if (tmp != NULL && tmp[1] != '<')
 	{
-		while (ft_isalnum(tmp[i]) || tmp[i] == '.' || tmp[i] == ' ')
+		while (tmp[i] == ' ')
+			i++;
+		while (ft_isalnum(tmp[i]) || tmp[i] == '.')
 			i++;
 		tmp = ft_substr(buf2, (tmp + 1) - buf2, i);
 		mini->infile = ft_strtrim(tmp, " ");
+		free(tmp);
+		tmp = ft_substr(buf2, i, ft_strlen(buf2));
+		free(buf2);
+		buf2 = ft_strtrim(tmp, " ");
 		free(tmp);
 	}
 	else
@@ -91,6 +97,7 @@ int	dolimitonecmd(char **buf, t_mini *mini)
 	unlink(buf2);
 	free(buf2);
 	freedoublepointer(buf);
+	freedoublepointer(cmd);
 	free(mini->infile);
 	return (0);
 }

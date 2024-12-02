@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 15:56:12 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/30 20:20:17 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/02 17:52:52 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ int	recread(t_mini *mini)
 		return (free(buf2), 0);
 	}
 	buf2 = debuginout(buf2, mini);
+	if (checkinfile(mini))
+		return (free(buf2), free(mini->infile), 0);
 	buf = ft_splitchars(buf2, "<|");
 	dpcheckenvars(buf, mini);
 	if ((ft_strchr(buf2, '<') != NULL && ft_strchr(buf2, '<')[1] == '<') &&
@@ -61,9 +63,12 @@ int	recread(t_mini *mini)
 	return (free(buf2), 0);
 }
 
-int	diffindex(char *buf, char *a, char *b)
+int	checkinfile(t_mini *mini)
 {
-	return ((b - buf) - (a - buf));
+	if (access(mini->infile, R_OK) != 0)
+		return (ft_putstr_fd("minishell: ", 1), ft_putstr_fd(mini->infile, 1),
+				ft_putendl_fd(": No existe el archivo o el directorio", 1), 1);
+	return (0);
 }
 
 int	recursiva(t_mini *mini)
@@ -71,12 +76,10 @@ int	recursiva(t_mini *mini)
 	int	x;
 
 	mini->infile = NULL;
-	mini->fileout = NULL;
 	x = recread(mini);
 	while (x == 0)
 	{
 		mini->infile = NULL;
-		mini->fileout = NULL;
 		x = recread(mini);
 	}
 	return (0);

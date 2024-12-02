@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 17:07:05 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/28 21:17:31 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/02 16:58:21 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	fdtomfiles(t_mini *mini, int fd)
 	t_fout	*tmp;
 
 	tmp = (*mini->mfilesout);
-	while (tmp->next)
+	while (tmp && tmp->next)
 	{
 		anyfdtofile(-1, tmp->file, tmp->appendout);
 		tmp = tmp->next;

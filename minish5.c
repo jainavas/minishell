@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 22:28:59 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/30 20:26:05 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/02 17:26:17 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,10 @@ char	*checkenvvars(char *buf, t_mini *mini)
 	char	*tmp;
 	int		i;
 
-	var = *(mini->envars);
-	tmp = NULL;
 	tmp = ft_strchr(buf, '$');
+	if (!tmp)
+		return (buf);
+	var = *(mini->envars);
 	while (var)
 	{
 		if (tmp && ft_strncmp(tmp + 1, var->name, ft_strlen(var->name) - 1) == 0 && ft_isalnum(tmp[ft_strlen(var->name)]) == 0 )

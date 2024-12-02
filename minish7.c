@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 16:38:08 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/30 20:21:36 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/02 16:50:04 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,3 +36,4 @@ void	dpcheckenvars(char **buf, t_mini *mini)
 	while (buf[++i])
 		buf[i] = checkenvvars(buf[i], mini);
 }
+
