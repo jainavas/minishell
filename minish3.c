@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 21:06:20 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/02 17:36:21 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/02 21:53:32 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,31 +50,17 @@ int	ft_dstrlen(char **s)
 char	*debuginout(char *buf2, t_mini *mini)
 {
 	char	*tmp;
-	int		i;
 
 	tmp = NULL;
 	tmp = ft_strchr(buf2, '<');
-	i = 1;
 	if (tmp != NULL && tmp[1] != '<')
-	{
-		while (tmp[i] == ' ')
-			i++;
-		while (ft_isalnum(tmp[i]) || tmp[i] == '.')
-			i++;
-		tmp = ft_substr(buf2, (tmp + 1) - buf2, i);
-		mini->infile = ft_strtrim(tmp, " ");
-		free(tmp);
-		tmp = ft_substr(buf2, i, ft_strlen(buf2));
-		free(buf2);
-		buf2 = ft_strtrim(tmp, " ");
-		free(tmp);
-	}
+		buf2 = putonlycmds(mini, buf2, tmp);
 	else
 		mini->infile = ft_strdup("/dev/stdin");
 	if (ft_strchr(buf2, '>') != NULL)
 		return (handlemfilesout(mini, buf2),
-				tmp = ft_substr(buf2, 0, ft_strchr(buf2, '>') - buf2),
-				free(buf2), tmp);
+			tmp = ft_substr(buf2, 0, ft_strchr(buf2, '>') - buf2),
+			free(buf2), tmp);
 	else
 		return (newfileout(mini->mfilesout, ft_strdup("/dev/stdout"), 0), buf2);
 }

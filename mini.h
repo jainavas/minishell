@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 02:16:09 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/02 17:51:21 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/02 22:10:06 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,5 +76,12 @@ t_fout	*foutlast(t_fout *lst);
 int		counttmps(t_envar **lst);
 void	dpcheckenvars(char **buf, t_mini *mini);
 int		checkinfile(t_mini *mini);
+int		builtins(t_mini *mini, char *buf2);
+char	*initialdebug(t_mini *mini, char *buf2);
+int		exec(t_mini *mini, char *buf2, char **buf);
+char	*putonlycmds(t_mini *mini, char *buf2, char *tmp);
+char	*checkenvlist(t_mini *mini, char **buf, char *tmp);
+char	*simplequote(t_mini *mini, char *buf, char *tmp, char *tmp2);
+char	*doublequote(t_mini *mini, char *buf, char *tmp, char *tmp2);
 
 #endif

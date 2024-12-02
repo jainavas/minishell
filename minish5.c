@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 22:28:59 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/02 17:26:17 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/02 21:53:15 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,28 +51,17 @@ void	entvars(t_envar **head, char *var, char *content)
 
 char	*checkenvvars(char *buf, t_mini *mini)
 {
-	t_envar	*var;
 	char	*tmp;
-	int		i;
 
 	tmp = ft_strchr(buf, '$');
 	if (!tmp)
 		return (buf);
-	var = *(mini->envars);
-	while (var)
-	{
-		if (tmp && ft_strncmp(tmp + 1, var->name, ft_strlen(var->name) - 1) == 0 && ft_isalnum(tmp[ft_strlen(var->name)]) == 0 )
-		{
-			i = (tmp - buf) + ft_strlen(var->content);
-			buf = ft_strinsertdup(buf, var->name, var->content);
-			var = *(mini->envars);
-			tmp = ft_strchr(&buf[i], '$');
-		}
-		var = var->next;
-	}
+	tmp = checkenvlist(mini, &buf, tmp);
 	if (tmp && ft_strchr(tmp + 1, '$'))
 	{
-		tmp = ft_strjoin_gnl(ft_substr(buf, 0, tmp - buf), ft_substr(ft_strchr(tmp + 1, '$'), 0, ft_strlen(ft_strchr(tmp + 1, '$'))));
+		tmp = ft_strjoin_gnl(ft_substr(buf, 0, tmp - buf),
+				ft_substr(ft_strchr(tmp + 1, '$'), 0,
+					ft_strlen(ft_strchr(tmp + 1, '$'))));
 		return (free(buf), checkenvvars(tmp, mini));
 	}
 	else if (!tmp)

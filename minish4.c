@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 20:05:57 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/02 17:06:11 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/02 22:17:49 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 int	dolimwithpipe(char *buf2, char **buf, t_mini *mini)
 {
+	buf2 = checkenvvars(buf2, mini);
 	buf = preppipexlim(buf2, buf);
 	pipex(((ft_strcount(buf2, '|') + 1) + 4), buf, mini->envp, mini);
 	free(mini->infile);
@@ -22,6 +23,7 @@ int	dolimwithpipe(char *buf2, char **buf, t_mini *mini)
 
 int	dopipes(char *buf2, char **buf, t_mini *mini)
 {
+	buf2 = checkenvvars(buf2, mini);
 	buf = preppipex(buf2, mini->infile, buf);
 	pipex(((ft_strcount(buf2, '|') + 1) + 2), buf, mini->envp, mini);
 	return (free(buf2), freedoublepointer(buf), 0);
@@ -35,6 +37,7 @@ int	docmd(char *buf2, char **buf, t_mini *mini)
 	if (ft_strcount(buf2, '<') == 2)
 		return (free(buf2), dolimitonecmd(buf, mini));
 	fdin = open(mini->infile, O_RDONLY);
+	buf2 = checkenvvars(buf2, mini);
 	aux = ft_split(buf2, ' ');
 	free(buf2);
 	if (!aux)
@@ -47,7 +50,7 @@ int	docmd(char *buf2, char **buf, t_mini *mini)
 			freedoublepointer(aux), free(buf2), 0);
 	alonecmdcall(fdin, aux, pathseek(aux, mini->envp), mini);
 	return (free(mini->infile),
-			freedoublepointer(buf), free(buf2), freedoublepointer(aux), 0);
+		freedoublepointer(buf), free(buf2), freedoublepointer(aux), 0);
 }
 
 int	checkquotes(char *buf, t_mini *mini)
@@ -64,28 +67,17 @@ int	checkquotes(char *buf, t_mini *mini)
 	free(aux);
 	if (tmp && tmp[0] == 39)
 	{
-		tmp2 = ft_strchr(tmp + 1, 39);
-		if (!tmp2)
+		tmp2 = simplequote(mini, buf, tmp, tmp2);
+		if (tmp2 == NULL)
 			return (-1);
-		tmp = ft_substr(buf, tmp - buf + 1, tmp2 - tmp - 1);
-		entvars(mini->envars, ft_strdup("holatmp_0"), tmp);
-		mini->quotesbuf = ft_strjoin_gnl(mini->quotesbuf, "$");
-		tmp = ft_strtrim(envarlast(*mini->envars)->name, " ");
-		mini->quotesbuf = ft_strjoin_gnl(mini->quotesbuf, tmp);
-		return (free(tmp), checkquotes(++tmp2, mini));
+		return (checkquotes(++tmp2, mini));
 	}
 	if (tmp && tmp[0] == '"')
 	{
-		tmp2 = ft_strchr(tmp + 1, '"');
-		if (!tmp2)
+		tmp2 = doublequote(mini, buf, tmp, tmp2);
+		if (tmp2 == NULL)
 			return (-1);
-		tmp = ft_substr(buf, tmp - buf + 1, tmp2 - tmp - 1);
-		tmp = checkenvvars(tmp, mini);
-		entvars(mini->envars, ft_strdup("holatmp_0"), tmp);
-		mini->quotesbuf = ft_strjoin_gnl(mini->quotesbuf, "$");
-		tmp = ft_strtrim(envarlast(*mini->envars)->name, " ");
-		mini->quotesbuf = ft_strjoin_gnl(mini->quotesbuf, tmp);
-		return (free(tmp), checkquotes(++tmp2, mini));
+		return (checkquotes(++tmp2, mini));
 	}
 	return (1);
 }

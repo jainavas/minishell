@@ -66,7 +66,7 @@ char	*ft_strchrtwo(const char *s, int c, int k)
 	return (NULL);
 }
 
-#include <stdio.h>
+// #include <stdio.h>
 // int main (){
 // 	printf("%s", ft_revstrchr(ft_strchr("htrhrha%c rg45g4", '%'), 'h'));
 // }

@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 17:22:26 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/28 21:16:51 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/02 19:54:24 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,22 +29,22 @@
 
 typedef struct pipex
 {
-	int		pid;
-	int		**fd;
-	int		fdout;
-	int		fdin;
-	char	**paths;
-	char	*buf;
-	char	*output;
-	char	***cmds;
-	int		numcmds;
-	int		actcmd;
-	int		out;
-	int		app;
-	char	**envp;
-	char	*lim;
-	char	*pwd;
-	char	*filein;
+	int			pid;
+	int			**fd;
+	int			fdout;
+	int			fdin;
+	char		**paths;
+	char		*buf;
+	char		*output;
+	char		***cmds;
+	int			numcmds;
+	int			actcmd;
+	int			out;
+	int			app;
+	char		**envp;
+	char		*lim;
+	char		*pwd;
+	char		*filein;
 	struct mini	*mini;
 }	t_pipex;
 
