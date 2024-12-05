@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 20:05:57 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/02 22:17:49 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/05 15:00:09 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,14 +67,14 @@ int	checkquotes(char *buf, t_mini *mini)
 	free(aux);
 	if (tmp && tmp[0] == 39)
 	{
-		tmp2 = simplequote(mini, buf, tmp, tmp2);
+		tmp2 = simplequote(mini, buf, tmp);
 		if (tmp2 == NULL)
 			return (-1);
 		return (checkquotes(++tmp2, mini));
 	}
 	if (tmp && tmp[0] == '"')
 	{
-		tmp2 = doublequote(mini, buf, tmp, tmp2);
+		tmp2 = doublequote(mini, buf, tmp);
 		if (tmp2 == NULL)
 			return (-1);
 		return (checkquotes(++tmp2, mini));

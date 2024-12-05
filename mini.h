@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 02:16:09 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/02 22:10:06 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/05 14:59:55 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define MINI_H
 
 # include <signal.h>
+# include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "pipex.h"
@@ -81,7 +82,7 @@ char	*initialdebug(t_mini *mini, char *buf2);
 int		exec(t_mini *mini, char *buf2, char **buf);
 char	*putonlycmds(t_mini *mini, char *buf2, char *tmp);
 char	*checkenvlist(t_mini *mini, char **buf, char *tmp);
-char	*simplequote(t_mini *mini, char *buf, char *tmp, char *tmp2);
-char	*doublequote(t_mini *mini, char *buf, char *tmp, char *tmp2);
+char	*simplequote(t_mini *mini, char *buf, char *tmp);
+char	*doublequote(t_mini *mini, char *buf, char *tmp);
 
 #endif
