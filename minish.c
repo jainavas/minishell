@@ -6,11 +6,13 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 01:58:02 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/06 23:33:50 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/06 23:41:51 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
+
+int	g_status;
 
 int	checkkill(char *buf)
 {
@@ -94,6 +96,7 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_mini	*mini;
 
+	g_status = 0;
 	mini = ft_calloc(1, sizeof(t_mini));
 	mini->argc = argc;
 	mini->argv = argv;

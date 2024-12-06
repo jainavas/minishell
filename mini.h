@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 02:16:09 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/06 22:58:07 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/06 23:41:22 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 # include <readline/history.h>
 # include "pipex.h"
 
-extern int	g_signal;
+extern int	g_status;
 
 typedef struct sigaction	t_sig;
 
@@ -89,7 +89,6 @@ char	*checkenvlist(t_mini *mini, char **buf, char *tmp);
 char	*simplequote(t_mini *mini, char *buf, char *tmp);
 char	*doublequote(t_mini *mini, char *buf, char *tmp);
 void	set_signals(void);
-void	handle_sigquit(int sig);
 void	handle_sigint(int sig);
 
 #endif
