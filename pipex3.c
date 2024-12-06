@@ -6,11 +6,12 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 19:34:41 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/29 18:27:37 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/06 23:37:10 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
+#include "mini.h"
 #include "readline/readline.h"
 
 void	triplepointeralloc(t_pipex *vars, int argc)
@@ -53,6 +54,8 @@ int	normalcmdcall(t_pipex *var, char **cmd, char *path)
 	var->pid = fork();
 	if (var->pid == 0)
 	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
 		closeanddupinput(var->fd[var->actcmd - 1]);
 		closeanddupoutput(var->fd[var->actcmd]);
 		if (execve(path, cmd, var->envp) == -1)

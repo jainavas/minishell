@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 01:58:02 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/06 18:02:12 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/06 23:33:50 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ int	alonecmdcall(int fdin, char **cmd, char *path, t_mini *mini)
 	pid = fork();
 	if (pid == 0)
 	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
 		dup2(fdin, fd[READ_FD]);
 		close(fdin);
 		dup2(fd[WRITE_FD], STDOUT_FILENO);

@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 16:54:34 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/28 20:57:09 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/06 23:36:57 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ int	firstcmdcall(t_pipex *var, char **cmd, char *path)
 	var->pid = fork();
 	if (var->pid == 0)
 	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
 		dup2(var->fdin, var->fd[var->actcmd][READ_FD]);
 		close(var->fdin);
 		dup2(var->fd[var->actcmd][WRITE_FD], STDOUT_FILENO);
