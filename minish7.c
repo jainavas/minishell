@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 16:38:08 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/02 20:41:49 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/06 18:43:50 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,8 @@ int	builtins(t_mini *mini, char *buf2)
 
 char	*initialdebug(t_mini *mini, char *buf2)
 {
+	if (!buf2)
+		return (NULL);
 	if (buf2[0] == '\0')
 		return (free(buf2), NULL);
 	add_history(buf2);

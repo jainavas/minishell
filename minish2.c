@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 15:56:12 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/02 21:05:37 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/06 20:14:53 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ int	recread(t_mini *mini)
 	int		t;
 
 	buf2 = readline("minishell% ");
+	if (!buf2)
+		return (1);
 	buf2 = initialdebug(mini, buf2);
 	if (!buf2)
 		return (0);
@@ -51,6 +53,8 @@ int	recursiva(t_mini *mini)
 	x = recread(mini);
 	while (x == 0)
 	{
+		// if (global_signal != 0)
+		// 	set_signals();
 		mini->infile = NULL;
 		x = recread(mini);
 	}

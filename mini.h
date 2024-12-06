@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 02:16:09 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/05 14:59:55 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/06 20:09:42 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,10 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "pipex.h"
+
+extern volatile int	global_signal;
+
+typedef struct sigaction	t_sig;
 
 typedef struct envvar
 {
@@ -84,5 +88,8 @@ char	*putonlycmds(t_mini *mini, char *buf2, char *tmp);
 char	*checkenvlist(t_mini *mini, char **buf, char *tmp);
 char	*simplequote(t_mini *mini, char *buf, char *tmp);
 char	*doublequote(t_mini *mini, char *buf, char *tmp);
+void	set_signals(void);
+void	handle_sigquit(int sig);
+void	handle_sigint(int sig);
 
 #endif
