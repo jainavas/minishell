@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 02:16:09 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/06 20:09:42 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/06 22:58:07 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 # include <readline/history.h>
 # include "pipex.h"
 
-extern volatile int	global_signal;
+extern int	g_signal;
 
 typedef struct sigaction	t_sig;
 

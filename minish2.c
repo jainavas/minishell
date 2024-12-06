@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 15:56:12 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/06 20:14:53 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/06 22:59:06 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,6 @@ int	recursiva(t_mini *mini)
 	x = recread(mini);
 	while (x == 0)
 	{
-		// if (global_signal != 0)
-		// 	set_signals();
 		mini->infile = NULL;
 		x = recread(mini);
 	}
