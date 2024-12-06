@@ -6,7 +6,7 @@
 /*   By: mpenas-z <mpenas-z@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 17:45:35 by mpenas-z          #+#    #+#             */
-/*   Updated: 2024/12/06 23:08:28 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/06 23:12:49 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,10 @@ void	set_signals(void)
 void	handle_sigint(int sig)
 {
 	g_signal = sig;
+	ft_putstr_fd("\n", 2);
 	rl_replace_line("", 0);
 	rl_on_new_line();
-	ft_putstr_fd("\n", 2);
+	rl_redisplay();
 }
 
 void	handle_sigquit(int sig)
