@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 01:58:02 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/06 23:41:51 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/07 18:13:24 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ int	alonecmdcall(int fdin, char **cmd, char *path, t_mini *mini)
 {
 	int	fd[2];
 	int	pid;
+	int	pid_status;
+	int	status;
 
 	pipe(fd);
 	pid = fork();
@@ -69,10 +71,13 @@ int	alonecmdcall(int fdin, char **cmd, char *path, t_mini *mini)
 	}
 	else
 	{
-		wait(NULL);
+		waitpid(pid, &pid_status, 0);
+		status = 0;
+		if (WIFSIGNALED(pid_status))
+			status = 130;
 		close(fdin);
 		close(fd[WRITE_FD]);
-		return (free(path), fdtomfiles(mini, fd[READ_FD]), 0);
+		return (free(path), fdtomfiles(mini, fd[READ_FD]), status);
 	}
 	return (0);
 }
