@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 20:05:57 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/05 15:00:09 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/07 17:17:08 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,25 +14,30 @@
 
 int	dolimwithpipe(char *buf2, char **buf, t_mini *mini)
 {
+	int	status;
+
 	buf2 = checkenvvars(buf2, mini);
 	buf = preppipexlim(buf2, buf);
-	pipex(((ft_strcount(buf2, '|') + 1) + 4), buf, mini->envp, mini);
+	status = pipex(((ft_strcount(buf2, '|') + 1) + 4), buf, mini->envp, mini);
 	free(mini->infile);
-	return (free(buf2), freedoublepointer(buf), 0);
+	return (free(buf2), freedoublepointer(buf), status);
 }
 
 int	dopipes(char *buf2, char **buf, t_mini *mini)
 {
+	int	status;
+	
 	buf2 = checkenvvars(buf2, mini);
 	buf = preppipex(buf2, mini->infile, buf);
-	pipex(((ft_strcount(buf2, '|') + 1) + 2), buf, mini->envp, mini);
-	return (free(buf2), freedoublepointer(buf), 0);
+	status = pipex(((ft_strcount(buf2, '|') + 1) + 2), buf, mini->envp, mini);
+	return (free(buf2), freedoublepointer(buf), status);
 }
 
 int	docmd(char *buf2, char **buf, t_mini *mini)
 {
 	int		fdin;
 	char	**aux;
+	int		status;
 
 	if (ft_strcount(buf2, '<') == 2)
 		return (free(buf2), dolimitonecmd(buf, mini));
@@ -42,15 +47,15 @@ int	docmd(char *buf2, char **buf, t_mini *mini)
 	free(buf2);
 	if (!aux)
 		return (write(1, "Unknown command\n", 16), free(mini->infile),
-			freedoublepointer(buf), 0);
+			freedoublepointer(buf), 127);
 	buf2 = pathseek(aux, mini->envp);
 	if (!buf2)
 		return (write(1, "Unknown command\n", 16), free(mini->infile),
 			freedoublepointer(buf),
-			freedoublepointer(aux), free(buf2), 0);
-	alonecmdcall(fdin, aux, pathseek(aux, mini->envp), mini);
+			freedoublepointer(aux), free(buf2), 127);
+	status = alonecmdcall(fdin, aux, pathseek(aux, mini->envp), mini);
 	return (free(mini->infile),
-		freedoublepointer(buf), free(buf2), freedoublepointer(aux), 0);
+		freedoublepointer(buf), free(buf2), freedoublepointer(aux), status);
 }
 
 int	checkquotes(char *buf, t_mini *mini)
