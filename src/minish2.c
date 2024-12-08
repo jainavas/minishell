@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 15:56:12 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/21 18:56:20 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/07 17:45:52 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,31 +16,33 @@ int	recread(t_mini *mini)
 {
 	char	**buf;
 	char	*buf2;
+	int		t;
 
 	buf2 = readline("minishell% ");
-	if (buf2[0] == '\0')
-		return (free(buf2), 0);
-	add_history(buf2);
+	if (!buf2)
+		return (1);
+	buf2 = initialdebug(mini, buf2);
+	if (!buf2)
+		return (0);
 	buf = NULL;
-	if (checkkill(buf2))
-		return (free(buf2), rl_clear_history(), 1);
-	if (ft_strncmp("cd ", buf2, 3) == 0)
-		return (docd(&buf2[3]), free(buf2), 0);
-	buf = ft_split_cmds(buf2);
-	debuginout(buf2, buf, mini);
-	if ((ft_strchr(buf2, '<') != NULL && ft_strchr(buf2, '<')[1] == '<') &&
-		ft_strchr(buf2, '|') != NULL)
-		return (dolimwithpipe(buf2, buf, mini));
-	else if (ft_strchr(buf2, '|') != NULL)
-		return (dopipes(buf2, buf, mini));
-	else
-		return (docmd(buf2, buf, mini));
-	return (free(buf2), 0);
+	t = builtins(mini, buf2);
+	if (t != -1)
+		return (g_status = t, t);
+	buf2 = debuginout(buf2, mini);
+	if (checkinfile(mini))
+		return (g_status = 127, free(buf2), free(mini->infile), 0);
+	buf = ft_splitchars(buf2, "<|");
+	dpcheckenvars(buf, mini);
+	g_status = exec(mini, buf2, buf);
+	return (0);
 }
 
-int	diffindex(char *buf, char *a, char *b)
+int	checkinfile(t_mini *mini)
 {
-	return ((b - buf) - (a - buf));
+	if (access(mini->infile, R_OK) != 0)
+		return (ft_putstr_fd("minishell: ", 1), ft_putstr_fd(mini->infile, 1),
+			ft_putendl_fd(": No existe el archivo o el directorio", 1), 1);
+	return (0);
 }
 
 int	recursiva(t_mini *mini)
@@ -48,12 +50,10 @@ int	recursiva(t_mini *mini)
 	int	x;
 
 	mini->infile = NULL;
-	mini->fileout = NULL;
 	x = recread(mini);
 	while (x == 0)
 	{
 		mini->infile = NULL;
-		mini->fileout = NULL;
 		x = recread(mini);
 	}
 	return (0);
@@ -65,7 +65,7 @@ char	**preppipexlim(char *buf, char **antbuf)
 	int		i;
 
 	i = -1;
-	res = ft_calloc((ft_strcount(buf, '|') + 1) + 5, sizeof(char *));
+	res = ft_calloc((ft_strcount(buf, '|') + 1) + 4, sizeof(char *));
 	res[0] = ft_strdup("a");
 	res[1] = ft_strdup("here_doc");
 	res[2] = antbuf[1];
@@ -74,14 +74,10 @@ char	**preppipexlim(char *buf, char **antbuf)
 		res[4] = antbuf[2];
 	else
 	{
-		while (++i + 2 < ft_dstrlen(antbuf))
+		while (++i + 1 < ft_dstrlen(antbuf))
 			res[i + 4] = antbuf[i + 2];
 	}
-	if (ft_strchr(buf, '>') == NULL)
-		res[(ft_strcount(buf, '|') + 1) + 3] = ft_strdup("/dev/stdout");
-	else
-		res[(ft_strcount(buf, '|') + 1) + 3] = antbuf[ft_dstrlen(antbuf) - 1];
-	res[(ft_strcount(buf, '|') + 1) + 4] = NULL;
+	res[(ft_strcount(buf, '|') + 1) + 3] = NULL;
 	free(antbuf);
 	return (res);
 }

@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 21:06:20 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/21 12:22:28 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/02 21:53:32 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,22 +47,22 @@ int	ft_dstrlen(char **s)
 	return (i);
 }
 
-void	debuginout(char *buf2, char **buf, t_mini *mini)
+char	*debuginout(char *buf2, t_mini *mini)
 {
-	if (ft_strchr(buf2, '<') != NULL && ft_strchr(buf2, '<')[1] != '<')
-		mini->infile = ft_strdup(buf[0]);
+	char	*tmp;
+
+	tmp = NULL;
+	tmp = ft_strchr(buf2, '<');
+	if (tmp != NULL && tmp[1] != '<')
+		buf2 = putonlycmds(mini, buf2, tmp);
 	else
 		mini->infile = ft_strdup("/dev/stdin");
 	if (ft_strchr(buf2, '>') != NULL)
-		mini->fileout = ft_strdup(buf[ft_dstrlen(buf) - 1]);
+		return (handlemfilesout(mini, buf2),
+			tmp = ft_substr(buf2, 0, ft_strchr(buf2, '>') - buf2),
+			free(buf2), tmp);
 	else
-		mini->fileout = ft_strdup("/dev/stdout");
-	mini->out = 0;
-	if (ft_strchr(buf2, '>') != NULL)
-		mini->out = 1;
-	mini->appendout = 0;
-	if (ft_strchr(buf2, '>') != NULL && ft_strchr(buf2, '>')[1] == '>')
-		mini->appendout = 1;
+		return (newfileout(mini->mfilesout, ft_strdup("/dev/stdout"), 0), buf2);
 }
 
 int	dolimitonecmd(char **buf, t_mini *mini)
@@ -83,6 +83,7 @@ int	dolimitonecmd(char **buf, t_mini *mini)
 	unlink(buf2);
 	free(buf2);
 	freedoublepointer(buf);
+	freedoublepointer(cmd);
 	free(mini->infile);
 	return (0);
 }
