@@ -6,11 +6,13 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 01:58:02 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/02 17:22:48 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/07 18:13:24 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
+
+int	g_status;
 
 int	checkkill(char *buf)
 {
@@ -52,11 +54,15 @@ int	alonecmdcall(int fdin, char **cmd, char *path, t_mini *mini)
 {
 	int	fd[2];
 	int	pid;
+	int	pid_status;
+	int	status;
 
 	pipe(fd);
 	pid = fork();
 	if (pid == 0)
 	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
 		dup2(fdin, fd[READ_FD]);
 		close(fdin);
 		dup2(fd[WRITE_FD], STDOUT_FILENO);
@@ -65,10 +71,13 @@ int	alonecmdcall(int fdin, char **cmd, char *path, t_mini *mini)
 	}
 	else
 	{
-		wait(NULL);
+		waitpid(pid, &pid_status, 0);
+		status = 0;
+		if (WIFSIGNALED(pid_status))
+			status = 130;
 		close(fdin);
 		close(fd[WRITE_FD]);
-		return (free(path), fdtomfiles(mini, fd[READ_FD]), 0);
+		return (free(path), fdtomfiles(mini, fd[READ_FD]), status);
 	}
 	return (0);
 }
@@ -92,6 +101,7 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_mini	*mini;
 
+	g_status = 0;
 	mini = ft_calloc(1, sizeof(t_mini));
 	mini->argc = argc;
 	mini->argv = argv;
@@ -100,6 +110,7 @@ int	main(int argc, char **argv, char **envp)
 	*(mini->envars) = NULL;
 	mini->mfilesout = ft_calloc(1, sizeof(t_fout *));
 	*(mini->mfilesout) = NULL;
+	set_signals();
 	recursiva(mini);
 	freelist(mini->envars);
 	freeoutfiles(mini->mfilesout);

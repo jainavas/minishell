@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 16:54:34 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/28 20:57:09 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/07 17:18:34 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,16 +23,16 @@ void	closeanddupinput(int fd[2])
 int	lastcmdcall(t_pipex *var, char **cmd, char *path)
 {
 	if (!cmd)
-		return (printf("cmdlast"), -1);
+		return (printf("cmdlast"), 1);
 	if (pipe(var->fd[var->actcmd]) == -1)
-		return (printf("pipelast"), -1);
+		return (printf("pipelast"), 1);
 	var->pid = fork();
 	if (var->pid == 0)
 	{
 		closeanddupinput(var->fd[var->actcmd - 1]);
 		closeanddupoutput(var->fd[var->actcmd]);
 		if (execve(path, cmd, var->envp) == -1)
-			return (printf("execcmdlast"), -1);
+			return (printf("execcmdlast"), 1);
 	}
 	else
 	{
@@ -48,18 +48,20 @@ int	firstcmdcall(t_pipex *var, char **cmd, char *path)
 {
 	var->actcmd = 0;
 	if (!cmd)
-		return (printf("cmd1"), freepipex(var), -1);
+		return (printf("cmd1"), freepipex(var), 1);
 	if (pipe(var->fd[var->actcmd]) == -1)
-		return (printf("pipe1"), -1);
+		return (printf("pipe1"), 1);
 	var->pid = fork();
 	if (var->pid == 0)
 	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
 		dup2(var->fdin, var->fd[var->actcmd][READ_FD]);
 		close(var->fdin);
 		dup2(var->fd[var->actcmd][WRITE_FD], STDOUT_FILENO);
 		closeanddupinput(var->fd[var->actcmd]);
 		if (execve(path, cmd, var->envp) == -1)
-			return (printf("execcmd1"), -1);
+			return (printf("execcmd1"), 1);
 	}
 	else
 	{
@@ -87,7 +89,8 @@ int	vardefs(t_pipex *vars, char **argv, int argc)
 		return (-1);
 	vars->fdin = open(argv[1], O_RDONLY);
 	if (vars->fdin == -1)
-		return (ft_printf("zsh: no such file or directory: %s\n", argv[1]), -1);
+		return (ft_printf("zsh: no such file or directory: %s\n", 
+				argv[1]), 127);
 	return (0);
 }
 
@@ -103,7 +106,7 @@ int	pipex(int argc, char **argv, char **envp, t_mini *mini)
 	vars->envp = envp;
 	vars->mini = mini;
 	if (argc < 4)
-		return (free(vars), 2);
+		return (free(vars), 1);
 	s = limornot(argc, argv, vars);
 	if (s != 0)
 		return (s);

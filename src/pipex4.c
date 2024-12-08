@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 19:34:43 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/29 18:28:50 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/07 17:19:38 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,16 +73,16 @@ int	limornot(int argc, char **argv, t_pipex *vars)
 	{
 		vars->lim = ft_strdup(argv[2]);
 		if (limvardefs(vars, argv, argc) != 0)
-			return (freepipex(vars), 2);
+			return (freepipex(vars), 1);
 	}
 	else
 	{
 		if (vardefs(vars, argv, argc) != 0)
-			return (write(1, "vardefs", 7), freepipex(vars), 2);
+			return (write(1, "vardefs", 7), freepipex(vars), 1);
 		if (checks(argv, vars) != 0)
-			return (write(1, "checks", 6), freepipex(vars), 2);
+			return (write(1, "checks", 6), freepipex(vars), 1);
 		if (firstcmdcall(vars, vars->cmds[0], vars->paths[0]) != 0)
-			return (write(1, "cdmcall", 7), freepipex(vars), 2);
+			return (write(1, "cdmcall", 7), freepipex(vars), 1);
 	}
 	return (0);
 }

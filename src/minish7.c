@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 16:38:08 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/02 20:41:49 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/07 17:46:15 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ int	builtins(t_mini *mini, char *buf2)
 		return (free(buf2), rl_clear_history(), 1);
 	if (ft_strncmp("cd ", buf2, 3) == 0)
 		return (buf2 = checkenvvars(buf2, mini), docd(&buf2[3]), free(buf2), 0);
+	if (ft_strncmp("$?", buf2, 2) == 0)
+		return (ft_putnbr_fd(g_status, 1), write(1, "\n", 1), free(buf2), 0);
 	if (ft_strncmp("echo ", buf2, 5) == 0)
 		return (buf2 = checkenvvars(buf2, mini), doecho(buf2), 0);
 	if (ft_strchr(buf2, '=') && ft_strchr(buf2, '=')[-1] != ' '
@@ -59,6 +61,8 @@ int	builtins(t_mini *mini, char *buf2)
 
 char	*initialdebug(t_mini *mini, char *buf2)
 {
+	if (!buf2)
+		return (NULL);
 	if (buf2[0] == '\0')
 		return (free(buf2), NULL);
 	add_history(buf2);
@@ -73,8 +77,10 @@ char	*initialdebug(t_mini *mini, char *buf2)
 		mini->quotesbuf = NULL;
 		return (buf2);
 	}
-	else
+	else if (ft_strncmp(buf2, "$?", 2) != 0)
 		return (checkenvvars(buf2, mini));
+	else
+		return (buf2);
 }
 
 int	exec(t_mini *mini, char *buf2, char **buf)

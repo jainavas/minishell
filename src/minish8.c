@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 21:16:21 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/02 22:21:49 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/05 15:01:01 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,10 @@ char	*checkenvlist(t_mini *mini, char **buf, char *tmp)
 	return (tmp);
 }
 
-char	*simplequote(t_mini *mini, char *buf, char *tmp, char *tmp2)
+char	*simplequote(t_mini *mini, char *buf, char *tmp)
 {
+	char	*tmp2;
+
 	tmp2 = ft_strchr(tmp + 1, 39);
 	if (!tmp2)
 		return (NULL);
@@ -65,8 +67,10 @@ char	*simplequote(t_mini *mini, char *buf, char *tmp, char *tmp2)
 	return (free(tmp), tmp2);
 }
 
-char	*doublequote(t_mini *mini, char *buf, char *tmp, char *tmp2)
+char	*doublequote(t_mini *mini, char *buf, char *tmp)
 {
+	char	*tmp2;
+
 	tmp2 = ft_strchr(tmp + 1, '"');
 	if (!tmp2)
 		return (NULL);
