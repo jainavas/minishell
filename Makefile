@@ -1,46 +1,80 @@
-LIB = ar rcs
-RM = rm -f
-
-CC = cc
-
-RED    = \033[31m
-GREEN  = \033[32m
-YELLOW = \033[33m
-BLUE   = \033[34m
-RESET  = \033[0m
-
-CCFLAGS = -Wall -Wextra -Werror -g3
-
-SRC_DIR = src
-
-SRC = pipex.c pipex2.c pipex3.c pipex4.c minish.c minish2.c minish3.c minish4.c minish5.c minish6.c minish7.c minish8.c ft_splitchars.c signals.c\
-
-OBJ = $(SRC:.c=.o)
-
-INCLUDE = mini.h
-
 NAME = mini
+CC = gcc
+CFLAGS = -Wall -Wextra -Werror -g3
+CLIBS = -lreadline
 
-LIBFTA = libft_ext/libft.a
+SRC_PATH = src/
+OBJ_PATH = obj/
+LIB_PATH = ./libft_ext/
+
+SRC =	minish.c \
+		minish2.c \
+		minish3.c \
+		minish4.c \
+		minish5.c \
+		minish6.c \
+		minish7.c \
+		minish8.c \
+		pipex.c \
+		pipex2.c \
+		pipex3.c \
+		pipex4.c \
+		ft_splitchars.c \
+		signals.c
+
+SRCS = $(addprefix $(SRC_PATH), $(SRC))
+OBJS = $(patsubst $(SRC_PATH)%.c,$(OBJ_PATH)%.o,$(SRCS))
+INC = -I/usr/include/readline -I/usr/include -I ./inc/
+LIB = $(addprefix $(LIB_PATH), libft.a)
+
+GREEN = \033[0;32m
+BLUE = \033[0;34m
+YELLOW = \033[0;33m
+RED = \033[0;31m
+RESET = \033[0m
+
 
 all: $(NAME)
 
-%.o: %.c
-	@$(CC) $(CCFLAGS) -I/usr/include/readline -I/usr/include -c $< -o $@
+$(LIB):
+	@printf "$(YELLOW)Building libft...$(RESET) \n"
+	@$(MAKE) -C $(LIB_PATH) > /dev/null 2>&1 && \
+		printf "$(GREEN)✔ Build succesful!$(RESET) \n" || \
+		printf "$(RED)✘ Build failed!$(RESET) \n"
 
-$(NAME): $(OBJ)
-	@cd libft_ext && make
-	@$(CC) $(CCFLAGS) $(OBJ) -Ilibft_ext -lreadline $(LIBFTA) -o $(NAME)
-	@echo "$(YELLOW)        ||>>    $(BLUE)minishell $(YELLOW)compiled!!    <<||$(RESET)"
+$(NAME): $(MLX) $(LIB) $(OBJS)
+	@printf "$(YELLOW)Building $(NAME)...$(RESET) \n"
+	@$(CC) $(CFLAGS) $(OBJS) $(INC) $(MLX) $(LIB) $(CLIBS) -o $(NAME) && \
+		printf "$(GREEN)✔ Build succesful!$(RESET) \n" || \
+		printf "$(RED)✘ Build failed!$(RESET) \n"
+
+$(OBJ_PATH)%.o: $(SRC_PATH)%.c | $(OBJ_PATH)
+	@printf "$(BLUE)Compiling $<...$(RESET) \n"
+	@$(CC) $(CFLAGS) $(INC) -c $< -o $@
+
+$(OBJ_PATH):
+	@printf "$(BLUE)Creating object directory...$(RESET) \n"
+	@mkdir -p $(OBJ_PATH)
 
 clean:
-	@$(RM) $(OBJ)
-	@cd libft_ext && make clean
+	@printf "$(BLUE)Cleaning object files...$(RESET) \n"
+	@$(MAKE) -C $(LIB_PATH) clean > /dev/null 2>&1
+	@rm -f $(OBJS) $(BOBJS)
+	@printf "$(GREEN)✔ Objects cleaned succesfully!$(RESET) \n"
 
-fclean:
-	@$(RM) $(NAME) $(OBJ)
-	@cd libft_ext && make fclean
+fclean: clean
+	@printf "$(BLUE)Removing binaries, dependencies and object files...$(RESET) \n"
+	@$(MAKE) -C $(LIB_PATH) fclean > /dev/null 2>&1
+	@rm -f $(NAME)
+	@rm -rf $(MLX_PATH)
+	@printf "$(GREEN)✔ Directory cleaned succesfully!$(RESET) \n"
 
 re: fclean all
 
-.PHONY: all clean fclean re
+call: all clean
+	@printf "$(YELLOW)Cleaning dependency builds...$(RESET) \n"
+	@$(MAKE) -C $(LIB_PATH) fclean > /dev/null 2>&1
+	@rm -rf $(MLX_PATH)
+	@printf "$(GREEN)✔ Dependency builds cleaned succesfully!$(RESET) \n"
+
+.PHONY: all clean fclean re call

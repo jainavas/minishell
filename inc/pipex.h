@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 17:22:26 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/02 19:54:24 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/08 15:02:21 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@
 # include <stdlib.h>
 # include <string.h>
 # include <errno.h>
-# include "libft_ext/libft.h"
-# include "libft_ext/ft_printf.h"
+# include "../libft_ext/libft.h"
+# include "../libft_ext/ft_printf.h"
 # include "mini.h"
 
 typedef struct pipex
