@@ -6,7 +6,7 @@
 /*   By: mpenas-z <mpenas-z@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 12:14:17 by mpenas-z          #+#    #+#             */
-/*   Updated: 2024/12/10 18:23:34 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/10 19:41:35 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	doecho(char *buf)
 }
 
 // WORK IN PROGRESS
-void	doexport(t_mini **mini, char *buf)
+void	doexport(t_mini *mini, char *buf)
 {
 	int		argc;
 	char	**parsed_line;
@@ -45,7 +45,7 @@ void	doexport(t_mini **mini, char *buf)
 	while (parsed_line[argc])
 		argc++;
 	if (argc == 1)
-		print_temp_env((*mini)->env);
+		print_temp_env(mini->env);
 	else if (argc == 2)
 		add_temp_envar(mini, parsed_line[1]);
 	else if (argc == 3)
@@ -72,7 +72,7 @@ int	builtins(t_mini **minish, char *buf2)
 	if (ft_strncmp("cd ", buf2, 3) == 0)
 		return (buf2 = checkenvvars(buf2, mini), docd(&buf2[3]), free(buf2), 0);
 	if (ft_strncmp("export", buf2, 3) == 0)
-		return (doexport(minish, buf2), free(buf2), 0);
+		return (doexport(mini, buf2), free(buf2), 0);
 	if (ft_strncmp("unset", buf2, 3) == 0)
 		return (dounset(minish, buf2), free(buf2), 0);
 	if (ft_strncmp("$?", buf2, 2) == 0)

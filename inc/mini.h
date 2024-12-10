@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 02:16:09 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/10 18:23:27 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/10 19:42:10 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,8 +108,8 @@ char	*checkenvvars(char *buf, t_mini *mini);
 void	freelist(t_env *lst);
 t_env	*get_env_head(t_env *env);
 t_env	*init_env_vars(char **envp);
-void	add_temp_envar(t_mini **mini, char *varname);
-void	add_envar(t_mini **mini, char *varname, char *value);
+void	add_temp_envar(t_mini *mini, char *varname);
+void	add_envar(t_mini *mini, char *varname, char *value);
 void	print_temp_env(t_env *env);
 void	print_env(t_env *env);
 /* pipex.c */
