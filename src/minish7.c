@@ -6,18 +6,18 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 16:38:08 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/10 12:42:01 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/10 17:33:48 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
 
-int	counttmps(t_envar **lst)
+int	counttmps(t_env *lst)
 {
-	t_envar	*new;
+	t_env	*new;
 	int		i;
 
-	new = *lst;
+	new = lst;
 	i = 0;
 	while (new != NULL)
 	{

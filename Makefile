@@ -1,6 +1,6 @@
 NAME = mini
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -g3
+CFLAGS = -Wall -Wextra -Werror -g3 -fPIE
 CLIBS = -lreadline
 
 SRC_PATH = src/

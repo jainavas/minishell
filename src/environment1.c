@@ -6,7 +6,7 @@
 /*   By: mpenas-z <mpenas-z@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 12:27:04 by mpenas-z          #+#    #+#             */
-/*   Updated: 2024/12/10 12:40:47 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/10 18:49:23 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,10 @@ char	*checkenvvars(char *buf, t_mini *mini)
 
 char	*checkenvlist(t_mini *mini, char **buf, char *tmp)
 {
-	t_envar	*var;
+	t_env	*var;
 	int		i;
 
-	var = *(mini->envars);
+	var = mini->env;
 	while (var)
 	{
 		if (tmp && ft_strncmp(tmp + 1, var->name, ft_strlen(var->name) - 1) == 0
@@ -56,7 +56,7 @@ char	*checkenvlist(t_mini *mini, char **buf, char *tmp)
 		{
 			i = (tmp - *buf) + ft_strlen(var->content);
 			*buf = ft_strinsertdup(*buf, var->name, var->content);
-			var = *(mini->envars);
+			var = mini->env;
 			tmp = ft_strchr(&buf[0][i], '$');
 		}
 		var = var->next;
@@ -64,9 +64,9 @@ char	*checkenvlist(t_mini *mini, char **buf, char *tmp)
 	return (tmp);
 }
 
-t_envar	*envarlast(t_envar *lst)
+t_env	*envarlast(t_env *lst)
 {
-	t_envar	*tmp;
+	t_env	*tmp;
 
 	tmp = lst;
 	if (lst)
@@ -75,11 +75,12 @@ t_envar	*envarlast(t_envar *lst)
 	return (tmp);
 }
 
-void	entvars(t_envar **head, char *var, char *content)
+// is_temp = 2 -> Don't show, delete when recread finished run.
+void	entvars(t_env *head, char *var, char *content)
 {
-	t_envar	*new;
+	t_env	*new;
 
-	new = ft_calloc(1, sizeof(t_envar));
+	new = ft_calloc(1, sizeof(t_env));
 	new->content = ft_strdup(content);
 	if (ft_strncmp(var, "holatmp_", 8) == 0)
 		var[8] = '0' + counttmps(head);
@@ -88,12 +89,12 @@ void	entvars(t_envar **head, char *var, char *content)
 	ft_strlcat(new->name, " ", ft_strlen(var) + 2);
 	new->next = NULL;
 	new->prev = NULL;
-	if (!*head)
-		*head = new;
+	if (!head)
+		head = new;
 	else
 	{
-		(envarlast(*head))->next = new;
-		new->prev = envarlast(*head);
+		(envarlast(head))->next = new;
+		new->prev = envarlast(head);
 	}
 	free(content);
 	free(var);

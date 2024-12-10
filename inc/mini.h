@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 02:16:09 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/10 13:51:59 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/10 18:23:27 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,14 @@ extern int	g_status;
 
 typedef struct sigaction	t_sig;
 
-typedef struct s_envvar
+typedef struct s_env
 {
 	char			*name;
 	char			*content;
-	struct s_envvar	*next;
-	struct s_envvar	*prev;
-}	t_envar;
+	int				is_temp;
+	struct s_env	*next;
+	struct s_env	*prev;
+}	t_env;
 
 typedef struct s_fileout
 {
@@ -44,13 +45,13 @@ typedef struct s_fileout
 
 typedef struct mini
 {
-	int		argc;
-	char	**argv;
-	char	**envp;
-	t_fout	**mfilesout;
-	char	*infile;
-	char	*quotesbuf;
-	t_envar	**envars;
+	int			argc;
+	char		**argv;
+	char		**envp;
+	t_fout		**mfilesout;
+	char		*infile;
+	char		*quotesbuf;
+	t_env	*env;
 }	t_mini;
 
 /* ft_splitchats.c */
@@ -83,7 +84,7 @@ void	handlemfilesout(t_mini *mini, char *buf);
 void	fdtomfiles(t_mini *mini, int fd);
 void	freeoutfiles(t_fout **lst);
 /* minish7.c */
-int		counttmps(t_envar **lst);
+int		counttmps(t_env *lst);
 char	*initialdebug(t_mini *mini, char *buf2);
 int		exec(t_mini *mini, char *buf2, char **buf);
 /* minish8.c */
@@ -99,15 +100,18 @@ void	doecho(char *buf);
 int		builtins(t_mini **minish, char *buf2);
 /* environment1.c */
 void	dpcheckenvars(char **buf, t_mini *mini);
-t_envar	*envarlast(t_envar *lst);
+t_env	*envarlast(t_env *lst);
 char	*checkenvlist(t_mini *mini, char **buf, char *tmp);
-void	entvars(t_envar **head, char *var, char *content);
+void	entvars(t_env *head, char *var, char *content);
 char	*checkenvvars(char *buf, t_mini *mini);
 /* environment2.c */
-void	freelist(t_envar **lst);
-void	add_temp_envar(char *varname, char *value);
-void	add_envar(char *varname, char *value);
-void	print_temp_env(void);
+void	freelist(t_env *lst);
+t_env	*get_env_head(t_env *env);
+t_env	*init_env_vars(char **envp);
+void	add_temp_envar(t_mini **mini, char *varname);
+void	add_envar(t_mini **mini, char *varname, char *value);
+void	print_temp_env(t_env *env);
+void	print_env(t_env *env);
 /* pipex.c */
 int		pipex(int argc, char **argv, char **envp, t_mini *mini);
 

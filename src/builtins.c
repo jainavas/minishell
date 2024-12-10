@@ -6,7 +6,7 @@
 /*   By: mpenas-z <mpenas-z@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 12:14:17 by mpenas-z          #+#    #+#             */
-/*   Updated: 2024/12/10 13:50:45 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/10 18:23:34 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,14 +45,13 @@ void	doexport(t_mini **mini, char *buf)
 	while (parsed_line[argc])
 		argc++;
 	if (argc == 1)
-		print_temp_env();
+		print_temp_env((*mini)->env);
 	else if (argc == 2)
-		add_temp_envar(parsed_line[1], parsed_line[2]);
+		add_temp_envar(mini, parsed_line[1]);
 	else if (argc == 3)
-		add_envar(parsed_line[1], parsed_line[2]);
+		add_envar(mini, parsed_line[1], parsed_line[2]);
 	else
 		return ;
-	ft_putstr_fd("export\n", 1);
 }
 
 // WORK IN PROGRESS
@@ -84,7 +83,7 @@ int	builtins(t_mini **minish, char *buf2)
 		&& ft_strchr(buf2, '=')[1] != ' ')
 	{
 		buf2 = checkenvvars(buf2, mini);
-		entvars(mini->envars, ft_substr(buf2, 0,
+		entvars(mini->env, ft_substr(buf2, 0,
 				ft_strchr(buf2, '=') - buf2),
 			ft_strdup(ft_strchr(buf2, '=') + 1));
 		return (free(buf2), 0);

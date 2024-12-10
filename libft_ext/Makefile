@@ -8,7 +8,7 @@ BLUE   = \033[34m
 RESET  = \033[0m
 
 CC = cc
-CCFLAGS = -Wall -Wextra -Werror -g3
+CCFLAGS = -Wall -Wextra -Werror -g3 -fPIE
 
 NAME = libft.a
 
