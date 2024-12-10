@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 21:16:21 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/05 15:01:01 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/10 17:30:58 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,27 +31,6 @@ char	*putonlycmds(t_mini *mini, char *buf2, char *tmp)
 	return (buf2);
 }
 
-char	*checkenvlist(t_mini *mini, char **buf, char *tmp)
-{
-	t_envar	*var;
-	int		i;
-
-	var = *(mini->envars);
-	while (var)
-	{
-		if (tmp && ft_strncmp(tmp + 1, var->name, ft_strlen(var->name) - 1) == 0
-			&& ft_isalnum(tmp[ft_strlen(var->name)]) == 0)
-		{
-			i = (tmp - *buf) + ft_strlen(var->content);
-			*buf = ft_strinsertdup(*buf, var->name, var->content);
-			var = *(mini->envars);
-			tmp = ft_strchr(&buf[0][i], '$');
-		}
-		var = var->next;
-	}
-	return (tmp);
-}
-
 char	*simplequote(t_mini *mini, char *buf, char *tmp)
 {
 	char	*tmp2;
@@ -60,9 +39,9 @@ char	*simplequote(t_mini *mini, char *buf, char *tmp)
 	if (!tmp2)
 		return (NULL);
 	tmp = ft_substr(buf, tmp - buf + 1, tmp2 - tmp - 1);
-	entvars(mini->envars, ft_strdup("holatmp_0"), tmp);
+	entvars(mini->env, ft_strdup("holatmp_0"), tmp);
 	mini->quotesbuf = ft_strjoin_gnl(mini->quotesbuf, "$");
-	tmp = ft_strtrim(envarlast(*mini->envars)->name, " ");
+	tmp = ft_strtrim(envarlast(mini->env)->name, " ");
 	mini->quotesbuf = ft_strjoin_gnl(mini->quotesbuf, tmp);
 	return (free(tmp), tmp2);
 }
@@ -76,9 +55,9 @@ char	*doublequote(t_mini *mini, char *buf, char *tmp)
 		return (NULL);
 	tmp = ft_substr(buf, tmp - buf + 1, tmp2 - tmp - 1);
 	tmp = checkenvvars(tmp, mini);
-	entvars(mini->envars, ft_strdup("holatmp_0"), tmp);
+	entvars(mini->env, ft_strdup("holatmp_0"), tmp);
 	mini->quotesbuf = ft_strjoin_gnl(mini->quotesbuf, "$");
-	tmp = ft_strtrim(envarlast(*mini->envars)->name, " ");
+	tmp = ft_strtrim(envarlast(mini->env)->name, " ");
 	mini->quotesbuf = ft_strjoin_gnl(mini->quotesbuf, tmp);
 	return (free(tmp), tmp2);
 }

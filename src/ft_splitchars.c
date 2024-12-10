@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 18:45:49 by jainavas          #+#    #+#             */
-/*   Updated: 2024/11/24 17:52:17 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/10 13:31:22 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ char	**ft_splitchars(char *str, char *charset)
 
 	words = count_words(str, charset);
 	split = (char **)malloc(sizeof(char *) * (words + 1));
-	split[words] = 0;
+	split[words] = NULL;
 	if (write_split(split, str, charset) == 1)
 		freedoublepointer(split);
 	words = -1;

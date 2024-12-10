@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 02:16:09 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/08 15:14:59 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/10 19:42:10 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,32 +25,33 @@ extern int	g_status;
 
 typedef struct sigaction	t_sig;
 
-typedef struct envvar
+typedef struct s_env
 {
 	char			*name;
 	char			*content;
-	struct envvar	*next;
-	struct envvar	*prev;
-}	t_envar;
+	int				is_temp;
+	struct s_env	*next;
+	struct s_env	*prev;
+}	t_env;
 
-typedef struct fileout
+typedef struct s_fileout
 {
-	char			*file;
-	int				out;
-	int				appendout;
-	struct fileout	*next;
-	struct fileout	*prev;
+	char				*file;
+	int					out;
+	int					appendout;
+	struct s_fileout	*next;
+	struct s_fileout	*prev;
 }	t_fout;
 
 typedef struct mini
 {
-	int		argc;
-	char	**argv;
-	char	**envp;
-	t_fout	**mfilesout;
-	char	*infile;
-	char	*quotesbuf;
-	t_envar	**envars;
+	int			argc;
+	char		**argv;
+	char		**envp;
+	t_fout		**mfilesout;
+	char		*infile;
+	char		*quotesbuf;
+	t_env	*env;
 }	t_mini;
 
 /* ft_splitchats.c */
@@ -61,12 +62,11 @@ int		alonecmdcall(int fdin, char **cmd, char *path, t_mini *mini);
 void	anyfdtofile(int fd, char *filename, int app);
 int		checkkill(char *buf);
 /* minish2.c */
-int		recread(t_mini *mini);
+int		recread(t_mini **mini);
 int		checkinfile(t_mini *mini);
-int		recursiva(t_mini *mini);
+int		recursiva(t_mini **mini);
 char	**preppipexlim(char *buf, char **antbuf);
 /* minish3.c */
-void	docd(char *path);
 int		ft_dstrchr(char **s, char *s2);
 int		ft_dstrlen(char **s);
 char	*debuginout(char *buf2, t_mini *mini);
@@ -77,31 +77,41 @@ int		dopipes(char *buf2, char **buf, t_mini *mini);
 int		docmd(char *buf2, char **buf, t_mini *mini);
 int		checkquotes(char *buf, t_mini *mini);
 /* minish5.c */
-void	doecho(char *buf);
-void	entvars(t_envar **head, char *var, char *content);
-char	*checkenvvars(char *buf, t_mini *mini);
-void	freelist(t_envar **lst);
 void	newfileout(t_fout **head, char *file, int app);
 /* minish6.c */
 t_fout	*foutlast(t_fout *lst);
-t_envar	*envarlast(t_envar *lst);
 void	handlemfilesout(t_mini *mini, char *buf);
 void	fdtomfiles(t_mini *mini, int fd);
 void	freeoutfiles(t_fout **lst);
 /* minish7.c */
-int		counttmps(t_envar **lst);
-void	dpcheckenvars(char **buf, t_mini *mini);
-int		builtins(t_mini *mini, char *buf2);
+int		counttmps(t_env *lst);
 char	*initialdebug(t_mini *mini, char *buf2);
 int		exec(t_mini *mini, char *buf2, char **buf);
 /* minish8.c */
 char	*putonlycmds(t_mini *mini, char *buf2, char *tmp);
-char	*checkenvlist(t_mini *mini, char **buf, char *tmp);
 char	*simplequote(t_mini *mini, char *buf, char *tmp);
 char	*doublequote(t_mini *mini, char *buf, char *tmp);
 /* signals.c */
 void	set_signals(void);
 void	handle_sigint(int sig);
+/* builtins.c */
+void	docd(char *path);
+void	doecho(char *buf);
+int		builtins(t_mini **minish, char *buf2);
+/* environment1.c */
+void	dpcheckenvars(char **buf, t_mini *mini);
+t_env	*envarlast(t_env *lst);
+char	*checkenvlist(t_mini *mini, char **buf, char *tmp);
+void	entvars(t_env *head, char *var, char *content);
+char	*checkenvvars(char *buf, t_mini *mini);
+/* environment2.c */
+void	freelist(t_env *lst);
+t_env	*get_env_head(t_env *env);
+t_env	*init_env_vars(char **envp);
+void	add_temp_envar(t_mini *mini, char *varname);
+void	add_envar(t_mini *mini, char *varname, char *value);
+void	print_temp_env(t_env *env);
+void	print_env(t_env *env);
 /* pipex.c */
 int		pipex(int argc, char **argv, char **envp, t_mini *mini);
 
