@@ -6,19 +6,11 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 21:06:20 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/02 21:53:32 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/10 12:19:44 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
-
-void	docd(char *path)
-{
-	if (access(path, F_OK) == 0)
-		chdir(path);
-	else
-		printf("cd: no such file or directory: %s\n", path);
-}
 
 int	ft_dstrchr(char **s, char *s2)
 {

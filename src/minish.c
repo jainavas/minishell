@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 01:58:02 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/07 18:13:24 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/10 13:00:27 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ int	main(int argc, char **argv, char **envp)
 	mini->mfilesout = ft_calloc(1, sizeof(t_fout *));
 	*(mini->mfilesout) = NULL;
 	set_signals();
-	recursiva(mini);
+	recursiva(&mini);
 	freelist(mini->envars);
 	freeoutfiles(mini->mfilesout);
 	free(mini->mfilesout);

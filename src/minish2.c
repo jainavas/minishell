@@ -6,13 +6,13 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 15:56:12 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/07 17:45:52 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/10 13:00:17 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
 
-int	recread(t_mini *mini)
+int	recread(t_mini **mini)
 {
 	char	**buf;
 	char	*buf2;
@@ -21,19 +21,19 @@ int	recread(t_mini *mini)
 	buf2 = readline("minishell% ");
 	if (!buf2)
 		return (1);
-	buf2 = initialdebug(mini, buf2);
+	buf2 = initialdebug((*mini), buf2);
 	if (!buf2)
 		return (0);
 	buf = NULL;
 	t = builtins(mini, buf2);
 	if (t != -1)
 		return (g_status = t, t);
-	buf2 = debuginout(buf2, mini);
-	if (checkinfile(mini))
-		return (g_status = 127, free(buf2), free(mini->infile), 0);
+	buf2 = debuginout(buf2, (*mini));
+	if (checkinfile((*mini)))
+		return (g_status = 127, free(buf2), free((*mini)->infile), 0);
 	buf = ft_splitchars(buf2, "<|");
-	dpcheckenvars(buf, mini);
-	g_status = exec(mini, buf2, buf);
+	dpcheckenvars(buf, (*mini));
+	g_status = exec((*mini), buf2, buf);
 	return (0);
 }
 
@@ -45,15 +45,15 @@ int	checkinfile(t_mini *mini)
 	return (0);
 }
 
-int	recursiva(t_mini *mini)
+int	recursiva(t_mini **mini)
 {
 	int	x;
 
-	mini->infile = NULL;
+	(*mini)->infile = NULL;
 	x = recread(mini);
 	while (x == 0)
 	{
-		mini->infile = NULL;
+		(*mini)->infile = NULL;
 		x = recread(mini);
 	}
 	return (0);

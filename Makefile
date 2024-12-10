@@ -20,7 +20,10 @@ SRC =	minish.c \
 		pipex3.c \
 		pipex4.c \
 		ft_splitchars.c \
-		signals.c
+		signals.c \
+		builtins.c \
+		environment1.c \
+		environment2.c
 
 SRCS = $(addprefix $(SRC_PATH), $(SRC))
 OBJS = $(patsubst $(SRC_PATH)%.c,$(OBJ_PATH)%.o,$(SRCS))

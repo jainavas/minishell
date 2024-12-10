@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 17:07:05 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/02 16:58:21 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/10 12:47:03 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,6 @@
 t_fout	*foutlast(t_fout *lst)
 {
 	t_fout	*tmp;
-
-	tmp = lst;
-	if (lst)
-		while (tmp->next)
-			tmp = tmp->next;
-	return (tmp);
-}
-
-t_envar	*envarlast(t_envar *lst)
-{
-	t_envar	*tmp;
 
 	tmp = lst;
 	if (lst)
