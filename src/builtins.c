@@ -6,7 +6,7 @@
 /*   By: mpenas-z <mpenas-z@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 12:14:17 by mpenas-z          #+#    #+#             */
-/*   Updated: 2024/12/10 19:41:35 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/13 17:17:10 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ void	doecho(char *buf)
 	free(buf);
 }
 
-// WORK IN PROGRESS
 void	doexport(t_mini *mini, char *buf)
 {
 	int		argc;
@@ -50,8 +49,7 @@ void	doexport(t_mini *mini, char *buf)
 		add_temp_envar(mini, parsed_line[1]);
 	else if (argc == 3)
 		add_envar(mini, parsed_line[1], parsed_line[2]);
-	else
-		return ;
+	freedoublepointer(parsed_line);
 }
 
 // WORK IN PROGRESS

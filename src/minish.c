@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 01:58:02 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/10 18:11:33 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/13 17:22:20 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ int	alonecmdcall(int fdin, char **cmd, char *path, t_mini *mini)
 			status = 130;
 		close(fdin);
 		close(fd[WRITE_FD]);
-		return (free(path), fdtomfiles(mini, fd[READ_FD]), status);
+		return (free(path), freedoublepointer(cmd), fdtomfiles(mini, fd[READ_FD]), status);
 	}
 	return (0);
 }

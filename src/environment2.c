@@ -6,7 +6,7 @@
 /*   By: mpenas-z <mpenas-z@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 12:40:23 by mpenas-z          #+#    #+#             */
-/*   Updated: 2024/12/10 19:39:57 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/13 17:14:46 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,14 +52,15 @@ t_env	*init_env_vars(char **envp)
 	{
 		env = ft_calloc(1, sizeof(t_env));
 		aux_buffs = ft_split(envp[i], '=');
-		env->name = aux_buffs[0];
-		env->content = aux_buffs[1];
+		env->name = ft_strdup(aux_buffs[0]);
+		env->content = ft_strdup(aux_buffs[1]);
 		env->is_temp = 0;
 		env->next = NULL;
 		env->prev = head_env;
 		if (head_env)
 			head_env->next = env;
 		head_env = env;
+		freedoublepointer(aux_buffs);
 	}
 	return (get_env_head(head_env));
 }
@@ -100,8 +101,8 @@ void	add_temp_envar(t_mini *mini, char *varname)
 	if (exists_env_var(mini, varname))
 		return ;
 	aux_env = ft_calloc(1, sizeof(t_env));
-	aux_env->name = varname;
-	aux_env->content = "''";
+	aux_env->name = ft_strdup(varname);
+	aux_env->content = ft_strdup("''");
 	aux_env->is_temp = 1;
 	aux_env->next = NULL;
 	env = envarlast(mini->env);
@@ -126,8 +127,8 @@ void	add_envar(t_mini *mini, char *varname, char *value)
 	else
 	{
 		aux_env = ft_calloc(1, sizeof(t_env));
-		aux_env->name = varname;
-		aux_env->content = value;
+		aux_env->name = ft_strdup(varname);
+		aux_env->content = ft_strdup(value);
 		aux_env->is_temp = 0;
 		aux_env->next = NULL;
 		env = envarlast(mini->env);
