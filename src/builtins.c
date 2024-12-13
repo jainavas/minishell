@@ -6,7 +6,7 @@
 /*   By: mpenas-z <mpenas-z@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 12:14:17 by mpenas-z          #+#    #+#             */
-/*   Updated: 2024/12/13 19:03:26 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/13 19:37:50 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,23 +33,26 @@ void	doecho(char *buf)
 	free(buf);
 }
 
-// Needs rework to accept multiple variables
 void	doexport(t_mini *mini, char *buf)
 {
 	int		argc;
+	char	**args;
 	char	**parsed_line;
 
-	parsed_line = ft_splitchars(buf, " =");
+	args = ft_split(buf, ' ');
 	argc = 0;
-	while (parsed_line[argc])
-		argc++;
+	while (args[++argc])
+	{
+		parsed_line = ft_split(args[argc], '=');
+		if (!parsed_line[1])
+			add_temp_envar(mini, parsed_line[0]);
+		else
+			add_envar(mini, parsed_line[0], parsed_line[1]);
+		freedoublepointer(parsed_line);
+	}
 	if (argc == 1)
 		print_temp_env(mini->env);
-	else if (argc == 2)
-		add_temp_envar(mini, parsed_line[1]);
-	else if (argc == 3)
-		add_envar(mini, parsed_line[1], parsed_line[2]);
-	freedoublepointer(parsed_line);
+	freedoublepointer(args);
 }
 
 void	dounset(t_mini *mini, char *buf)
@@ -62,9 +65,11 @@ void	dounset(t_mini *mini, char *buf)
 	argc = 0;
 	while (parsed_line[argc])
 		argc++;
-	// Give error: unset: not enough arguments
 	if (argc == 1)
+	{
+		printf("unset: not enough arguments\n");
 		return ;
+	}
 	else if (argc >= 2)
 	{
 		argc = 0;
