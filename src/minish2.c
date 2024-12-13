@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 15:56:12 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/10 13:00:17 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/13 18:38:54 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	recread(t_mini **mini)
 	if (!buf2)
 		return (0);
 	buf = NULL;
-	t = builtins(mini, buf2);
+	t = builtins((*mini), buf2);
 	if (t != -1)
 		return (g_status = t, t);
 	buf2 = debuginout(buf2, (*mini));
