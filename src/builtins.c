@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mpenas-z <mpenas-z@student.42madrid.com>   +#+  +:+       +#+        */
+/*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 12:14:17 by mpenas-z          #+#    #+#             */
-/*   Updated: 2024/12/13 19:59:57 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/13 20:32:30 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ int	builtins(t_mini *mini, char *buf2)
 		&& ft_strchr(buf2, '=')[1] != ' ')
 	{
 		buf2 = checkenvvars(buf2, mini);
-		entvars(mini->env, ft_substr(buf2, 0,
+		entvars(&mini->env, ft_substr(buf2, 0,
 				ft_strchr(buf2, '=') - buf2),
 			ft_strdup(ft_strchr(buf2, '=') + 1));
 		return (free(buf2), 0);

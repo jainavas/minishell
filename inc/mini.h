@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 02:16:09 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/13 18:37:03 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/13 20:30:40 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,8 @@ typedef struct mini
 	t_fout		**mfilesout;
 	char		*infile;
 	char		*quotesbuf;
-	t_env	*env;
+	t_env		*env;
+	t_env		**quotestmps;
 }	t_mini;
 
 /* ft_splitchats.c */
@@ -91,6 +92,7 @@ int		exec(t_mini *mini, char *buf2, char **buf);
 char	*putonlycmds(t_mini *mini, char *buf2, char *tmp);
 char	*simplequote(t_mini *mini, char *buf, char *tmp);
 char	*doublequote(t_mini *mini, char *buf, char *tmp);
+char	*checktmpslist(t_mini *mini, char **buf, char *tmp);
 /* signals.c */
 void	set_signals(void);
 void	handle_sigint(int sig);
@@ -104,7 +106,7 @@ int		builtins(t_mini *minish, char *buf2);
 void	dpcheckenvars(char **buf, t_mini *mini);
 t_env	*envarlast(t_env *lst);
 char	*checkenvlist(t_mini *mini, char **buf, char *tmp);
-void	entvars(t_env *head, char *var, char *content);
+void	entvars(t_env **head, char *var, char *content);
 char	*checkenvvars(char *buf, t_mini *mini);
 /* environment2.c */
 void	freelist(t_env *lst);

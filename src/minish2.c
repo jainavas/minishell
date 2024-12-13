@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 15:56:12 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/13 18:38:54 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/13 20:11:50 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ int	recursiva(t_mini **mini)
 	x = recread(mini);
 	while (x == 0)
 	{
+		freelist(*(*mini)->quotestmps);
+		*(*mini)->quotestmps = NULL;
 		(*mini)->infile = NULL;
 		x = recread(mini);
 	}

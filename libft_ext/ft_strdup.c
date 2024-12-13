@@ -61,9 +61,9 @@ char	*ft_strinsertdup(char *s, char *var, char *content)
 		res[i] = s[i];
 	while (content[++j])
 		res[i++] = content[j];
-	while (s[i + ft_strlen(var) - j])
+	while (s[i + ft_strlen(var) - (j - 1)])
 	{
-		res[i] = s[i + ft_strlen(var) - j];
+		res[i] = s[i + ft_strlen(var) - (j - 1)];
 		i++;
 	}
 	res[i] = '\0';
