@@ -6,7 +6,7 @@
 /*   By: mpenas-z <mpenas-z@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 12:40:23 by mpenas-z          #+#    #+#             */
-/*   Updated: 2024/12/13 17:14:46 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/13 18:58:55 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ int	exists_env_var(t_mini *mini, char *varname)
 	t_env	*aux_env;
 
 	aux_env = mini->env;
-	while (aux_env->next)
+	while (aux_env)
 	{
 		if (!ft_strncmp(aux_env->name, varname, ft_strlen(varname)))
 			return (1);
@@ -84,7 +84,7 @@ t_env	*get_env_var(t_mini *mini, char *varname)
 	t_env	*aux_env;
 
 	aux_env = mini->env;
-	while (aux_env->next)
+	while (aux_env)
 	{
 		if (!ft_strncmp(aux_env->name, varname, ft_strlen(varname)))
 			return (aux_env);
@@ -122,7 +122,7 @@ void	add_envar(t_mini *mini, char *varname, char *value)
 		aux_env->is_temp = 0;
 		if (aux_env->content)
 			free (aux_env->content);
-		aux_env->content = value;
+		aux_env->content = ft_strdup(value);
 	}
 	else
 	{
@@ -135,6 +135,28 @@ void	add_envar(t_mini *mini, char *varname, char *value)
 		env->next = aux_env;
 		aux_env->prev = env;
 	}
+}
+
+void	remove_envar(t_mini *mini, char *varname)
+{
+	t_env	*aux_env;
+	t_env	*env;
+
+	if (exists_env_var(mini, varname))
+	{
+		aux_env = get_env_var(mini, varname);
+		env = aux_env->prev;
+		env->next = aux_env->next;
+		if (aux_env->next)
+			aux_env->next->prev = env;
+		if (aux_env->content)
+			free (aux_env->content);
+		if (aux_env->name)
+			free (aux_env->name);
+		free (aux_env);
+	}
+	(void)aux_env;
+	(void)env;
 }
 
 void	print_temp_env(t_env *env)

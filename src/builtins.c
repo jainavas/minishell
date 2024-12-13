@@ -6,7 +6,7 @@
 /*   By: mpenas-z <mpenas-z@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 12:14:17 by mpenas-z          #+#    #+#             */
-/*   Updated: 2024/12/13 17:58:08 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/13 19:03:26 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ void	doecho(char *buf)
 	free(buf);
 }
 
+// Needs rework to accept multiple variables
 void	doexport(t_mini *mini, char *buf)
 {
 	int		argc;
@@ -51,20 +52,31 @@ void	doexport(t_mini *mini, char *buf)
 	freedoublepointer(parsed_line);
 }
 
-// WORK IN PROGRESS
-void	dounset(t_mini **mini, char *buf)
+void	dounset(t_mini *mini, char *buf)
 {
+	int		argc;
+	char	**parsed_line;
+
 	(void)mini;
-	(void)buf;
-	ft_putstr_fd("unset\n", 1);	
+	parsed_line = ft_split(buf, ' ');
+	argc = 0;
+	while (parsed_line[argc])
+		argc++;
+	// Give error: unset: not enough arguments
+	if (argc == 1)
+		return ;
+	else if (argc >= 2)
+	{
+		argc = 0;
+		while (parsed_line[++argc])
+			remove_envar(mini, parsed_line[argc]);
+	}
+	freedoublepointer(parsed_line);
 }
 
 // Need to solve that exportt works.
-int	builtins(t_mini **minish, char *buf2)
+int	builtins(t_mini *mini, char *buf2)
 {
-	t_mini	*mini;
-
-	mini = (*minish);
 	if (checkkill(buf2))
 		return (free(buf2), rl_clear_history(), 1);
 	if (ft_strncmp("cd ", buf2, 3) == 0)
@@ -72,7 +84,9 @@ int	builtins(t_mini **minish, char *buf2)
 	if (ft_strncmp("export", buf2, 6) == 0)
 		return (doexport(mini, buf2), free(buf2), 0);
 	if (ft_strncmp("unset", buf2, 5) == 0)
-		return (dounset(minish, buf2), free(buf2), 0);
+		return (dounset(mini, buf2), free(buf2), 0);
+	if (ft_strncmp("env", buf2, 3) == 0)
+		return (print_env(mini->env), free(buf2), 0);
 	if (ft_strncmp("$?", buf2, 2) == 0)
 		return (ft_putnbr_fd(g_status, 1), write(1, "\n", 1), free(buf2), 0);
 	if (ft_strncmp("echo ", buf2, 5) == 0)
