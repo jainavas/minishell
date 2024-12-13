@@ -6,7 +6,7 @@
 /*   By: mpenas-z <mpenas-z@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 12:14:17 by mpenas-z          #+#    #+#             */
-/*   Updated: 2024/12/13 19:37:50 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/13 19:59:57 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ void	doecho(char *buf)
 	free(buf);
 }
 
+// Need to avoid numbers or empty spaces to be variable names
 void	doexport(t_mini *mini, char *buf)
 {
 	int		argc;
@@ -79,7 +80,7 @@ void	dounset(t_mini *mini, char *buf)
 	freedoublepointer(parsed_line);
 }
 
-// Need to solve that exportt works.
+// Need to solve that exportt works -> This is a parsing problem.
 int	builtins(t_mini *mini, char *buf2)
 {
 	if (checkkill(buf2))
