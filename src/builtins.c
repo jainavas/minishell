@@ -6,7 +6,7 @@
 /*   By: mpenas-z <mpenas-z@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 12:14:17 by mpenas-z          #+#    #+#             */
-/*   Updated: 2024/12/13 17:17:10 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/13 17:58:08 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ void	doexport(t_mini *mini, char *buf)
 	int		argc;
 	char	**parsed_line;
 
-	(void)mini;
 	parsed_line = ft_splitchars(buf, " =");
 	argc = 0;
 	while (parsed_line[argc])
@@ -60,6 +59,7 @@ void	dounset(t_mini **mini, char *buf)
 	ft_putstr_fd("unset\n", 1);	
 }
 
+// Need to solve that exportt works.
 int	builtins(t_mini **minish, char *buf2)
 {
 	t_mini	*mini;
@@ -69,9 +69,9 @@ int	builtins(t_mini **minish, char *buf2)
 		return (free(buf2), rl_clear_history(), 1);
 	if (ft_strncmp("cd ", buf2, 3) == 0)
 		return (buf2 = checkenvvars(buf2, mini), docd(&buf2[3]), free(buf2), 0);
-	if (ft_strncmp("export", buf2, 3) == 0)
+	if (ft_strncmp("export", buf2, 6) == 0)
 		return (doexport(mini, buf2), free(buf2), 0);
-	if (ft_strncmp("unset", buf2, 3) == 0)
+	if (ft_strncmp("unset", buf2, 5) == 0)
 		return (dounset(minish, buf2), free(buf2), 0);
 	if (ft_strncmp("$?", buf2, 2) == 0)
 		return (ft_putnbr_fd(g_status, 1), write(1, "\n", 1), free(buf2), 0);
