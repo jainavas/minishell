@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 12:40:23 by mpenas-z          #+#    #+#             */
-/*   Updated: 2024/12/16 18:17:43 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/16 21:22:55 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,7 +167,7 @@ void	print_temp_env(t_env *env)
 	while (aux)
 	{
 		env = aux;
-		printf("%s=%s\n", env->name, env->content);
+		printf("declare -x %s=%s\n", env->name, env->content);
 		aux = env->next;
 	}
 	return ;

@@ -6,18 +6,33 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 12:14:17 by mpenas-z          #+#    #+#             */
-/*   Updated: 2024/12/16 19:09:16 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/16 21:54:24 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/mini.h"
 
-void	docd(char *path)
+void	docd(char *path, t_mini *mini)
 {
-	if (access(path, F_OK) == 0)
-		chdir(path);
+	t_env	*tmp;
+	char	*str;
+
+	if (path[0] == '\0' || path[1] == '\0')
+	{
+		tmp = get_env_var(&mini->env, "HOME");
+		chdir(tmp->content);
+	}
+	else if (path[1] == '~')
+	{
+		tmp = get_env_var(&mini->env, "HOME");
+		str = ft_strinsertdup(strdup(path + 1), "" , tmp->content, '~');
+		chdir(str);
+		free(str);
+	}
+	else if (access(&path[1], F_OK) == 0)
+		chdir(&path[1]);
 	else
-		printf("cd: no such file or directory: %s\n", path);
+		ft_printf("cd: no such file or directory: %s\n", &path[1]);
 }
 
 void	doecho(char *buf)
@@ -86,7 +101,7 @@ int	builtins(t_mini *mini, char *buf2)
 	if (checkkill(buf2))
 		return (free(buf2), rl_clear_history(), 1);
 	if (ft_strcmpspace("cd", buf2) == 0)
-		return (buf2 = checkenvvars(buf2, mini), docd(&buf2[3]), free(buf2), 0);
+		return (buf2 = checkenvvars(buf2, mini), docd(&buf2[2], mini), free(buf2), 0);
 	if (ft_strcmpspace("export", buf2) == 0)
 		return (doexport(mini, buf2), free(buf2), 0);
 	if (ft_strcmpspace("unset", buf2) == 0)

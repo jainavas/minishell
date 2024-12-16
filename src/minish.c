@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 01:58:02 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/16 18:49:57 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/16 21:14:41 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	g_status;
 
 int	checkkill(char *buf)
 {
-	if (ft_strncmp(buf, "exit", 5) == 0 || ft_strncmp(buf, "kill", 5) == 0)
+	if (ft_strcmpspace(buf, "exit") == 0)
 		return (1);
 	else
 		return (0);

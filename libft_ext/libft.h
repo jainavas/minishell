@@ -70,7 +70,7 @@ int					ft_strcount(const char *s, int c);
 void				freedoublepointer(char **split);
 void				freedp(int **dp);
 char				*ft_strfilterdup(const char *s, char filter);
-char				*ft_strinsertdup(char *s, char *var, char *content);
+char				*ft_strinsertdup(char *s, char *var, char *content, char flag);
 char				*ft_strchrtwo(const char *s, int c, int k);
 
 // BONUSSSSSSSSSSSSSSS

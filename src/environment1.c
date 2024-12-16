@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 12:27:04 by mpenas-z          #+#    #+#             */
-/*   Updated: 2024/12/16 18:24:34 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/16 21:49:02 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ char	*checkenvlist(t_mini *mini, char **buf, char *tmp)
 		if (tmp && ft_strcmpalnum(tmp + 1, var->name) == 0)
 		{
 			i = (tmp - *buf) + ft_strlen(var->content);
-			*buf = ft_strinsertdup(*buf, var->name, var->content);
+			*buf = ft_strinsertdup(*buf, var->name, var->content, '$');
 			var = mini->env;
 			tmp = ft_strchr(&buf[0][i], '$');
 		}

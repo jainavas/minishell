@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 21:16:21 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/16 18:51:26 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/16 21:49:10 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ char	*checktmpslist(t_mini *mini, char **buf, char *tmp)
 		if (tmp && ft_strcmpalnum(tmp + 1, var->name) == 0)
 		{
 			i = (tmp - *buf) + ft_strlen(var->content);
-			*buf = ft_strinsertdup(*buf, var->name, var->content);
+			*buf = ft_strinsertdup(*buf, var->name, var->content, '$');
 			var = *mini->quotestmps;
 			tmp = ft_strchr(&buf[0][i], '$');
 			break ;

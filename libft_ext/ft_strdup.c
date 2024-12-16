@@ -44,7 +44,7 @@ char	*ft_strfilterdup(const char *s, char filter)
 	return (res);
 }
 
-char	*ft_strinsertdup(char *s, char *var, char *content)
+char	*ft_strinsertdup(char *s, char *var, char *content, char flag)
 {
 	char	*res;
 	int		i;
@@ -57,7 +57,7 @@ char	*ft_strinsertdup(char *s, char *var, char *content)
 				+ ft_strlen(content) + 1) * sizeof(char));
 	if (res == NULL || s == NULL)
 		return (ft_strdup(""));
-	while (s[++i] && s[i] != '$')
+	while (s[++i] && s[i] != flag)
 		res[i] = s[i];
 	while (content[++j])
 		res[i++] = content[j];
