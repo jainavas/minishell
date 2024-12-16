@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 12:14:17 by mpenas-z          #+#    #+#             */
-/*   Updated: 2024/12/13 20:32:30 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/16 19:09:16 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	docd(char *path)
 
 void	doecho(char *buf)
 {
-	if (ft_strncmp(buf, "echo -n ", 8) != 0)
+	if (ft_strcmpspace(buf, "echo -n") != 0)
 	{
 		write(1, &buf[5], ft_strlen(&buf[5]));
 		if (buf[ft_strlen(buf) - 1] != '\n')
@@ -85,20 +85,21 @@ int	builtins(t_mini *mini, char *buf2)
 {
 	if (checkkill(buf2))
 		return (free(buf2), rl_clear_history(), 1);
-	if (ft_strncmp("cd ", buf2, 3) == 0)
+	if (ft_strcmpspace("cd", buf2) == 0)
 		return (buf2 = checkenvvars(buf2, mini), docd(&buf2[3]), free(buf2), 0);
-	if (ft_strncmp("export", buf2, 6) == 0)
+	if (ft_strcmpspace("export", buf2) == 0)
 		return (doexport(mini, buf2), free(buf2), 0);
-	if (ft_strncmp("unset", buf2, 5) == 0)
+	if (ft_strcmpspace("unset", buf2) == 0)
 		return (dounset(mini, buf2), free(buf2), 0);
-	if (ft_strncmp("env", buf2, 3) == 0)
+	if (ft_strcmpspace("env", buf2) == 0)
 		return (print_env(mini->env), free(buf2), 0);
-	if (ft_strncmp("$?", buf2, 2) == 0)
+	if (ft_strcmpspace("$?", buf2) == 0)
 		return (ft_putnbr_fd(g_status, 1), write(1, "\n", 1), free(buf2), 0);
-	if (ft_strncmp("echo ", buf2, 5) == 0)
+	if (ft_strcmpspace("echo", buf2) == 0)
 		return (buf2 = checkenvvars(buf2, mini), doecho(buf2), 0);
 	if (ft_strchr(buf2, '=') && ft_strchr(buf2, '=')[-1] != ' '
-		&& ft_strchr(buf2, '=')[1] != ' ')
+		&& ft_strchr(buf2, '=')[1] != ' '
+		&& ft_isgroup(ft_strchr(buf2, '=') + 1, ft_isbashprotected) == 0)
 	{
 		buf2 = checkenvvars(buf2, mini);
 		entvars(&mini->env, ft_substr(buf2, 0,

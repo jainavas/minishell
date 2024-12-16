@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 15:56:12 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/13 20:11:50 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/16 19:05:35 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,18 +50,20 @@ int	recursiva(t_mini **mini)
 	int	x;
 
 	(*mini)->infile = NULL;
+	(*mini)->didcheckenv = 0;
 	x = recread(mini);
 	while (x == 0)
 	{
 		freelist(*(*mini)->quotestmps);
 		*(*mini)->quotestmps = NULL;
 		(*mini)->infile = NULL;
+		(*mini)->didcheckenv = 0;
 		x = recread(mini);
 	}
 	return (0);
 }
 
-char	**preppipexlim(char *buf, char **antbuf)
+char	**preppipexlim(char *buf, char **antbuf, t_mini *mini)
 {
 	char	**res;
 	int		i;
@@ -70,16 +72,19 @@ char	**preppipexlim(char *buf, char **antbuf)
 	res = ft_calloc((ft_strcount(buf, '|') + 1) + 4, sizeof(char *));
 	res[0] = ft_strdup("a");
 	res[1] = ft_strdup("here_doc");
-	res[2] = antbuf[1];
-	res[3] = antbuf[0];
-	if (ft_strcount(buf, '|') == 1)
-		res[4] = antbuf[2];
-	else
+	res[2] = ft_strdup(antbuf[1]);
+	res[3] = ft_strdup(antbuf[0]);
+	if (checkprepaths(ft_split(antbuf[0], ' '), mini))
+		return (ft_printf("zsh: command not found: %s\n", antbuf[0]),
+			freedoublepointer(res), freedoublepointer(antbuf), NULL);
+	while (++i + 1 < ft_dstrlen(antbuf))
 	{
-		while (++i + 1 < ft_dstrlen(antbuf))
-			res[i + 4] = antbuf[i + 2];
+		if (checkprepaths(ft_split(antbuf[i + 2], ' '), mini))
+			return (ft_printf("zsh: command not found: %s\n", antbuf[0]),
+				freedoublepointer(res), freedoublepointer(antbuf),NULL);
+		res[i + 4] = ft_strdup(antbuf[i + 2]);
 	}
 	res[(ft_strcount(buf, '|') + 1) + 3] = NULL;
-	free(antbuf);
+	freedoublepointer(antbuf);
 	return (res);
 }

@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 21:16:21 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/13 20:34:02 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/16 18:51:26 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ char	*checktmpslist(t_mini *mini, char **buf, char *tmp)
 	var = *mini->quotestmps;
 	while (var)
 	{
-		if (tmp && ft_strncmp(tmp + 1, var->name, ft_strlen(var->name)) == 0)
+		if (tmp && ft_strcmpalnum(tmp + 1, var->name) == 0)
 		{
 			i = (tmp - *buf) + ft_strlen(var->content);
 			*buf = ft_strinsertdup(*buf, var->name, var->content);
@@ -81,4 +81,16 @@ char	*checktmpslist(t_mini *mini, char **buf, char *tmp)
 		var = var->next;
 	}
 	return (tmp);
+}
+
+int	checkprepaths(char **cmd, t_mini *mini)
+{
+	char	*aux;
+
+	aux = pathseek(cmd, mini->envp);
+	freedoublepointer(cmd);
+	if (aux)
+		return (free(aux), 0);
+	else
+		return (1);
 }

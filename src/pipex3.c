@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 19:34:41 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/06 23:37:10 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/16 18:34:49 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,12 @@ int	checkpaths(t_pipex *vars)
 	while (++i < vars->numcmds - 1)
 	{
 		if (!vars->paths[i])
-			return (ft_printf("zsh: command not found: %s\n",
-					vars->cmds[i][0]), -1);
+		{
+			ft_printf("zsh: command not found: %s\n", vars->cmds[i][0]);
+			while (vars->paths[++i])
+				free(vars->paths[i]);
+			return (-1);
+		}
 	}
 	return (0);
 }

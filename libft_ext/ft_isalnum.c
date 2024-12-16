@@ -18,3 +18,21 @@ int	ft_isalnum(int c)
 		return (1);
 	return (0);
 }
+
+int	ft_isbashprotected(int c)
+{
+	if (c == '=' || c == '|' || c == '<' || c == '>')
+		return (1);
+	return (0);
+}
+
+int	ft_isgroup(char	*tolook, int group(int))
+{
+	int	i;
+
+	i = -1;
+	while (tolook[++i])
+		if (group(tolook[i]) == 1)
+			return (1);
+	return (0);
+}

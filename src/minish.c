@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 01:58:02 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/13 20:13:59 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/16 18:49:57 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int	alonecmdcall(int fdin, char **cmd, char *path, t_mini *mini)
 	return (0);
 }
 
-char	**preppipex(char *buf, char *infile, char **buf2)
+char	**preppipex(char *buf, char *infile, char **buf2, t_mini *mini)
 {
 	char	**res;
 	int		i;
@@ -92,7 +92,12 @@ char	**preppipex(char *buf, char *infile, char **buf2)
 	res[1] = infile;
 	res[0] = ft_strdup("a");
 	while (buf2[++i])
+	{
+		if (checkprepaths(ft_split(buf2[i], ' '), mini))
+			return (ft_printf("zsh: command not found: %s\n", buf2[i]),
+				freedoublepointer(buf2), freedoublepointer(res), NULL);
 		res [i + 2] = ft_strdup(buf2[i]);
+	}
 	res[i + 2] = NULL;
 	return (freedoublepointer(buf2), res);
 }

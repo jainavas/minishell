@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 02:16:09 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/13 20:30:40 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/16 18:55:08 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ typedef struct mini
 	t_fout		**mfilesout;
 	char		*infile;
 	char		*quotesbuf;
+	int			didcheckenv;
 	t_env		*env;
 	t_env		**quotestmps;
 }	t_mini;
@@ -58,7 +59,7 @@ typedef struct mini
 /* ft_splitchats.c */
 char	**ft_splitchars(char *str, char *charset);
 /* minish.c */
-char	**preppipex(char *buf, char *infile, char **buf2);
+char	**preppipex(char *buf, char *infile, char **buf2, t_mini *mini);
 int		alonecmdcall(int fdin, char **cmd, char *path, t_mini *mini);
 void	anyfdtofile(int fd, char *filename, int app);
 int		checkkill(char *buf);
@@ -66,7 +67,7 @@ int		checkkill(char *buf);
 int		recread(t_mini **mini);
 int		checkinfile(t_mini *mini);
 int		recursiva(t_mini **mini);
-char	**preppipexlim(char *buf, char **antbuf);
+char	**preppipexlim(char *buf, char **antbuf, t_mini *mini);
 /* minish3.c */
 int		ft_dstrchr(char **s, char *s2);
 int		ft_dstrlen(char **s);
@@ -93,6 +94,7 @@ char	*putonlycmds(t_mini *mini, char *buf2, char *tmp);
 char	*simplequote(t_mini *mini, char *buf, char *tmp);
 char	*doublequote(t_mini *mini, char *buf, char *tmp);
 char	*checktmpslist(t_mini *mini, char **buf, char *tmp);
+int		checkprepaths(char **cmd, t_mini *mini);
 /* signals.c */
 void	set_signals(void);
 void	handle_sigint(int sig);
@@ -106,11 +108,12 @@ int		builtins(t_mini *minish, char *buf2);
 void	dpcheckenvars(char **buf, t_mini *mini);
 t_env	*envarlast(t_env *lst);
 char	*checkenvlist(t_mini *mini, char **buf, char *tmp);
-void	entvars(t_env **head, char *var, char *content);
+int		entvars(t_env **head, char *var, char *content);
 char	*checkenvvars(char *buf, t_mini *mini);
 /* environment2.c */
 void	freelist(t_env *lst);
 t_env	*get_env_head(t_env *env);
+t_env	*get_env_var(t_env **head, char *varname);
 t_env	*init_env_vars(char **envp);
 void	add_temp_envar(t_mini *mini, char *varname);
 void	add_envar(t_mini *mini, char *varname, char *value);

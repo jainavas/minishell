@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   environment2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mpenas-z <mpenas-z@student.42madrid.com>   +#+  +:+       +#+        */
+/*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 12:40:23 by mpenas-z          #+#    #+#             */
-/*   Updated: 2024/12/13 18:58:55 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/16 18:17:43 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,14 +79,14 @@ int	exists_env_var(t_mini *mini, char *varname)
 	return (0);
 }
 
-t_env	*get_env_var(t_mini *mini, char *varname)
+t_env	*get_env_var(t_env	**head, char *varname)
 {
 	t_env	*aux_env;
 
-	aux_env = mini->env;
+	aux_env = *head;
 	while (aux_env)
 	{
-		if (!ft_strncmp(aux_env->name, varname, ft_strlen(varname)))
+		if (!ft_strcmpalnum(aux_env->name, varname))
 			return (aux_env);
 		aux_env = aux_env->next;
 	}
@@ -118,7 +118,7 @@ void	add_envar(t_mini *mini, char *varname, char *value)
 
 	if (exists_env_var(mini, varname))
 	{
-		aux_env = get_env_var(mini, varname);
+		aux_env = get_env_var(&mini->env, varname);
 		aux_env->is_temp = 0;
 		if (aux_env->content)
 			free (aux_env->content);
@@ -144,7 +144,7 @@ void	remove_envar(t_mini *mini, char *varname)
 
 	if (exists_env_var(mini, varname))
 	{
-		aux_env = get_env_var(mini, varname);
+		aux_env = get_env_var(&mini->env, varname);
 		env = aux_env->prev;
 		env->next = aux_env->next;
 		if (aux_env->next)

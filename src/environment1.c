@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 12:27:04 by mpenas-z          #+#    #+#             */
-/*   Updated: 2024/12/13 20:35:18 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/16 18:24:34 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ char	*checkenvvars(char *buf, t_mini *mini)
 {
 	char	*tmp;
 
+	if (mini->didcheckenv == 1)
+		return (buf);
 	tmp = ft_strchr(buf, '$');
 	if (!tmp)
 		return (buf);
@@ -34,12 +36,13 @@ char	*checkenvvars(char *buf, t_mini *mini)
 		tmp = ft_strjoin_gnl(ft_substr(buf, 0, tmp - buf),
 				ft_substr(ft_strchr(tmp + 1, '$'), 0,
 					ft_strlen(ft_strchr(tmp + 1, '$'))));
-		return (free(buf), checkenvvars(tmp, mini));
+		return (free(buf), mini->didcheckenv = 0, checkenvvars(tmp, mini));
 	}
 	else if (!tmp)
-		return (buf);
+		return (mini->didcheckenv = 1, buf);
 	tmp = ft_substr(buf, 0, tmp - buf);
 	free(buf);
+	mini->didcheckenv = 1;
 	return (tmp);
 }
 
@@ -52,8 +55,7 @@ char	*checkenvlist(t_mini *mini, char **buf, char *tmp)
 	while (var)
 	{
 		tmp = checktmpslist(mini, buf, tmp);
-		// modify condition to only accept exact matches ex: $USERsdf is wrong but picks it
-		if (tmp && ft_strncmp(tmp + 1, var->name, ft_strlen(var->name)) == 0)
+		if (tmp && ft_strcmpalnum(tmp + 1, var->name) == 0)
 		{
 			i = (tmp - *buf) + ft_strlen(var->content);
 			*buf = ft_strinsertdup(*buf, var->name, var->content);
@@ -77,10 +79,13 @@ t_env	*envarlast(t_env *lst)
 }
 
 // is_temp = 2 -> Don't show, delete when recread finished run.
-void	entvars(t_env **head, char *var, char *content)
+int	entvars(t_env **head, char *var, char *content)
 {
 	t_env	*new;
 
+	if (get_env_var(head, var) != NULL)
+		return (new = get_env_var(head, var), free(new->content),
+			new->content = ft_strdup(content), free(var), free(content), 0);
 	new = ft_calloc(1, sizeof(t_env));
 	new->content = ft_strdup(content);
 	if (ft_strncmp(var, "holatmp_", 8) == 0)
@@ -95,6 +100,5 @@ void	entvars(t_env **head, char *var, char *content)
 		(envarlast(*head))->next = new;
 		new->prev = envarlast(*head);
 	}
-	free(content);
-	free(var);
+	return (free(content), free(var), 0);
 }

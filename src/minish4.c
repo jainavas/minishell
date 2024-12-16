@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 20:05:57 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/13 17:34:44 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/16 19:06:25 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,9 @@ int	dolimwithpipe(char *buf2, char **buf, t_mini *mini)
 	int	status;
 
 	buf2 = checkenvvars(buf2, mini);
-	buf = preppipexlim(buf2, buf);
+	buf = preppipexlim(buf2, buf, mini);
+	if (buf == NULL)
+		return (free(buf2), free(mini->infile), 127);
 	status = pipex(((ft_strcount(buf2, '|') + 1) + 4), buf, mini->envp, mini);
 	free(mini->infile);
 	return (free(buf2), freedoublepointer(buf), status);
@@ -28,7 +30,9 @@ int	dopipes(char *buf2, char **buf, t_mini *mini)
 	int	status;
 	
 	buf2 = checkenvvars(buf2, mini);
-	buf = preppipex(buf2, mini->infile, buf);
+	buf = preppipex(buf2, mini->infile, buf, mini);
+	if (buf == NULL)
+		return (free(buf2), 127);
 	status = pipex(((ft_strcount(buf2, '|') + 1) + 2), buf, mini->envp, mini);
 	return (free(buf2), freedoublepointer(buf), status);
 }
