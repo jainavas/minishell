@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 12:14:17 by mpenas-z          #+#    #+#             */
-/*   Updated: 2024/12/16 21:54:24 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/17 23:44:14 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,18 @@ void	doecho(char *buf)
 	free(buf);
 }
 
-// Need to avoid numbers or empty spaces to be variable names
+int	is_bad_assignment(char *buf)
+{
+	int	i;
+
+	i = -1;
+	while (buf[++i])
+		if (buf[i] == '=' && (!buf[i - 1] || buf[i - 1] == ' ') 
+			&& (!buf[i + 1] || buf[i + 1] == ' '))
+			return (1);
+	return (0);
+}
+
 void	doexport(t_mini *mini, char *buf)
 {
 	int		argc;
@@ -57,10 +68,17 @@ void	doexport(t_mini *mini, char *buf)
 
 	args = ft_split(buf, ' ');
 	argc = 0;
+	if (is_bad_assignment(buf) == 1)
+	{
+		printf("export: bad assignment\n");
+		return ;
+	}
 	while (args[++argc])
 	{
 		parsed_line = ft_split(args[argc], '=');
-		if (!parsed_line[1])
+		if (parsed_line[0][0] > '0' && parsed_line[0][0] < '9')
+			printf("export: not an identifier: %c\n", parsed_line[0][0]);
+		else if (!parsed_line[1])
 			add_temp_envar(mini, parsed_line[0]);
 		else
 			add_envar(mini, parsed_line[0], parsed_line[1]);
@@ -95,7 +113,6 @@ void	dounset(t_mini *mini, char *buf)
 	freedoublepointer(parsed_line);
 }
 
-// Need to solve that exportt works -> This is a parsing problem.
 int	builtins(t_mini *mini, char *buf2)
 {
 	if (checkkill(buf2))
