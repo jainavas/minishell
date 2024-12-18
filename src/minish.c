@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 01:58:02 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/18 01:30:18 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/18 16:31:45 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,10 +61,7 @@ int	alonecmdcall(int fdin, char **cmd, char *path, t_mini *mini)
 	pid = fork();
 	if (pid == 0)
 	{
-		signal(SIGINT, SIG_DFL);
-		signal(SIGQUIT, SIG_DFL);
-		dup2(fdin, fd[READ_FD]);
-		close(fdin);
+		alonecmdcallutils(fd, fdin);
 		if (ft_strcmpalnum((*mini->mfilesout)->file, "/dev/stdout") != 0)
 			dup2(fd[WRITE_FD], STDOUT_FILENO);
 		closeanddupinput(fd);
@@ -76,9 +73,8 @@ int	alonecmdcall(int fdin, char **cmd, char *path, t_mini *mini)
 		status = 0;
 		if (WIFSIGNALED(pid_status))
 			status = 130;
-		close(fdin);
-		close(fd[WRITE_FD]);
-		return (free(path), fdtomfiles(mini, fd[READ_FD]), status);
+		return (close(fdin), close(fd[WRITE_FD]), free(path),
+			fdtomfiles(mini, fd[READ_FD]), status);
 	}
 	return (0);
 }

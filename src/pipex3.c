@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 19:34:41 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/18 01:15:32 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/18 16:34:09 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,13 +66,11 @@ int	normalcmdcall(t_pipex *var, char **cmd, char *path)
 			return (printf("execn"), -1);
 	}
 	else
-	{
-		close(var->fd[var->actcmd - 1][WRITE_FD]);
-		close(var->fd[var->actcmd - 1][READ_FD]);
-		close(var->fd[var->actcmd][WRITE_FD]);
-		return (normalcmdcall(var, var->cmds[var->actcmd + 1],
+		return (close(var->fd[var->actcmd - 1][WRITE_FD]),
+			close(var->fd[var->actcmd - 1][READ_FD]),
+			close(var->fd[var->actcmd][WRITE_FD]),
+			normalcmdcall(var, var->cmds[var->actcmd + 1],
 				var->paths[var->actcmd + 1]));
-	}
 	return (0);
 }
 

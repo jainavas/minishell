@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 02:16:09 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/18 01:00:43 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/18 16:44:13 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,39 +21,39 @@
 # include <readline/history.h>
 # include "pipex.h"
 
-extern int	g_status;
+extern int					g_status;
 
 typedef struct sigaction	t_sig;
 
 typedef struct s_env
 {
-	char			*name;
-	char			*content;
-	int				is_temp;
-	struct s_env	*next;
-	struct s_env	*prev;
+	char					*name;
+	char					*content;
+	int						is_temp;
+	struct s_env			*next;
+	struct s_env			*prev;
 }	t_env;
 
 typedef struct s_fileout
 {
-	char				*file;
-	int					out;
-	int					appendout;
-	struct s_fileout	*next;
-	struct s_fileout	*prev;
+	char					*file;
+	int						out;
+	int						appendout;
+	struct s_fileout		*next;
+	struct s_fileout		*prev;
 }	t_fout;
 
 typedef struct mini
 {
-	int			argc;
-	char		**argv;
-	char		**envp;
-	t_fout		**mfilesout;
-	char		*infile;
-	char		*quotesbuf;
-	int			didcheckenv;
-	t_env		*env;
-	t_env		**quotestmps;
+	int						argc;
+	char					**argv;
+	char					**envp;
+	t_fout					**mfilesout;
+	char					*infile;
+	char					*quotesbuf;
+	int						didcheckenv;
+	t_env					*env;
+	t_env					**quotestmps;
 }	t_mini;
 
 /* ft_splitchats.c */
@@ -80,6 +80,8 @@ int		docmd(char *buf2, char **buf, t_mini *mini);
 int		checkquotes(char *buf, t_mini *mini);
 /* minish5.c */
 void	newfileout(t_fout **head, char *file, int app);
+void	alonecmdcallutils(int fd[2], int fdin);
+int		spacesindex(const char *str);
 /* minish6.c */
 t_fout	*foutlast(t_fout *lst);
 void	handlemfilesout(t_mini *mini, char *buf);
@@ -99,7 +101,7 @@ int		checkprepaths(char **cmd, t_mini *mini);
 void	set_signals(void);
 void	handle_sigint(int sig);
 /* builtins.c */
-void	docd(char *path, t_mini *mini);
+int		docd(char *path, t_mini *mini);
 void	doecho(char *buf);
 void	doexport(t_mini *mini, char *buf);
 void	dounset(t_mini *mini, char *buf);

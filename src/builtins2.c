@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 00:52:59 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/18 01:03:32 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/18 16:25:46 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	is_bad_assignment(char *buf)
 
 	i = -1;
 	while (buf[++i])
-		if (buf[i] == '=' && (!buf[i - 1] || buf[i - 1] == ' ') 
+		if (buf[i] == '=' && (!buf[i - 1] || buf[i - 1] == ' ')
 			&& (!buf[i + 1] || buf[i + 1] == ' '))
 			return (1);
 	return (0);

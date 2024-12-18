@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 20:05:57 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/18 01:15:27 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/18 16:17:38 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	dolimwithpipe(char *buf2, char **buf, t_mini *mini)
 int	dopipes(char *buf2, char **buf, t_mini *mini)
 {
 	int	status;
-	
+
 	buf2 = checkenvvars(buf2, mini);
 	if (buf[0] == NULL)
 		return (ft_printf("mini: command not found: %s\n", buf2), free(buf2),
@@ -56,11 +56,11 @@ int	docmd(char *buf2, char **buf, t_mini *mini)
 	aux = ft_split(buf2, ' ');
 	free(buf2);
 	if (!aux)
-		return (ft_printf("mini: command not found: %s\n", buf2),
+		return (ft_printf("mini: command not found\n"),
 			free(mini->infile), freedoublepointer(buf), 127);
 	buf2 = pathseek(aux, mini->envp);
 	if (!buf2)
-		return (ft_printf("mini: command not found: %s\n", buf2),
+		return (ft_printf("mini: command not found\n"),
 			free(mini->infile), freedoublepointer(buf),
 			freedoublepointer(aux), free(buf2), 127);
 	status = alonecmdcall(fdin, aux, pathseek(aux, mini->envp), mini);

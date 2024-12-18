@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 16:54:34 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/07 17:18:34 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/18 16:18:12 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ int	vardefs(t_pipex *vars, char **argv, int argc)
 		return (-1);
 	vars->fdin = open(argv[1], O_RDONLY);
 	if (vars->fdin == -1)
-		return (ft_printf("zsh: no such file or directory: %s\n", 
+		return (ft_printf("zsh: no such file or directory: %s\n",
 				argv[1]), 127);
 	return (0);
 }

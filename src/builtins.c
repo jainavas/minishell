@@ -6,33 +6,37 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 12:14:17 by mpenas-z          #+#    #+#             */
-/*   Updated: 2024/12/18 01:01:20 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/18 16:49:18 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/mini.h"
 
-void	docd(char *path, t_mini *mini)
+int	docd(char *path, t_mini *mini)
 {
 	t_env	*tmp;
 	char	*str;
 
-	if (path[0] == '\0' || path[1] == '\0')
+	if (path[spacesindex(path + 2) + 2] == '\0')
 	{
 		tmp = get_env_var(&mini->env, "HOME");
 		chdirandoldpwd(tmp->content, mini);
+		return (free(path), 0);
 	}
-	else if (path[1] == '~')
+	else if (path[spacesindex(path + 2) + 2] == '~')
 	{
 		tmp = get_env_var(&mini->env, "HOME");
-		str = ft_strinsertdup(strdup(path + 1), "" , tmp->content, '~');
+		str = ft_strinsertdup(strdup(path + spacesindex(path + 2) + 2), "",
+				tmp->content, '~');
 		chdirandoldpwd(str, mini);
-		free(str);
+		return (free(str), free(path), 0);
 	}
-	else if (access(&path[1], F_OK) == 0)
-		chdirandoldpwd(&path[1], mini);
+	else if (access(&path[spacesindex(path + 2) + 2], F_OK) == 0)
+		return (chdirandoldpwd(&path[spacesindex(path + 2) + 2], mini),
+			free(path), 0);
 	else
-		ft_printf("cd: no such file or directory: %s\n", &path[1]);
+		return (ft_printf("cd: no such file or directory: %s\n", &path[3]),
+			free(path), 0);
 }
 
 void	doecho(char *buf)
@@ -106,7 +110,7 @@ int	builtins(t_mini *mini, char *buf2)
 	if (checkkill(buf2))
 		return (free(buf2), rl_clear_history(), 1);
 	if (ft_strcmpspace("cd", buf2) == 0)
-		return (buf2 = checkenvvars(buf2, mini), docd(&buf2[2], mini), free(buf2), 0);
+		return (docd(checkenvvars(buf2, mini), mini), 0);
 	if (ft_strcmpspace("export", buf2) == 0)
 		return (doexport(mini, buf2), free(buf2), 0);
 	if (ft_strcmpspace("unset", buf2) == 0)
