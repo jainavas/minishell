@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 15:56:12 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/16 21:18:36 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/18 01:15:16 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,12 +75,12 @@ char	**preppipexlim(char *buf, char **antbuf, t_mini *mini)
 	res[2] = ft_strdup(antbuf[1]);
 	res[3] = ft_strdup(antbuf[0]);
 	if (checkprepaths(ft_split(antbuf[0], ' '), mini))
-		return (ft_printf("zsh: command not found: %s\n", antbuf[0]),
+		return (ft_printf("mini: command not found: %s\n", antbuf[0]),
 			freedoublepointer(res), freedoublepointer(antbuf), NULL);
 	while (++i + 1 < ft_dstrlen(antbuf))
 	{
 		if (antbuf[i + 2] && checkprepaths(ft_split(antbuf[i + 2], ' '), mini))
-			return (ft_printf("zsh: command not found: %s\n", antbuf[0]),
+			return (ft_printf("mini: command not found: %s\n", antbuf[0]),
 				freedoublepointer(res), freedoublepointer(antbuf),NULL);
 		if (antbuf[i + 2])
 			res[i + 4] = ft_strdup(antbuf[i + 2]);

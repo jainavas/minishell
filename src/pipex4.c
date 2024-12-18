@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 19:34:43 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/16 18:29:07 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/18 00:45:49 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	limvardefs(t_pipex *vars, char **argv, int argc)
 		return (-1);
 	vars->fdin = open("tmp_heredoc", O_CREAT | O_WRONLY, 0777);
 	vars->pwd = pwdseek(vars);
-	limmitator(argv[2], vars->fdin);
+	limmitator(argv[2], vars->fdin, vars->mini);
 	close(vars->fdin);
 	vars->filein = ft_strdup("/tmp_heredoc");
 	vars->fdin = open("tmp_heredoc", O_RDONLY);

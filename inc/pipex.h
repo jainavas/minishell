@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 17:22:26 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/08 15:19:42 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/18 00:47:30 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void		closeanddupoutput(int fd[2]);
 void		triplepointeralloc(t_pipex *vars, int argc);
 int			checkpaths(t_pipex *vars);
 int			normalcmdcall(t_pipex *var, char **cmd, char *path);
-void		limmitator(char *lim, int fdin);
+void		limmitator(char *lim, int fdin, struct mini *mini);
 /* pipex4.c */
 int			limvardefs(t_pipex *vars, char **argv, int argc);
 char		*pwdseek(t_pipex *var);

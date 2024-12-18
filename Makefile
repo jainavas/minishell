@@ -22,6 +22,7 @@ SRC =	minish.c \
 		ft_splitchars.c \
 		signals.c \
 		builtins.c \
+		builtins2.c \
 		environment1.c \
 		environment2.c
 

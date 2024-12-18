@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 02:16:09 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/17 23:44:31 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/18 01:00:43 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,10 +101,12 @@ void	handle_sigint(int sig);
 /* builtins.c */
 void	docd(char *path, t_mini *mini);
 void	doecho(char *buf);
-int		is_bad_assignment(char *buf);
 void	doexport(t_mini *mini, char *buf);
 void	dounset(t_mini *mini, char *buf);
 int		builtins(t_mini *minish, char *buf2);
+/* builtins2.c */
+int		is_bad_assignment(char *buf);
+void	chdirandoldpwd(char *new, t_mini *mini);
 /* environment1.c */
 void	dpcheckenvars(char **buf, t_mini *mini);
 t_env	*envarlast(t_env *lst);

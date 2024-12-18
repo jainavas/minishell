@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 12:14:17 by mpenas-z          #+#    #+#             */
-/*   Updated: 2024/12/17 23:44:14 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/18 01:01:20 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,17 +20,17 @@ void	docd(char *path, t_mini *mini)
 	if (path[0] == '\0' || path[1] == '\0')
 	{
 		tmp = get_env_var(&mini->env, "HOME");
-		chdir(tmp->content);
+		chdirandoldpwd(tmp->content, mini);
 	}
 	else if (path[1] == '~')
 	{
 		tmp = get_env_var(&mini->env, "HOME");
 		str = ft_strinsertdup(strdup(path + 1), "" , tmp->content, '~');
-		chdir(str);
+		chdirandoldpwd(str, mini);
 		free(str);
 	}
 	else if (access(&path[1], F_OK) == 0)
-		chdir(&path[1]);
+		chdirandoldpwd(&path[1], mini);
 	else
 		ft_printf("cd: no such file or directory: %s\n", &path[1]);
 }
@@ -46,18 +46,6 @@ void	doecho(char *buf)
 	else
 		write(1, &buf[8], ft_strlen(&buf[8]));
 	free(buf);
-}
-
-int	is_bad_assignment(char *buf)
-{
-	int	i;
-
-	i = -1;
-	while (buf[++i])
-		if (buf[i] == '=' && (!buf[i - 1] || buf[i - 1] == ' ') 
-			&& (!buf[i + 1] || buf[i + 1] == ' '))
-			return (1);
-	return (0);
 }
 
 void	doexport(t_mini *mini, char *buf)

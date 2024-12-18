@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 16:38:08 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/10 17:33:48 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/18 00:41:11 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,15 @@ int	counttmps(t_env *lst)
 
 char	*initialdebug(t_mini *mini, char *buf2)
 {
+	char	*tmp;
+
 	if (!buf2)
 		return (NULL);
 	if (buf2[0] == '\0')
 		return (free(buf2), NULL);
+	tmp = ft_strtrim(buf2, " ");
+	free(buf2);
+	buf2 = tmp;
 	add_history(buf2);
 	if (ft_strchrtwo(buf2, '"', 39))
 	{

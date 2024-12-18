@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 01:58:02 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/16 21:14:41 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/18 01:30:18 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,8 @@ int	alonecmdcall(int fdin, char **cmd, char *path, t_mini *mini)
 		signal(SIGQUIT, SIG_DFL);
 		dup2(fdin, fd[READ_FD]);
 		close(fdin);
-		dup2(fd[WRITE_FD], STDOUT_FILENO);
+		if (ft_strcmpalnum((*mini->mfilesout)->file, "/dev/stdout") != 0)
+			dup2(fd[WRITE_FD], STDOUT_FILENO);
 		closeanddupinput(fd);
 		execve(path, cmd, mini->envp);
 	}
@@ -94,7 +95,7 @@ char	**preppipex(char *buf, char *infile, char **buf2, t_mini *mini)
 	while (buf2[++i])
 	{
 		if (checkprepaths(ft_split(buf2[i], ' '), mini))
-			return (ft_printf("zsh: command not found: %s\n", buf2[i]),
+			return (ft_printf("mini: command not found: %s\n", buf2[i]),
 				freedoublepointer(buf2), freedoublepointer(res), NULL);
 		res [i + 2] = ft_strdup(buf2[i]);
 	}

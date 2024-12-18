@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 21:06:20 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/10 12:19:44 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/18 00:46:06 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int	dolimitonecmd(char **buf, t_mini *mini)
 	char	**cmd;
 
 	fd = open("tmp_heredoc", O_CREAT | O_WRONLY, 0777);
-	limmitator(buf[1], fd);
+	limmitator(buf[1], fd, mini);
 	close(fd);
 	fd = open("tmp_heredoc", O_RDONLY);
 	cmd = ft_split(buf[0], ' ');
