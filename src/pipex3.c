@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 19:34:41 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/18 16:34:09 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/22 18:30:13 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,8 @@ void	limmitator(char *lim, int fdin, struct mini *mini)
 	char	*buf;
 
 	buf = readline("> ");
+	if (!buf)
+		return ;
 	while (ft_strncmp(buf, lim, ft_strlen(lim)) != 0)
 	{
 		buf = checkenvvars(buf, mini);
@@ -86,6 +88,8 @@ void	limmitator(char *lim, int fdin, struct mini *mini)
 		write(fdin, "\n", 1);
 		free(buf);
 		buf = readline("> ");
+		if (!buf)
+			return ;
 	}
 	free(buf);
 }

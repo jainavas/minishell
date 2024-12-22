@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 12:27:04 by mpenas-z          #+#    #+#             */
-/*   Updated: 2024/12/16 21:49:02 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/21 20:04:22 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,6 @@ t_env	*envarlast(t_env *lst)
 	return (tmp);
 }
 
-// is_temp = 2 -> Don't show, delete when recread finished run.
 int	entvars(t_env **head, char *var, char *content)
 {
 	t_env	*new;
