@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 21:16:21 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/16 21:49:10 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/22 23:16:24 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ char	*doublequote(t_mini *mini, char *buf, char *tmp)
 	mini->quotesbuf = ft_strjoin_gnl(mini->quotesbuf, "$");
 	tmp = ft_strtrim(envarlast(*mini->quotestmps)->name, " ");
 	mini->quotesbuf = ft_strjoin_gnl(mini->quotesbuf, tmp);
-	return (free(tmp), tmp2);
+	return (tmp);
 }
 
 char	*checktmpslist(t_mini *mini, char **buf, char *tmp)

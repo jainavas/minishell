@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 01:58:02 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/22 20:45:22 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/22 23:20:41 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,8 +107,10 @@ int	main(int argc, char **argv, char **envp)
 	mini = ft_calloc(1, sizeof(t_mini));
 	mini->argc = argc;
 	mini->argv = argv;
+	mini->status = 0;
 	mini->envp = envp;
 	mini->env = init_env_vars(envp);
+	add_envar(mini, "?", "0");
 	mini->mfilesout = ft_calloc(1, sizeof(t_fout *));
 	*(mini->mfilesout) = NULL;
 	mini->quotestmps = ft_calloc(1, sizeof(t_env *));

@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 02:16:09 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/22 20:40:45 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/22 22:54:16 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ typedef struct mini
 	char					*infile;
 	char					*quotesbuf;
 	int						didcheckenv;
+	int						status;
 	t_env					*env;
 	t_env					**quotestmps;
 }	t_mini;

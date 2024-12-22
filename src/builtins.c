@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 12:14:17 by mpenas-z          #+#    #+#             */
-/*   Updated: 2024/12/18 16:49:18 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/22 23:22:36 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,8 +117,8 @@ int	builtins(t_mini *mini, char *buf2)
 		return (dounset(mini, buf2), free(buf2), 0);
 	if (ft_strcmpspace("env", buf2) == 0)
 		return (print_env(mini->env), free(buf2), 0);
-	if (ft_strcmpspace("$?", buf2) == 0)
-		return (ft_putnbr_fd(g_status, 1), write(1, "\n", 1), free(buf2), 0);
+	// if (ft_strcmpspace("$?", buf2) == 0)
+	// 	return (ft_putnbr_fd(mini->status, 1), write(1, "\n", 1), free(buf2), 0);
 	if (ft_strcmpspace("echo", buf2) == 0)
 		return (buf2 = checkenvvars(buf2, mini), doecho(buf2), 0);
 	if (ft_strchr(buf2, '=') && ft_strchr(buf2, '=')[-1] != ' '
