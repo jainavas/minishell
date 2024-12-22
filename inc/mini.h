@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 02:16:09 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/22 22:54:16 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/22 23:29:07 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,7 @@ t_env	*get_env_head(t_env *env);
 t_env	*get_env_var(t_env **head, char *varname);
 t_env	*init_env_vars(char **envp);
 void	add_temp_envar(t_mini *mini, char *varname);
-void	add_envar(t_mini *mini, char *varname, char *value);
+void	add_envar(t_mini *mini, char *varname, char *value, int is_temp);
 void	remove_envar(t_mini *mini, char *varname);
 void	print_temp_env(t_env *env);
 void	print_env(t_env *env);

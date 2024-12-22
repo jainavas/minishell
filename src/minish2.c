@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 15:56:12 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/22 23:26:00 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/22 23:28:30 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	recursiva(t_mini **mini)
 	while (x == 0)
 	{
 		(*mini)->status = g_status;
-		add_envar((*mini), "?", ft_itoa((*mini)->status));
+		add_envar((*mini), "?", ft_itoa((*mini)->status), 2);
 		freelist(*(*mini)->quotestmps);
 		*(*mini)->quotestmps = NULL;
 		(*mini)->infile = NULL;
