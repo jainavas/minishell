@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 01:58:02 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/18 16:31:45 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/22 20:45:22 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,9 +70,9 @@ int	alonecmdcall(int fdin, char **cmd, char *path, t_mini *mini)
 	else
 	{
 		waitpid(pid, &pid_status, 0);
-		status = 0;
-		if (WIFSIGNALED(pid_status))
-			status = 130;
+		if (g_status == 130)
+			write(1, "\n", 1);
+		status = g_status;
 		return (close(fdin), close(fd[WRITE_FD]), free(path),
 			fdtomfiles(mini, fd[READ_FD]), status);
 	}

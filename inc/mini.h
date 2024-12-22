@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 02:16:09 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/18 16:44:13 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/22 20:40:45 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ int		checkprepaths(char **cmd, t_mini *mini);
 /* signals.c */
 void	set_signals(void);
 void	handle_sigint(int sig);
+void	new_prompt(void);
 /* builtins.c */
 int		docd(char *path, t_mini *mini);
 void	doecho(char *buf);
