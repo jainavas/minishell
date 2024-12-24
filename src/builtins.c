@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 12:14:17 by mpenas-z          #+#    #+#             */
-/*   Updated: 2024/12/22 23:39:42 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/24 15:51:44 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,33 +52,37 @@ void	doecho(char *buf)
 	free(buf);
 }
 
-void	doexport(t_mini *mini, char *buf)
+int	doexport(t_mini *mini, char *buf)
 {
 	int		argc;
+	int		status;
 	char	**args;
 	char	**parsed_line;
 
 	args = ft_split(buf, ' ');
 	argc = 0;
-	if (is_bad_assignment(buf) == 1)
-	{
-		printf("export: bad assignment\n");
-		return ;
-	}
+	status = 0;
 	while (args[++argc])
 	{
-		parsed_line = ft_split(args[argc], '=');
-		if (parsed_line[0][0] > '0' && parsed_line[0][0] < '9')
-			printf("export: not an identifier: %c\n", parsed_line[0][0]);
-		else if (!parsed_line[1])
-			add_temp_envar(mini, parsed_line[0]);
+		if (!is_valid_identifier(args[argc]))
+		{
+			ft_putstr_fd("export: not a valid identifier\n", 2);
+			status = 1;
+		}
 		else
-			add_envar(mini, parsed_line[0], parsed_line[1], 1);
-		freedoublepointer(parsed_line);
+		{
+			parsed_line = ft_split(args[argc], '=');
+			if (!parsed_line[1])
+				add_temp_envar(mini, parsed_line[0]);
+			else
+				add_envar(mini, parsed_line[0], parsed_line[1], 1);
+			freedoublepointer(parsed_line);
+		}
 	}
 	if (argc == 1)
 		print_temp_env(mini->env);
 	freedoublepointer(args);
+	return (status);
 }
 
 void	dounset(t_mini *mini, char *buf)
@@ -92,10 +96,7 @@ void	dounset(t_mini *mini, char *buf)
 	while (parsed_line[argc])
 		argc++;
 	if (argc == 1)
-	{
-		printf("unset: not enough arguments\n");
 		return ;
-	}
 	else if (argc >= 2)
 	{
 		argc = 0;
@@ -107,18 +108,21 @@ void	dounset(t_mini *mini, char *buf)
 
 int	builtins(t_mini *mini, char *buf2)
 {
+	int	status;
+
+	status = 0;
 	if (checkkill(buf2))
-		return (free(buf2), rl_clear_history(), 1);
+		return (status = -1, free(buf2), rl_clear_history(), status);
 	if (ft_strcmpspace("cd", buf2) == 0)
-		return (docd(checkenvvars(buf2, mini), mini), 0);
+		return (status = docd(checkenvvars(buf2, mini), mini), status);
 	if (ft_strcmpspace("export", buf2) == 0)
-		return (doexport(mini, buf2), free(buf2), 0);
+		return (status = doexport(mini, buf2), free(buf2), status);
 	if (ft_strcmpspace("unset", buf2) == 0)
-		return (dounset(mini, buf2), free(buf2), 0);
+		return (dounset(mini, buf2), free(buf2), status);
 	if (ft_strcmpspace("env", buf2) == 0)
-		return (print_env(mini->env), free(buf2), 0);
+		return (print_env(mini->env), free(buf2), status);
 	if (ft_strcmpspace("echo", buf2) == 0)
-		return (buf2 = checkenvvars(buf2, mini), doecho(buf2), 0);
+		return (buf2 = checkenvvars(buf2, mini), doecho(buf2), status);
 	if (ft_strchr(buf2, '=') && ft_strchr(buf2, '=')[-1] != ' '
 		&& ft_strchr(buf2, '=')[1] != ' '
 		&& ft_isgroup(ft_strchr(buf2, '=') + 1, ft_isbashprotected) == 0)
@@ -129,5 +133,5 @@ int	builtins(t_mini *mini, char *buf2)
 			ft_strdup(ft_strchr(buf2, '=') + 1));
 		return (free(buf2), 0);
 	}
-	return (-1);
+	return (-2);
 }

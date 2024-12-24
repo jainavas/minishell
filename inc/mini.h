@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 02:16:09 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/22 23:29:07 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/24 15:46:44 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,11 +105,11 @@ void	new_prompt(void);
 /* builtins.c */
 int		docd(char *path, t_mini *mini);
 void	doecho(char *buf);
-void	doexport(t_mini *mini, char *buf);
+int		doexport(t_mini *mini, char *buf);
 void	dounset(t_mini *mini, char *buf);
 int		builtins(t_mini *minish, char *buf2);
 /* builtins2.c */
-int		is_bad_assignment(char *buf);
+int		is_valid_identifier(char *buf);
 void	chdirandoldpwd(char *new, t_mini *mini);
 /* environment1.c */
 void	dpcheckenvars(char **buf, t_mini *mini);
