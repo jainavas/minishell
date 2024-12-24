@@ -6,21 +6,13 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 01:58:02 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/22 23:29:33 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/24 16:19:22 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
 
 int	g_status;
-
-int	checkkill(char *buf)
-{
-	if (ft_strcmpspace(buf, "exit") == 0)
-		return (1);
-	else
-		return (0);
-}
 
 void	anyfdtofile(int fd, char *filename, int app)
 {
@@ -123,4 +115,5 @@ int	main(int argc, char **argv, char **envp)
 	free(mini->mfilesout);
 	free(mini->quotestmps);
 	free(mini);
+	return (g_status);
 }

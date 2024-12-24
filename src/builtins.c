@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 12:14:17 by mpenas-z          #+#    #+#             */
-/*   Updated: 2024/12/24 15:51:44 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/24 16:18:39 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,8 @@ int	docd(char *path, t_mini *mini)
 		return (chdirandoldpwd(&path[spacesindex(path + 2) + 2], mini),
 			free(path), 0);
 	else
-		return (ft_printf("cd: no such file or directory: %s\n", &path[3]),
-			free(path), 0);
+		return (ft_putstr_fd("cd: no such file or directory\n", 2),
+			free(path), 1);
 }
 
 void	doecho(char *buf)
@@ -110,9 +110,9 @@ int	builtins(t_mini *mini, char *buf2)
 {
 	int	status;
 
-	status = 0;
-	if (checkkill(buf2))
-		return (status = -1, free(buf2), rl_clear_history(), status);
+	status = checkkill(buf2);
+	if (status != 0)
+		return (free(buf2), rl_clear_history(), status);
 	if (ft_strcmpspace("cd", buf2) == 0)
 		return (status = docd(checkenvvars(buf2, mini), mini), status);
 	if (ft_strcmpspace("export", buf2) == 0)

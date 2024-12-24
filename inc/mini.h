@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 02:16:09 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/24 15:46:44 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/24 16:15:37 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,6 @@ char	**ft_splitchars(char *str, char *charset);
 char	**preppipex(char *buf, char *infile, char **buf2, t_mini *mini);
 int		alonecmdcall(int fdin, char **cmd, char *path, t_mini *mini);
 void	anyfdtofile(int fd, char *filename, int app);
-int		checkkill(char *buf);
 /* minish2.c */
 int		recread(t_mini **mini);
 int		checkinfile(t_mini *mini);
@@ -110,6 +109,8 @@ void	dounset(t_mini *mini, char *buf);
 int		builtins(t_mini *minish, char *buf2);
 /* builtins2.c */
 int		is_valid_identifier(char *buf);
+int		are_numbers(char *buf);
+int		checkkill(char *buf);
 void	chdirandoldpwd(char *new, t_mini *mini);
 /* environment1.c */
 void	dpcheckenvars(char **buf, t_mini *mini);
