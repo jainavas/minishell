@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 15:27:49 by jainavas          #+#    #+#             */
-/*   Updated: 2024/08/12 15:27:49 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/25 11:45:57 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,21 @@ char	*ft_strdup(const char *s)
 	if (res == NULL)
 		return (NULL);
 	ft_strlcpy(res, s, ft_strlen(s) + 1);
+	return (res);
+}
+
+char	*ft_strndup(const char *s, size_t n)
+{
+	char	*res;
+
+	if (!s || n <= 0)
+		return (ft_strdup(""));
+	if (n >= ft_strlen(s))
+		n = ft_strlen(s);
+	res = malloc((n + 1) * sizeof(char));
+	if (res == NULL)
+		return (NULL);
+	ft_strlcpy(res, s, n + 1);
 	return (res);
 }
 

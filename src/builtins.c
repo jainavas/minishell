@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 12:14:17 by mpenas-z          #+#    #+#             */
-/*   Updated: 2024/12/24 16:18:39 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/25 22:37:28 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,11 +106,11 @@ void	dounset(t_mini *mini, char *buf)
 	freedoublepointer(parsed_line);
 }
 
-int	builtins(t_mini *mini, char *buf2)
+int	builtins(t_mini *mini, char *buf2, char *buf3)
 {
 	int	status;
 
-	status = checkkill(buf2);
+	status = checkkill(buf3);
 	if (status != 0)
 		return (free(buf2), rl_clear_history(), status);
 	if (ft_strcmpspace("cd", buf2) == 0)
@@ -121,8 +121,8 @@ int	builtins(t_mini *mini, char *buf2)
 		return (dounset(mini, buf2), free(buf2), status);
 	if (ft_strcmpspace("env", buf2) == 0)
 		return (print_env(mini->env), free(buf2), status);
-	if (ft_strcmpspace("echo", buf2) == 0)
-		return (buf2 = checkenvvars(buf2, mini), doecho(buf2), status);
+	if (ft_strcmpspace("echo", buf3) == 0)
+		return (doecho(buf3), status);
 	if (ft_strchr(buf2, '=') && ft_strchr(buf2, '=')[-1] != ' '
 		&& ft_strchr(buf2, '=')[1] != ' '
 		&& ft_isgroup(ft_strchr(buf2, '=') + 1, ft_isbashprotected) == 0)

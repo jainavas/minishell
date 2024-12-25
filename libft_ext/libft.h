@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 00:54:06 by jainavas          #+#    #+#             */
-/*   Updated: 2024/08/12 00:54:06 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/25 11:47:04 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ char				**ft_split(char const *s, char c);
 char				*ft_strchr(const char *s, int c);
 char				*ft_revstrchr(const char *s, int c, char first);
 char				*ft_strdup(const char *s1);
+char				*ft_strndup(const char *s, size_t n);
 char				*ft_strjoin(char *s1, char const *s2);
 size_t				ft_strlcat(char *dst, const char *src, size_t dstsize);
 size_t				ft_strlcpy(char *dst, const char *src, size_t dstsize);

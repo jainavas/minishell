@@ -24,7 +24,8 @@ SRC =	minish.c \
 		builtins.c \
 		builtins2.c \
 		environment1.c \
-		environment2.c
+		environment2.c \
+		parsing.c
 
 SRCS = $(addprefix $(SRC_PATH), $(SRC))
 OBJS = $(patsubst $(SRC_PATH)%.c,$(OBJ_PATH)%.o,$(SRCS))

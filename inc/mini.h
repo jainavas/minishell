@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 02:16:09 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/24 16:15:37 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/25 22:37:55 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ int		docd(char *path, t_mini *mini);
 void	doecho(char *buf);
 int		doexport(t_mini *mini, char *buf);
 void	dounset(t_mini *mini, char *buf);
-int		builtins(t_mini *minish, char *buf2);
+int		builtins(t_mini *minish, char *buf2, char *buf3);
 /* builtins2.c */
 int		is_valid_identifier(char *buf);
 int		are_numbers(char *buf);
@@ -128,6 +128,15 @@ void	add_envar(t_mini *mini, char *varname, char *value, int is_temp);
 void	remove_envar(t_mini *mini, char *varname);
 void	print_temp_env(t_env *env);
 void	print_env(t_env *env);
+/* parsing.c */
+char	*process_input(t_mini *mini, char *buf);
+void	split_input(char *buf, char ***cmd);
+int		count_params(char *buf);
+char	*process_quotes(t_mini *mini, char *buf);
+char	*remove_quotes(char *buf);
+char	*expand_var(t_mini *mini, char *str, char *name);
+char	*replace_content(char *str, char *content, char *start, int len);
+int		get_namelen(char *name);
 /* pipex.c */
 int		pipex(int argc, char **argv, char **envp, t_mini *mini);
 
