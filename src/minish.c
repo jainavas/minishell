@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 01:58:02 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/24 16:19:22 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/27 13:00:12 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ char	**preppipex(char *buf, char *infile, char **buf2, t_mini *mini)
 	while (buf2[++i])
 	{
 		if (checkprepaths(ft_split(buf2[i], ' '), mini))
-			return (ft_printf("mini: command not found: %s\n", buf2[i]),
+			return (ft_putstr_fd("mini: command not found\n", 2),
 				freedoublepointer(buf2), freedoublepointer(res), NULL);
 		res [i + 2] = ft_strdup(buf2[i]);
 	}

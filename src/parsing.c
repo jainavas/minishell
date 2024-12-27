@@ -6,7 +6,7 @@
 /*   By: mpenas-z <mpenas-z@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/24 18:22:58 by mpenas-z          #+#    #+#             */
-/*   Updated: 2024/12/25 22:13:33 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/27 13:02:57 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ char	*process_input(t_mini *mini, char *buf)
 	i = -1;
 	while (cmd[++i])
 	{
-		cmd[i] = process_quotes(mini, cmd[i]);
+		cmd[i] = process_vars(mini, cmd[i]);
 		temp = ft_strdup(cmd[i]);
 		aux = ft_strjoin_gnl(aux, temp);
 		free (temp);
@@ -87,7 +87,7 @@ int	count_params(char *buf)
 	return (i[2]);
 }
 
-char	*process_quotes(t_mini *mini, char *buf)
+char	*process_vars(t_mini *mini, char *buf)
 {
 	int		i;
 	int		mode;

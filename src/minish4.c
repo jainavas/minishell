@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 20:05:57 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/18 16:17:38 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/27 12:57:00 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	dolimwithpipe(char *buf2, char **buf, t_mini *mini)
 
 	buf2 = checkenvvars(buf2, mini);
 	if (buf[0] == NULL)
-		return (ft_printf("mini: command not found: %s\n", buf2), free(buf2),
+		return (ft_putstr_fd("mini: command not found\n", 2), free(buf2),
 			freedoublepointer(buf), free(mini->infile), 127);
 	buf = preppipexlim(buf2, buf, mini);
 	if (buf == NULL)
@@ -34,7 +34,7 @@ int	dopipes(char *buf2, char **buf, t_mini *mini)
 
 	buf2 = checkenvvars(buf2, mini);
 	if (buf[0] == NULL)
-		return (ft_printf("mini: command not found: %s\n", buf2), free(buf2),
+		return (ft_putstr_fd("mini: command not found\n", 2), free(buf2),
 			freedoublepointer(buf), free(mini->infile), 127);
 	buf = preppipex(buf2, mini->infile, buf, mini);
 	if (buf == NULL)
@@ -56,11 +56,11 @@ int	docmd(char *buf2, char **buf, t_mini *mini)
 	aux = ft_split(buf2, ' ');
 	free(buf2);
 	if (!aux)
-		return (ft_printf("mini: command not found\n"),
+		return (ft_putstr_fd("mini: command not found\n", 2),
 			free(mini->infile), freedoublepointer(buf), 127);
 	buf2 = pathseek(aux, mini->envp);
 	if (!buf2)
-		return (ft_printf("mini: command not found\n"),
+		return (ft_putstr_fd("mini: command not found\n", 2),
 			free(mini->infile), freedoublepointer(buf),
 			freedoublepointer(aux), free(buf2), 127);
 	status = alonecmdcall(fdin, aux, pathseek(aux, mini->envp), mini);

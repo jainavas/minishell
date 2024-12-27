@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 02:16:09 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/25 22:37:55 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/26 16:53:56 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,7 +132,7 @@ void	print_env(t_env *env);
 char	*process_input(t_mini *mini, char *buf);
 void	split_input(char *buf, char ***cmd);
 int		count_params(char *buf);
-char	*process_quotes(t_mini *mini, char *buf);
+char	*process_vars(t_mini *mini, char *buf);
 char	*remove_quotes(char *buf);
 char	*expand_var(t_mini *mini, char *str, char *name);
 char	*replace_content(char *str, char *content, char *start, int len);

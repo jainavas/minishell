@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 15:56:12 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/25 22:40:44 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/27 12:59:36 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,8 @@ int	recread(t_mini **mini)
 int	checkinfile(t_mini *mini)
 {
 	if (access(mini->infile, R_OK) != 0)
-		return (ft_putstr_fd("minishell: ", 1), ft_putstr_fd(mini->infile, 1),
-			ft_putendl_fd(": no such file or directory", 1), 1);
+		return (ft_putstr_fd("minishell: ", 1),
+			ft_putstr_fd("No such file or directory", 2), 1);
 	return (0);
 }
 
@@ -84,12 +84,12 @@ char	**preppipexlim(char *buf, char **antbuf, t_mini *mini)
 	res[2] = ft_strdup(antbuf[1]);
 	res[3] = ft_strdup(antbuf[0]);
 	if (checkprepaths(ft_split(antbuf[0], ' '), mini))
-		return (ft_printf("mini: command not found: %s\n", antbuf[0]),
+		return (ft_putstr_fd("mini: command not found\n", 2),
 			freedoublepointer(res), freedoublepointer(antbuf), NULL);
 	while (++i + 1 < ft_dstrlen(antbuf))
 	{
 		if (antbuf[i + 2] && checkprepaths(ft_split(antbuf[i + 2], ' '), mini))
-			return (ft_printf("mini: command not found: %s\n", antbuf[0]),
+			return (ft_putstr_fd("mini: command not found\n", 2),
 				freedoublepointer(res), freedoublepointer(antbuf), NULL);
 		if (antbuf[i + 2])
 			res[i + 4] = ft_strdup(antbuf[i + 2]);
