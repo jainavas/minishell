@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 12:40:23 by mpenas-z          #+#    #+#             */
-/*   Updated: 2024/12/16 21:22:55 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/22 23:36:29 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ void	add_temp_envar(t_mini *mini, char *varname)
 		return ;
 	aux_env = ft_calloc(1, sizeof(t_env));
 	aux_env->name = ft_strdup(varname);
-	aux_env->content = ft_strdup("''");
+	aux_env->content = NULL;
 	aux_env->is_temp = 1;
 	aux_env->next = NULL;
 	env = envarlast(mini->env);
@@ -111,7 +111,7 @@ void	add_temp_envar(t_mini *mini, char *varname)
 	return ;
 }
 
-void	add_envar(t_mini *mini, char *varname, char *value)
+void	add_envar(t_mini *mini, char *varname, char *value, int is_temp)
 {
 	t_env	*aux_env;
 	t_env	*env;
@@ -119,7 +119,7 @@ void	add_envar(t_mini *mini, char *varname, char *value)
 	if (exists_env_var(mini, varname))
 	{
 		aux_env = get_env_var(&mini->env, varname);
-		aux_env->is_temp = 0;
+		aux_env->is_temp = is_temp;
 		if (aux_env->content)
 			free (aux_env->content);
 		aux_env->content = ft_strdup(value);
@@ -129,7 +129,7 @@ void	add_envar(t_mini *mini, char *varname, char *value)
 		aux_env = ft_calloc(1, sizeof(t_env));
 		aux_env->name = ft_strdup(varname);
 		aux_env->content = ft_strdup(value);
-		aux_env->is_temp = 0;
+		aux_env->is_temp = is_temp;
 		aux_env->next = NULL;
 		env = envarlast(mini->env);
 		env->next = aux_env;
@@ -167,7 +167,10 @@ void	print_temp_env(t_env *env)
 	while (aux)
 	{
 		env = aux;
-		printf("declare -x %s=%s\n", env->name, env->content);
+		if (env->is_temp != 2 && env->content)
+			printf("declare -x %s=\"%s\"\n", env->name, env->content);
+		else if (env->is_temp != 2 && !env->content)
+			printf("declare -x %s\n", env->name);
 		aux = env->next;
 	}
 	return ;
@@ -181,7 +184,7 @@ void	print_env(t_env *env)
 	while (aux)
 	{
 		env = aux;
-		if (env->is_temp != 1)
+		if (env->is_temp == 0)
 			printf("%s=%s\n", env->name, env->content);
 		aux = env->next;
 	}

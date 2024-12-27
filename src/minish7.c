@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 16:38:08 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/18 00:41:11 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/22 23:25:41 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,14 +51,13 @@ char	*initialdebug(t_mini *mini, char *buf2)
 		mini->quotesbuf = NULL;
 		return (buf2);
 	}
-	else if (ft_strncmp(buf2, "$?", 2) != 0)
-		return (checkenvvars(buf2, mini));
 	else
-		return (buf2);
+		return (checkenvvars(buf2, mini));
 }
 
 int	exec(t_mini *mini, char *buf2, char **buf)
 {
+	g_status = 0;
 	if ((ft_strchr(buf2, '<') != NULL && ft_strchr(buf2, '<')[1] == '<') &&
 		ft_strchr(buf2, '|') != NULL)
 		return (dolimwithpipe(buf2, buf, mini));

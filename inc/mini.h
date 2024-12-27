@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 02:16:09 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/18 16:44:13 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/24 16:15:37 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ typedef struct mini
 	char					*infile;
 	char					*quotesbuf;
 	int						didcheckenv;
+	int						status;
 	t_env					*env;
 	t_env					**quotestmps;
 }	t_mini;
@@ -62,7 +63,6 @@ char	**ft_splitchars(char *str, char *charset);
 char	**preppipex(char *buf, char *infile, char **buf2, t_mini *mini);
 int		alonecmdcall(int fdin, char **cmd, char *path, t_mini *mini);
 void	anyfdtofile(int fd, char *filename, int app);
-int		checkkill(char *buf);
 /* minish2.c */
 int		recread(t_mini **mini);
 int		checkinfile(t_mini *mini);
@@ -100,14 +100,17 @@ int		checkprepaths(char **cmd, t_mini *mini);
 /* signals.c */
 void	set_signals(void);
 void	handle_sigint(int sig);
+void	new_prompt(void);
 /* builtins.c */
 int		docd(char *path, t_mini *mini);
 void	doecho(char *buf);
-void	doexport(t_mini *mini, char *buf);
+int		doexport(t_mini *mini, char *buf);
 void	dounset(t_mini *mini, char *buf);
 int		builtins(t_mini *minish, char *buf2);
 /* builtins2.c */
-int		is_bad_assignment(char *buf);
+int		is_valid_identifier(char *buf);
+int		are_numbers(char *buf);
+int		checkkill(char *buf);
 void	chdirandoldpwd(char *new, t_mini *mini);
 /* environment1.c */
 void	dpcheckenvars(char **buf, t_mini *mini);
@@ -121,7 +124,7 @@ t_env	*get_env_head(t_env *env);
 t_env	*get_env_var(t_env **head, char *varname);
 t_env	*init_env_vars(char **envp);
 void	add_temp_envar(t_mini *mini, char *varname);
-void	add_envar(t_mini *mini, char *varname, char *value);
+void	add_envar(t_mini *mini, char *varname, char *value, int is_temp);
 void	remove_envar(t_mini *mini, char *varname);
 void	print_temp_env(t_env *env);
 void	print_env(t_env *env);

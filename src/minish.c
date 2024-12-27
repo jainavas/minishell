@@ -6,21 +6,13 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 01:58:02 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/18 16:31:45 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/24 16:19:22 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
 
 int	g_status;
-
-int	checkkill(char *buf)
-{
-	if (ft_strcmpspace(buf, "exit") == 0)
-		return (1);
-	else
-		return (0);
-}
 
 void	anyfdtofile(int fd, char *filename, int app)
 {
@@ -70,9 +62,9 @@ int	alonecmdcall(int fdin, char **cmd, char *path, t_mini *mini)
 	else
 	{
 		waitpid(pid, &pid_status, 0);
-		status = 0;
-		if (WIFSIGNALED(pid_status))
-			status = 130;
+		if (g_status == 130)
+			write(1, "\n", 1);
+		status = g_status;
 		return (close(fdin), close(fd[WRITE_FD]), free(path),
 			fdtomfiles(mini, fd[READ_FD]), status);
 	}
@@ -107,8 +99,10 @@ int	main(int argc, char **argv, char **envp)
 	mini = ft_calloc(1, sizeof(t_mini));
 	mini->argc = argc;
 	mini->argv = argv;
+	mini->status = 0;
 	mini->envp = envp;
 	mini->env = init_env_vars(envp);
+	add_envar(mini, "?", "0", 2);
 	mini->mfilesout = ft_calloc(1, sizeof(t_fout *));
 	*(mini->mfilesout) = NULL;
 	mini->quotestmps = ft_calloc(1, sizeof(t_env *));
@@ -121,4 +115,5 @@ int	main(int argc, char **argv, char **envp)
 	free(mini->mfilesout);
 	free(mini->quotestmps);
 	free(mini);
+	return (g_status);
 }

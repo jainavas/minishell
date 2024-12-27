@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 15:56:12 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/18 16:17:51 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/24 16:22:17 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,10 @@ int	recread(t_mini **mini)
 		return (0);
 	buf = NULL;
 	t = builtins((*mini), buf2);
-	if (t != -1)
-		return (g_status = t, t);
+	if (t == -1)
+		return (t);
+	else if (t != -2)
+		return (g_status = t, 0);
 	buf2 = debuginout(buf2, (*mini));
 	if (checkinfile((*mini)))
 		return (g_status = 127, free(buf2), free((*mini)->infile), 0);
@@ -41,7 +43,7 @@ int	checkinfile(t_mini *mini)
 {
 	if (access(mini->infile, R_OK) != 0)
 		return (ft_putstr_fd("minishell: ", 1), ft_putstr_fd(mini->infile, 1),
-			ft_putendl_fd(": No existe el archivo o el directorio", 1), 1);
+			ft_putendl_fd(": no such file or directory", 1), 1);
 	return (0);
 }
 
@@ -54,6 +56,8 @@ int	recursiva(t_mini **mini)
 	x = recread(mini);
 	while (x == 0)
 	{
+		(*mini)->status = g_status;
+		add_envar((*mini), "?", ft_itoa((*mini)->status), 2);
 		freelist(*(*mini)->quotestmps);
 		*(*mini)->quotestmps = NULL;
 		(*mini)->infile = NULL;
