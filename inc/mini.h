@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 02:16:09 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/28 19:27:03 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/29 00:08:43 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,15 +34,15 @@ typedef struct s_env
 	struct s_env			*prev;
 }	t_env;
 
+// Probably need to change infile and outfile to char ** because bash accepts many.
 typedef	struct s_cmd
 {
 	char			*cmd;
 	char			*lim;
+	char			*infile;
+	char			*outfile;
 	char			**argv;
 	int				argc;
-	int				infile;
-	int				outfile;
-	struct s_cmd	*next;
 }	t_cmd;
 
 typedef struct s_fileout
@@ -140,7 +140,11 @@ void	remove_envar(t_mini *mini, char *varname);
 void	print_temp_env(t_env *env);
 void	print_env(t_env *env);
 /* evaluator.c */
-t_cmd	*evaluate_commands(char **cmd);
+t_list	*evaluate_commands(char **cmd);
+t_cmd	*get_current_cmd(char **args, int begin, int argc);
+int		is_operator(char *buf);
+int		check_operator_syntax(char **args);
+void	print_cmd_list(t_list *head);
 /* parsing.c */
 char	**process_input(t_mini *mini, char *buf);
 int		count_splitted_operators(char *buf);

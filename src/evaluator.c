@@ -6,78 +6,125 @@
 /*   By: mpenas-z <mpenas-z@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 18:05:55 by mpenas-z          #+#    #+#             */
-/*   Updated: 2024/12/28 20:15:42 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/29 00:32:54 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/mini.h"
 
-t_cmd	*evaluate_commands(char **args)
+t_list	*evaluate_commands(char **args)
 {
-	t_cmd	*head;
-	t_cmd	*current;
-	int		cmd_count;
+	t_list	*head;
+	t_list	*current;
+	t_cmd	*cmd;
 	int		argc;
 	int		i;
 
-	argc = 0;
+	if (check_operator_syntax(args) != 0)
+		return (NULL);
+	head = NULL;
 	i = -1;
 	while (args[++i])
 	{
-		if (!is_operator(args[i]))
+		if (ft_strncmp(args[i], "|", 1))
 		{
-			argc = i;
-			while (!is_operator(args[argc]))
+			ft_lstadd_back(&head, ft_lstnew(NULL));
+			current = ft_lstlast(head);
+			argc = 0;
+			while (args[i + argc] && !is_operator(args[i + argc]))
+			{
 				argc++;
-			argc = argc - i;
-			if (!current)
-				current = new_command(args, argc + i, argc);
+				printf("ARGC: %d\n", argc);
+			}
+			current->content = get_current_cmd(args, i, argc);
+			cmd = (t_cmd *)current->content;
+			if (cmd->lim != NULL)
+				i = i + argc + 2;
+			else if (cmd->infile != NULL
+					|| cmd->outfile != NULL)
+				i = i + argc + 1;
 			else
-			{
-				current->next = new_command(args, argc + i, argc);
-				current = current->next;
-			}
-			if (!head)
-				head = current;
-			if (!ft_strncmp(args[argc + i], "<", 1))
-			{
-				if (!ft_strncmp(args[argc + ++i], "<", 1))
-					current->lim = args[argc + ++i];
-				current->infile = open(args[argc + i], O_RDONLY);
-				if (current->infile == -1)
-					perror("open");
-			}
-			else if (!ft_strncmp(args[argc + i], ">", 1))
-			{
-				current->outfile = open(args[argc + i], \
-										O_WRONLY | O_CREAT | O_TRUNC, 0644);
-				if (current->outfile == -1)
-					perror("open");
-			}
+				i = i + argc;
 		}
 	}
 	return (head);
 }
 
+t_cmd	*get_current_cmd(char **args, int begin, int argc)
+{
+	t_cmd	*cmd;
+	int		i;
+
+	cmd = ft_calloc(1, sizeof(t_cmd));
+	cmd->argc = argc;
+	cmd->lim = NULL;
+	cmd->infile = NULL;
+	cmd->outfile = NULL;
+	cmd->cmd = args[begin];
+	cmd->argv = ft_calloc(argc + 1, sizeof(char *));
+	i = -1;
+	while (++i < argc && args[begin + i])
+		cmd->argv[i] = args[begin + i];
+	cmd->argv[i] = NULL;
+	if (args[begin + argc] && !ft_strncmp(args[begin + argc], ">", 1))
+		cmd->outfile = args[begin + argc + 1];
+	else if (args[begin + argc] && !ft_strncmp(args[begin + argc], "<", 1))
+	{
+		if (args[begin + argc + 1] && !ft_strncmp(args[begin + argc + 1], "<", 1))
+			cmd->lim = args[begin + argc + 2];
+		else
+			cmd->infile = args[begin + argc + 1];
+	}
+	return (cmd);
+}
+
 int	is_operator(char *buf)
 {
+	if (!buf)
+		return (1);
 	if (!ft_strncmp(buf, "|", 1) || !ft_strncmp(buf, "<", 1)
 		|| !ft_strncmp(buf, ">", 1))
 		return (1);
 	return (0);
 }
 
-t_cmd	*new_command(char *buf)
+// WIP
+// Need to look for syntax errors like: "echo hello >", "cat <", or "cat |".
+// Should we implement stuff like "cat < infile < infile2" or "echo hola > outfile > outfile2"?
+// Also make sure cat < < lim WILL NOT WORK, probably is better to split << as one.
+// It automatically shall call mini_error system on error, otherwise return 0.
+int	check_operator_syntax(char **args)
 {
-	t_cmd	*cmd;
+	(void)args;
+	return (0);
+}
 
-	cmd = ft_calloc(1, sizeof(t_cmd));
-	cmd->cmd = buf;
-	cmd->argv = NULL;
-	cmd->lim = NULL;
-	cmd->argc = 1;
-	cmd->infile = -1;
-	cmd->outfile = -1;
-	cmd->next = NULL;
-	return (cmd);
+void	print_cmd_list(t_list *head)
+{
+	t_list	*current;
+	t_cmd	*cmd;
+	int		i;
+
+	printf("Printing cmd list: %p\n", head);
+	current = head;
+	while (current)
+	{
+		if (current->content)
+		{
+			cmd = (t_cmd *)current->content;
+			printf("Cmd: %s\n", cmd->cmd);
+			printf("Argv: {");
+			i = -1;
+			while (cmd->argv[++i])
+				printf("%s, ", cmd->argv[i]);
+			if (cmd->argv[i] == NULL)
+				printf("(nil)");
+			printf("}\n");
+			printf("Argc: %d\n", cmd->argc);
+			printf("Lim: %s\n", cmd->lim);
+			printf("Outfile: %s\n", cmd->outfile);
+			printf("Infile: %s\n", cmd->infile);
+		}
+		current = current->next;
+	}
 }

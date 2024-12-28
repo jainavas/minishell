@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 15:56:12 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/28 19:13:24 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/29 00:08:59 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 int	recread(t_mini **mini)
 {
+	t_list	*head;
 	char	**buf;
 	// char	*buf3;
 	char	*buf2;
@@ -26,6 +27,8 @@ int	recread(t_mini **mini)
 	t = -1;
 	while (buf[++t])
 		printf("String %d: %s\n", t, buf[t]);
+	head = evaluate_commands(buf);
+	print_cmd_list(head);
 	freedoublepointer(buf);
 	// COMMENTED DUE TO TESTING REASONS
 	// buf3 = ft_strdup(buf2);
