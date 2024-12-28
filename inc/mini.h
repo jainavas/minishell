@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 02:16:09 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/28 19:08:52 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/28 19:27:03 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,13 @@ typedef struct s_env
 
 typedef	struct s_cmd
 {
-	char	*cmd;
-	char	**argv;
-	char	*lim;
-	int		argc;
-	int		infile;
-	int		outfile;
+	char			*cmd;
+	char			*lim;
+	char			**argv;
+	int				argc;
+	int				infile;
+	int				outfile;
+	struct s_cmd	*next;
 }	t_cmd;
 
 typedef struct s_fileout
