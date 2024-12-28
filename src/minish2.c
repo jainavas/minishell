@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 15:56:12 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/27 12:59:36 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/28 19:13:24 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,29 +15,35 @@
 int	recread(t_mini **mini)
 {
 	char	**buf;
-	char	*buf3;
+	// char	*buf3;
 	char	*buf2;
 	int		t;
 
 	buf2 = readline("minishell% ");
 	if (!buf2)
 		return (1);
-	buf3 = ft_strdup(buf2);
-	t = builtins((*mini), buf2, process_input((*mini), buf3));
-	if (t == -1)
-		return (t);
-	else if (t != -2)
-		return (g_status = t, 0);
-	buf2 = initialdebug((*mini), buf2);
-	if (!buf2)
-		return (0);
-	buf = NULL;
-	buf2 = debuginout(buf2, (*mini));
-	if (checkinfile((*mini)))
-		return (g_status = 127, free(buf2), free((*mini)->infile), 0);
-	buf = ft_splitchars(buf2, "<|");
-	dpcheckenvars(buf, (*mini));
-	g_status = exec((*mini), buf2, buf);
+	buf = process_input((*mini), buf2);
+	t = -1;
+	while (buf[++t])
+		printf("String %d: %s\n", t, buf[t]);
+	freedoublepointer(buf);
+	// COMMENTED DUE TO TESTING REASONS
+	// buf3 = ft_strdup(buf2);
+	// t = builtins((*mini), buf2, process_input((*mini), buf3));
+	// if (t == -1)
+	// 	return (t);
+	// else if (t != -2)
+	// 	return (g_status = t, 0);
+	// buf2 = initialdebug((*mini), buf2);
+	// if (!buf2)
+	// 	return (0);
+	// buf = NULL;
+	// buf2 = debuginout(buf2, (*mini));
+	// if (checkinfile((*mini)))
+	// 	return (g_status = 127, free(buf2), free((*mini)->infile), 0);
+	// buf = ft_splitchars(buf2, "<|");
+	// dpcheckenvars(buf, (*mini));
+	// g_status = exec((*mini), buf2, buf);
 	return (0);
 }
 

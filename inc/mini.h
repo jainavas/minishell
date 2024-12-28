@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 02:16:09 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/26 16:53:56 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/28 19:08:52 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,16 @@ typedef struct s_env
 	struct s_env			*next;
 	struct s_env			*prev;
 }	t_env;
+
+typedef	struct s_cmd
+{
+	char	*cmd;
+	char	**argv;
+	char	*lim;
+	int		argc;
+	int		infile;
+	int		outfile;
+}	t_cmd;
 
 typedef struct s_fileout
 {
@@ -128,8 +138,14 @@ void	add_envar(t_mini *mini, char *varname, char *value, int is_temp);
 void	remove_envar(t_mini *mini, char *varname);
 void	print_temp_env(t_env *env);
 void	print_env(t_env *env);
+/* evaluator.c */
+t_cmd	*evaluate_commands(char **cmd);
 /* parsing.c */
-char	*process_input(t_mini *mini, char *buf);
+char	**process_input(t_mini *mini, char *buf);
+int		count_splitted_operators(char *buf);
+void	is_in_quotes(int *mode, char c);
+char	**split_operators(int count, char *buf);
+void	process_operators(char ***cmd);
 void	split_input(char *buf, char ***cmd);
 int		count_params(char *buf);
 char	*process_vars(t_mini *mini, char *buf);

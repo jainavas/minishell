@@ -6,21 +6,19 @@
 /*   By: mpenas-z <mpenas-z@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/24 18:22:58 by mpenas-z          #+#    #+#             */
-/*   Updated: 2024/12/27 13:02:57 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/28 18:32:49 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/mini.h"
 
-char	*process_input(t_mini *mini, char *buf)
+char	**process_input(t_mini *mini, char *buf)
 {
 	char	**cmd;
 	char	*temp;
-	char	*aux;
 	int		param_count;
 	int		i;
 
-	aux = NULL;
 	param_count = count_params(buf);
 	cmd = ft_calloc(param_count + 1, sizeof(char *));
 	split_input(buf, &cmd);
@@ -28,13 +26,107 @@ char	*process_input(t_mini *mini, char *buf)
 	i = -1;
 	while (cmd[++i])
 	{
-		cmd[i] = process_vars(mini, cmd[i]);
-		temp = ft_strdup(cmd[i]);
-		aux = ft_strjoin_gnl(aux, temp);
+		temp = cmd[i];
+		cmd[i] = ft_strtrim(cmd[i], " ");
 		free (temp);
 	}
-	freedoublepointer(cmd);
-	return (aux);
+	process_operators(&cmd);
+	i = -1;
+	while (cmd[++i])
+		cmd[i] = process_vars(mini, cmd[i]);
+	return (cmd);
+}
+
+int	count_operators(char *buf)
+{
+	int	i[3];
+
+	i[2] = 0;
+	i[1] = 0;
+	i[0] = -1;
+	while ((size_t)++i[0] <= ft_strlen(buf))
+	{
+		if (i[1] == 0 && buf[i[0]] == '"')
+			i[1] = 1;
+		else if (i[1] == 0 && buf[i[0]] == '\'')
+			i[1] = 2;
+		else if ((i[1] == 1 && buf[i[0]] == '"')
+			|| (i[1] == 2 && buf[i[0]] == '\''))
+			i[1] = 0;
+		else if (i[1] == 0 && (buf[i[0]] == '<' || buf[i[0]] == '>'
+				|| buf[i[0]] == '|' || buf[i[0]] == '\0'))
+		{
+			if (i[0] > 0 && buf[i[0] - 1] != '<' && buf[i[0] - 1] != '>'
+				&& buf[i[0] - 1] != '|' && buf[i[0] - 1] != '\0')
+				i[2]++;
+			if (buf[i[0]] != '\0')
+				i[2]++;
+		}
+	}
+	return (i[2]);
+}
+
+void	is_in_quotes(int *mode, char c)
+{
+	if (*mode == 0 && c == '"')
+		*mode = 1;
+	else if (*mode == 0 && c == '\'')
+		*mode = 2;
+	else if ((*mode == 1 && c == '"') || (*mode == 2 && c == '\''))
+		*mode = 0;
+}
+
+char	**split_operators(int count, char *buf)
+{
+	char	**split;
+	char	*temp;
+	int		i[3];
+
+	split = ft_calloc(count + 1, sizeof(char *));
+	temp = buf;
+	i[2] = 0;
+	i[1] = 0;
+	i[0] = -1;
+	while ((size_t)++i[0] <= ft_strlen(buf))
+	{
+		is_in_quotes(&i[1], buf[i[0]]);
+		if (i[1] == 0 && (buf[i[0]] == '<' || buf[i[0]] == '>'
+				|| buf[i[0]] == '|' || buf[i[0]] == '\0'))
+		{
+			if (temp < buf + i[0])
+				split[i[2]++] = ft_strndup(temp, buf + i[0] - temp);
+			if (buf[i[0]] != '\0')
+				split[i[2]++] = ft_strndup(buf + i[0], 1);
+			temp = buf + i[0] + 1;
+		}
+	}
+	return (split);
+}
+
+void	process_operators(char ***cmd)
+{
+	char	**input;
+	char	**split;
+	int		i[3];
+
+	input = (*cmd);
+	i[0] = -1;
+	i[1] = 0;
+	while (input[++i[0]])
+		i[1] += count_operators(input[i[0]]);
+	(*cmd) = ft_calloc(i[1] + 1, sizeof(char *));
+	i[2] = -1;
+	i[0] = -1;
+	while (input[++i[0]])
+	{
+		i[1] = -1;
+		split = split_operators(count_operators(input[i[0]]), input[i[0]]);
+		while (split[++i[1]])
+			(*cmd)[++i[2]] = split[i[1]];
+		free(split);
+		free(input[i[0]]);
+	}
+	free(input);
 }
 
 void	split_input(char *buf, char ***cmd)
@@ -52,7 +144,7 @@ void	split_input(char *buf, char ***cmd)
 			i[1] = 1;
 		else if (i[1] == 0 && buf[i[0]] == '\'')
 			i[1] = 2;
-		else if ((i[1] == 1 && buf[i[0]] == '"') 
+		else if ((i[1] == 1 && buf[i[0]] == '"')
 			|| (i[1] == 2 && buf[i[0]] == '\''))
 			i[1] = 0;
 		if (i[1] == 0 && (buf[i[0]] == ' ' || buf[i[0] + 1] == '\0'))
@@ -78,7 +170,7 @@ int	count_params(char *buf)
 			i[1] = 1;
 		else if (i[1] == 0 && buf[i[0]] == '\'')
 			i[1] = 2;
-		else if ((i[1] == 1 && buf[i[0]] == '"') 
+		else if ((i[1] == 1 && buf[i[0]] == '"')
 			|| (i[1] == 2 && buf[i[0]] == '\''))
 			i[1] = 0;
 		if (i[1] == 0 && (buf[i[0]] == ' ' || buf[i[0] + 1] == '\0'))
@@ -178,12 +270,12 @@ int	get_namelen(char *name)
 {
 	int	i;
 
-	if (!name) 
+	if (!name)
 		return (0);
 	if (name[1] == '?')
 		return (2);
 	i = 1;
 	while (name[i] && (isalnum(name[i]) || name[i] == '_'))
-			i++;
+		i++;
 	return (i);
 }
