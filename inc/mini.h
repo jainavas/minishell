@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 02:16:09 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/29 00:08:43 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/29 13:44:09 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,10 +141,14 @@ void	print_temp_env(t_env *env);
 void	print_env(t_env *env);
 /* evaluator.c */
 t_list	*evaluate_commands(char **cmd);
-t_cmd	*get_current_cmd(char **args, int begin, int argc);
+t_list	*assign_outfile(t_list **current, char **args, int *begin);
+t_list	*assign_infile(t_list **current, char **args, int *begin);
+t_cmd	*get_current_cmd(char **args, int *begin);
 int		is_operator(char *buf);
 int		check_operator_syntax(char **args);
 void	print_cmd_list(t_list *head);
+void	free_cmd(t_cmd *cmd);
+void	free_cmd_list(t_list *head);
 /* parsing.c */
 char	**process_input(t_mini *mini, char *buf);
 int		count_splitted_operators(char *buf);

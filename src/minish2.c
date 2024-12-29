@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 15:56:12 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/29 00:08:59 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/29 13:48:12 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,9 @@ int	recread(t_mini **mini)
 	while (buf[++t])
 		printf("String %d: %s\n", t, buf[t]);
 	head = evaluate_commands(buf);
-	print_cmd_list(head);
 	freedoublepointer(buf);
+	print_cmd_list(head);
+	free_cmd_list(head);
 	// COMMENTED DUE TO TESTING REASONS
 	// buf3 = ft_strdup(buf2);
 	// t = builtins((*mini), buf2, process_input((*mini), buf3));
