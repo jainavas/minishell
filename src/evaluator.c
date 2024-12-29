@@ -6,7 +6,7 @@
 /*   By: mpenas-z <mpenas-z@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 18:05:55 by mpenas-z          #+#    #+#             */
-/*   Updated: 2024/12/29 13:46:48 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2024/12/29 14:20:39 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,8 @@ int	is_operator(char *buf)
 
 // WIP
 // Need to look for syntax errors like: "echo hello >", "cat <", or "cat |".
-// Should we implement stuff like "cat < infile < infile2" or "echo hola > outfile > outfile2"?
+// Should we implement stuff like "cat < infile < infile2" or
+// "echo hola > outfile > outfile2"? -> If so do it in assign_outfile;
 // Also make sure cat < < lim WILL NOT WORK, probably is better to split << as one.
 // It automatically shall call mini_error system on error, otherwise return 0.
 int	check_operator_syntax(char **args)
