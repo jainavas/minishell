@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   evaluator.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mpenas-z <mpenas-z@student.42madrid.com>   +#+  +:+       +#+        */
+/*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 18:05:55 by mpenas-z          #+#    #+#             */
-/*   Updated: 2024/12/29 14:20:39 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2025/01/03 18:39:36 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,18 @@ t_list	*evaluate_commands(char **args)
 		}
 		else if (!ft_strncmp(args[i], "<", 1))
 			current = assign_infile(&current, args, &i);
-		else if (!ft_strncmp(args[i], ">", 1))
-			current = assign_outfile(&current, args, &i);
+		else if (!ft_strncmp(args[i], ">", 1) && ft_strncmp(args[i + 1], ">", 1))
+			current = assign_outfile(&current, args, &i, 0);
+		else if (!ft_strncmp(args[i], ">", 1) && !ft_strncmp(args[i + 1], ">", 1))
+		{
+			i++;
+			current = assign_outfile(&current, args, &i, 1);
+		}
 	}
 	return (head);
 }
 
-t_list	*assign_outfile(t_list **current, char **args, int *begin)
+t_list	*assign_outfile(t_list **current, char **args, int *begin, int app)
 {
 	int		i;
 	t_cmd	*cmd;
@@ -52,7 +57,7 @@ t_list	*assign_outfile(t_list **current, char **args, int *begin)
 	if (!args[++i])
 		return (*current);
 	else if (args[i] && !is_operator(args[i]))
-		cmd->outfile = ft_strdup(args[i]);
+		newfileout(cmd->outfiles, ft_strdup(args[i]), app);
 	(*current)->content = cmd;
 	*begin = i;
 	return ((*current));
@@ -91,7 +96,7 @@ t_cmd	*get_current_cmd(char **args, int *begin)
 	cmd->argc = argc;
 	cmd->lim = NULL;
 	cmd->infile = NULL;
-	cmd->outfile = NULL;
+	cmd->outfiles = ft_calloc(1, sizeof(t_fout *));
 	cmd->cmd = ft_strdup(args[*begin]);
 	cmd->argv = ft_calloc(argc + 1, sizeof(char *));
 	i = -1;
@@ -128,6 +133,7 @@ void	print_cmd_list(t_list *head)
 {
 	t_list	*current;
 	t_cmd	*cmd;
+	t_fout	*outf;
 	int		i;
 
 	printf("Printing cmd list: %p\n", head);
@@ -137,6 +143,7 @@ void	print_cmd_list(t_list *head)
 		if (current->content)
 		{
 			cmd = (t_cmd *)current->content;
+			outf = *cmd->outfiles;
 			if (!cmd)
 				return ;
 			printf("Cmd: %s\n", cmd->cmd);
@@ -149,7 +156,11 @@ void	print_cmd_list(t_list *head)
 			printf("}\n");
 			printf("Argc: %d\n", cmd->argc);
 			printf("Lim: %s\n", cmd->lim);
-			printf("Outfile: %s\n", cmd->outfile);
+			while (outf)
+			{
+				printf("Outfile: %s\n", outf->file);
+				outf = outf->next;
+			}
 			printf("Infile: %s\n", cmd->infile);
 		}
 		current = current->next;
@@ -179,9 +190,12 @@ void	free_cmd(t_cmd *cmd)
 		freedoublepointer(cmd->argv);
 	if (cmd->infile)
 		free (cmd->infile);
-	if (cmd ->lim)
+	if (cmd->lim)
 		free (cmd->lim);
-	if (cmd ->outfile)
-		free (cmd->outfile);
+	if (cmd->outfiles)
+	{
+		freeoutfiles(cmd->outfiles);
+		free(cmd->outfiles);
+	}
 	free (cmd);
 }

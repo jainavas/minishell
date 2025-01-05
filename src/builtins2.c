@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 00:52:59 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/24 16:39:41 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2025/01/04 19:31:42 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,4 +73,5 @@ void	chdirandoldpwd(char *new, t_mini *mini)
 	tmp = getcwd(NULL, 0);
 	entvars(&mini->env, ft_strdup("OLDPWD"), tmp);
 	chdir(new);
+	entvars(&mini->env, ft_strdup("PWD"), getcwd(NULL, 0));
 }

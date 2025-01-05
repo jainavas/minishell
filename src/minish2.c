@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 15:56:12 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/29 13:48:12 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2025/01/03 19:58:01 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,15 +29,19 @@ int	recread(t_mini **mini)
 		printf("String %d: %s\n", t, buf[t]);
 	head = evaluate_commands(buf);
 	freedoublepointer(buf);
+	(*mini)->header = head;
+	run_cmd_list(*mini, head);
 	print_cmd_list(head);
 	free_cmd_list(head);
+	// CHECK KILL SHOULD BE OUTSIDE BUILTINS FOR CMD EXEC TO BE ISOLATED
+	// status = checkkill(buf3);
+	// if (status != 0)
+	// 	return (free(buf2), rl_clear_history(), -1);
 	// COMMENTED DUE TO TESTING REASONS
 	// buf3 = ft_strdup(buf2);
 	// t = builtins((*mini), buf2, process_input((*mini), buf3));
-	// if (t == -1)
-	// 	return (t);
-	// else if (t != -2)
-	// 	return (g_status = t, 0);
+	// if (t != -2)
+	// 	return (0);
 	// buf2 = initialdebug((*mini), buf2);
 	// if (!buf2)
 	// 	return (0);

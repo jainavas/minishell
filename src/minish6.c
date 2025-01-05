@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 17:07:05 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/10 12:47:03 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2025/01/03 19:07:29 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,11 +47,11 @@ void	handlemfilesout(t_mini *mini, char *buf)
 	}
 }
 
-void	fdtomfiles(t_mini *mini, int fd)
+void	fdtomfiles(t_fout **head, int fd)
 {
 	t_fout	*tmp;
 
-	tmp = (*mini->mfilesout);
+	tmp = *head;
 	while (tmp && tmp->next)
 	{
 		anyfdtofile(-1, tmp->file, tmp->appendout);
@@ -59,7 +59,7 @@ void	fdtomfiles(t_mini *mini, int fd)
 	}
 	ft_putnbr_fd(fd, fd);
 	anyfdtofile(fd, tmp->file, tmp->appendout);
-	freeoutfiles(mini->mfilesout);
+	freeoutfiles(head);
 }
 
 void	freeoutfiles(t_fout **lst)

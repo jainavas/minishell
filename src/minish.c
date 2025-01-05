@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 01:58:02 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/27 13:00:12 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2025/01/04 18:34:37 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,8 @@ void	anyfdtofile(int fd, char *filename, int app)
 	}
 	if (fdo != 0 && fdo != 1 && fdo != 2)
 		close(fdo);
-	if (fd != -1)
-		close(fd);
+	// if (fd != -1)
+	// 	close(fd);
 }
 
 int	alonecmdcall(int fdin, char **cmd, char *path, t_mini *mini)
@@ -47,26 +47,24 @@ int	alonecmdcall(int fdin, char **cmd, char *path, t_mini *mini)
 	int	fd[2];
 	int	pid;
 	int	pid_status;
-	int	status;
 
 	pipe(fd);
 	pid = fork();
 	if (pid == 0)
 	{
 		alonecmdcallutils(fd, fdin);
-		if (ft_strcmpalnum((*mini->mfilesout)->file, "/dev/stdout") != 0)
-			dup2(fd[WRITE_FD], STDOUT_FILENO);
+		dup2(fd[WRITE_FD], STDOUT_FILENO);
 		closeanddupinput(fd);
-		execve(path, cmd, mini->envp);
+		execve(path, cmd, envtodoublechar(mini->env));
 	}
 	else
 	{
 		waitpid(pid, &pid_status, 0);
 		if (g_status == 130)
 			write(1, "\n", 1);
-		status = g_status;
-		return (close(fdin), close(fd[WRITE_FD]), free(path),
-			fdtomfiles(mini, fd[READ_FD]), status);
+		if (fdin > 2)
+			close(fdin);
+		return (close(fd[WRITE_FD]), free(path), fd[READ_FD]);
 	}
 	return (0);
 }

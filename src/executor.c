@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mpenas-z <mpenas-z@student.42madrid.com>   +#+  +:+       +#+        */
+/*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/29 14:21:20 by mpenas-z          #+#    #+#             */
-/*   Updated: 2024/12/29 14:30:54 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2025/01/04 19:20:19 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,58 @@
 // If a command fails, output error and keep going.
 // For some reason, in bash echo after a failed pipe prints before error.
 // -> Should we store cmd outputs and then evaluate priority?
-int	run_cmd_list(t_list *head)
+int	run_cmd_list(t_mini *mini, t_list *head)
 {
+	t_list	*curr;
+	t_cmd	*cmd;
+	int		fdret;
+	char	buf;
 
+	curr = head;
+	fdret = 0;
+	// if (((t_cmd *)curr->content)->infile)
+	// 	fdret = open(((t_cmd *)curr->content)->infile, O_RDONLY);
+	// if (fdret == -1)
+	// 	fdret = 0;
+	while (curr)
+	{
+		cmd = (t_cmd *)curr->content;
+		fdret = execute_command(mini, cmd, fdret);
+		if (*cmd->outfiles)
+			fdtomfiles(cmd->outfiles, fdret);
+		curr = curr->next;
+	}
+	if (fdret != 0 && read(fdret, &buf, 0) != -1)
+		fdtofd(fdret, STDOUT_FILENO);
+	return (0);
 }
 
 // This function executes the current command once all pipes, 
 // files and redirections have been set up.
-int	execute_command(t_cmd *cmd, int infd, int outfd)
+int	execute_command(t_mini *mini, t_cmd *cmd, int infd)
 {
+	int	tmpfd;
 
+	tmpfd = builtins(mini, cmd);
+	if (tmpfd != -2)
+		return (g_status = 0, tmpfd);
+	if (!cmdexistence(cmd->cmd, mini))
+		return (ft_putstr_fd(cmd->cmd, 1), ft_putstr_fd(": not exists\n", 1), 0);
+	tmpfd = alonecmdcall(infd, cmd->argv, pathseek(&cmd->cmd, envtodoublechar(mini->env)), mini);
+	return (tmpfd);
+}
+
+int	cmdcount(t_list **head)
+{
+	t_list	*tmp;
+	int		i;
+
+	tmp = *head;
+	i = 0;
+	while (tmp)
+	{
+		i++;
+		tmp = tmp->next;
+	}
+	return (i);
 }

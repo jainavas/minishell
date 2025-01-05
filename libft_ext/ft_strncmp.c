@@ -62,3 +62,29 @@ int	ft_strcmpspace(const char *s1, const char *s2)
 	res = (unsigned char)*(s1 + i) - (unsigned char)*(s2 + i);
 	return (res);
 }
+
+int	ft_strcmpoptions(const char *s1, const char *option)
+{
+	int	i;
+
+	i = 0;
+	if (!s1 || !option)
+		return (-1);
+	while (s1[i] && option[i] && s1[i] == option[i])
+		i++;
+	if (!s1[i] && !option[i])
+		return (0);
+	if (!option[i] && s1[i] == option[1])
+	{
+		while (s1[i] == option[1])
+			i++;
+		if (!s1[i])
+			return (0);
+	}
+	return (-1);
+}
+// #include <stdio.h>
+// int main(void)
+// {
+// 	printf ("%d", ft_strcmpoptions("-", "-n"));
+// }
