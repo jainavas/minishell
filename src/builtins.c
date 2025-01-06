@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 12:14:17 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/04 19:32:25 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/06 02:56:55 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,8 @@ int	doexport(t_mini *mini, t_cmd *cmd, int fd)
 	}
 	if (argc == 1)
 		print_temp_env(mini->env, fd);
+	else
+		close(fd);
 	return (status);
 }
 
@@ -94,11 +96,9 @@ void	dounset(t_mini *mini, t_cmd	*cmd)
 
 	(void)mini;
 	argc = 0;
-	while (cmd->argv[argc])
-		argc++;
-	if (argc == 1)
+	if (cmd->argc == 1)
 		return ;
-	else if (argc >= 2)
+	else if (cmd->argc >= 2)
 	{
 		argc = 0;
 		while (cmd->argv[++argc])
@@ -111,9 +111,9 @@ int	builtins(t_mini *mini, t_cmd *cmd)
 	int	fd[2];
 
 	if (ft_strcmpspace("cd", cmd->cmd) == 0)
-		return (docd(checkenvvars(cmd->argv[1], mini), mini), -1);
+		return (docd(checkenvvars(cmd->argv[1], mini), mini), 0);
 	if (ft_strcmpspace("unset", cmd->cmd) == 0)
-		return (dounset(mini, cmd), -1);
+		return (dounset(mini, cmd), 0);
 	// WIP with new parse
 	// if (ft_strchr(buf2, '=') && ft_strchr(buf2, '=')[-1] != ' '
 	// 	&& ft_strchr(buf2, '=')[1] != ' '

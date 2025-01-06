@@ -6,12 +6,17 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 18:05:55 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/03 18:39:36 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/06 03:49:24 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/mini.h"
 
+// theres a problem with infile handle when <Makefile grep a,
+// tries to assign infile but the cmd struct doesnt exist yet coz is created when cmd is found
+
+// theres two options in my op, or we just strdup it somewhere and do the assign infile after cmd,
+// or we create it elsewhere
 t_list	*evaluate_commands(char **args)
 {
 	t_list	*head;
@@ -30,7 +35,7 @@ t_list	*evaluate_commands(char **args)
 		{
 			ft_lstadd_back(&head, ft_lstnew(NULL));
 			current = ft_lstlast(head);
-			current->content = get_current_cmd(args, &i);
+			current->content = get_current_cmd(args, &i); // HERE, if not current->content is uninitialized
 		}
 		else if (!ft_strncmp(args[i], "<", 1))
 			current = assign_infile(&current, args, &i);

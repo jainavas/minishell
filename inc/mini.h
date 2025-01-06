@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 02:16:09 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/04 19:09:21 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/06 03:05:34 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,7 @@ t_fout	*foutlast(t_fout *lst);
 void	handlemfilesout(t_mini *mini, char *buf);
 void	fdtomfiles(t_fout **head, int fd);
 void	freeoutfiles(t_fout **lst);
+char	*pathseekenv(char **args, char **envp);
 /* minish7.c */
 int		counttmps(t_env *lst);
 char	*initialdebug(t_mini *mini, char *buf2);

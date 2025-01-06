@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 01:58:02 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/04 18:34:37 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/06 03:17:39 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,8 @@ int	alonecmdcall(int fdin, char **cmd, char *path, t_mini *mini)
 	if (pid == 0)
 	{
 		alonecmdcallutils(fd, fdin);
-		dup2(fd[WRITE_FD], STDOUT_FILENO);
+		if (cmdcount(&mini->header) != 1 || *((t_cmd *)mini->header->content)->outfiles != NULL)
+			dup2(fd[WRITE_FD], STDOUT_FILENO);
 		closeanddupinput(fd);
 		execve(path, cmd, envtodoublechar(mini->env));
 	}

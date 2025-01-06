@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 12:40:23 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/04 19:13:12 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/06 02:59:41 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -243,7 +243,7 @@ char	**envtodoublechar(t_env *env)
 	}
 	res[++i] = NULL;
 	close(tmpfd);
-	tmp = ft_strjoin(getcwd(NULL, 0), "/tmpenv");
+	tmp = ft_strjoin_gnl(getcwd(NULL, 0), "/tmpenv");
 	unlink(tmp);
 	free(tmp);
 	return (res);

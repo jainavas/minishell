@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 22:28:59 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/04 18:16:20 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/06 03:01:11 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,14 +54,16 @@ int	spacesindex(const char *str)
 int	cmdexistence(char *cmd, t_mini *mini)
 {
 	char	*tmp;
+	char	**tmp2;
 
 	if (!cmd)
 		return (0);
-	tmp = pathseek(&cmd, mini->envp);
+	tmp2 = envtodoublechar(mini->env);
+	tmp = pathseek(&cmd, tmp2);
 	if (tmp)
-		return (free(tmp), 1);
+		return (free(tmp), freedoublepointer(tmp2), 1);
 	else
-		return (0);
+		return (freedoublepointer(tmp2), 0);
 }
 
 void	fdtofd(int fdin, int fdout)
