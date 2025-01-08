@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 22:28:59 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/06 03:01:11 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/08 17:32:16 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,20 @@ void	newfileout(t_fout **head, char *file, int app)
 	free(file);
 }
 
-void	alonecmdcallutils(int fd[2], int fdin)
+void	alonecmdcallutils(t_cmd *cmd, int fdin)
 {
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
-	dup2(fdin, fd[READ_FD]);
-	if (fdin > 2)
+	if (cmd->infile)
+		dup2(fdin, cmd->fd[READ_FD]);
+	else if (cmd->prev)
+	{
+		dup2(cmd->prev->fd[READ_FD], cmd->fd[READ_FD]);
+		close(cmd->prev->fd[READ_FD]);
+	}
+	else
+		dup2(fdin, cmd->fd[READ_FD]);
+	if (fdin > 2 && fdin != -1)
 		close(fdin);
 }
 
@@ -59,7 +67,7 @@ int	cmdexistence(char *cmd, t_mini *mini)
 	if (!cmd)
 		return (0);
 	tmp2 = envtodoublechar(mini->env);
-	tmp = pathseek(&cmd, tmp2);
+	tmp = pathseekenv(&cmd, tmp2);
 	if (tmp)
 		return (free(tmp), freedoublepointer(tmp2), 1);
 	else

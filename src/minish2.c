@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 15:56:12 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/03 19:58:01 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/08 19:50:47 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	recread(t_mini **mini)
 {
-	t_list	*head;
+	t_cmd	*head;
 	char	**buf;
 	// char	*buf3;
 	char	*buf2;
@@ -23,16 +23,20 @@ int	recread(t_mini **mini)
 	buf2 = readline("minishell% ");
 	if (!buf2)
 		return (1);
-	buf = process_input((*mini), buf2);
-	t = -1;
-	while (buf[++t])
-		printf("String %d: %s\n", t, buf[t]);
+	if (buf2[0] == '\0')
+		return (0);
+	add_history(buf2);
+	buf = process_input((*mini), ft_strdup(buf2));
+	// t = -1;
+	// while (buf[++t])
+	// 	printf("String %d: %s\n", t, buf[t]);
 	head = evaluate_commands(buf);
 	freedoublepointer(buf);
-	(*mini)->header = head;
-	run_cmd_list(*mini, head);
-	print_cmd_list(head);
-	free_cmd_list(head);
+	(*mini)->header = &head;
+	head->oginput = buf2;
+	// print_cmd_list(head);
+	t = run_cmd_list(*mini, &head);
+	free_cmd_list(&head);
 	// CHECK KILL SHOULD BE OUTSIDE BUILTINS FOR CMD EXEC TO BE ISOLATED
 	// status = checkkill(buf3);
 	// if (status != 0)
@@ -52,7 +56,7 @@ int	recread(t_mini **mini)
 	// buf = ft_splitchars(buf2, "<|");
 	// dpcheckenvars(buf, (*mini));
 	// g_status = exec((*mini), buf2, buf);
-	return (0);
+	return (t);
 }
 
 int	checkinfile(t_mini *mini)

@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 12:40:23 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/06 02:59:41 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/08 16:42:27 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,7 +182,7 @@ void	print_temp_env(t_env *env, int fd)
 		}
 		aux = env->next;
 	}
-	if (fd > 2)
+	if (fd > 2 && fd != -1)
 		close(fd);
 }
 
@@ -202,7 +202,7 @@ void	print_envfd(t_env *env, int fd)
 		}
 		aux = env->next;
 	}
-	if (fd > 2)
+	if (fd > 2 && fd != -1)
 		close(fd);
 }
 
@@ -242,7 +242,8 @@ char	**envtodoublechar(t_env *env)
 		tmp = get_next_line(tmpfd);
 	}
 	res[++i] = NULL;
-	close(tmpfd);
+	if (tmpfd != -1)
+		close(tmpfd);
 	tmp = ft_strjoin_gnl(getcwd(NULL, 0), "/tmpenv");
 	unlink(tmp);
 	free(tmp);

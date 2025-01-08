@@ -1,4 +1,4 @@
-NAME = mini
+NAME = minishell
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -g3 -fPIE
 CLIBS = -lreadline
@@ -27,6 +27,7 @@ SRC =	minish.c \
 		environment2.c \
 		parsing.c \
 		evaluator.c \
+		cmdlisthandle.c \
 		executor.c
 
 SRCS = $(addprefix $(SRC_PATH), $(SRC))

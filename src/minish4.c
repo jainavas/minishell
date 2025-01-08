@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 20:05:57 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/27 12:57:00 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2025/01/07 17:22:47 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,30 +43,30 @@ int	dopipes(char *buf2, char **buf, t_mini *mini)
 	return (free(buf2), freedoublepointer(buf), status);
 }
 
-int	docmd(char *buf2, char **buf, t_mini *mini)
-{
-	int		fdin;
-	char	**aux;
-	int		status;
+// int	docmd(char *buf2, char **buf, t_mini *mini)
+// {
+// 	int		fdin;
+// 	char	**aux;
+// 	int		status;
 
-	if (ft_strcount(buf2, '<') == 2)
-		return (free(buf2), dolimitonecmd(buf, mini));
-	fdin = open(mini->infile, O_RDONLY);
-	buf2 = checkenvvars(buf2, mini);
-	aux = ft_split(buf2, ' ');
-	free(buf2);
-	if (!aux)
-		return (ft_putstr_fd("mini: command not found\n", 2),
-			free(mini->infile), freedoublepointer(buf), 127);
-	buf2 = pathseek(aux, mini->envp);
-	if (!buf2)
-		return (ft_putstr_fd("mini: command not found\n", 2),
-			free(mini->infile), freedoublepointer(buf),
-			freedoublepointer(aux), free(buf2), 127);
-	status = alonecmdcall(fdin, aux, pathseek(aux, mini->envp), mini);
-	return (free(mini->infile),
-		freedoublepointer(buf), free(buf2), freedoublepointer(aux), status);
-}
+// 	if (ft_strcount(buf2, '<') == 2)
+// 		return (free(buf2), dolimitonecmd(buf, mini));
+// 	fdin = open(mini->infile, O_RDONLY);
+// 	buf2 = checkenvvars(buf2, mini);
+// 	aux = ft_split(buf2, ' ');
+// 	free(buf2);
+// 	if (!aux)
+// 		return (ft_putstr_fd("mini: command not found\n", 2),
+// 			free(mini->infile), freedoublepointer(buf), 127);
+// 	buf2 = pathseek(aux, mini->envp);
+// 	if (!buf2)
+// 		return (ft_putstr_fd("mini: command not found\n", 2),
+// 			free(mini->infile), freedoublepointer(buf),
+// 			freedoublepointer(aux), free(buf2), 127);
+// 	status = alonecmdcall(fdin, aux, pathseek(aux, mini->envp), mini);
+// 	return (free(mini->infile),
+// 		freedoublepointer(buf), free(buf2), freedoublepointer(aux), status);
+// }
 
 int	checkquotes(char *buf, t_mini *mini)
 {

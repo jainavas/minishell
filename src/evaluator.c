@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 18:05:55 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/06 03:49:24 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/08 19:32:15 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,75 +17,84 @@
 
 // theres two options in my op, or we just strdup it somewhere and do the assign infile after cmd,
 // or we create it elsewhere
-t_list	*evaluate_commands(char **args)
+t_cmd	*evaluate_commands(char **args)
 {
-	t_list	*head;
-	t_list	*current;
+	t_cmd	*head;
+	t_cmd	*current;
+	int		tmp;
 	int		i;
 
 	if (check_operator_syntax(args) != 0)
 		return (NULL);
 	head = NULL;
+	current = NULL;
 	i = -1;
+	tmp = -1;
 	while (args[++i])
 	{
-		if (head)
-			current = ft_lstlast(head);
+		if (args[i][0] == '|')
+			current = NULL;
 		if (!is_operator(args[i]))
 		{
-			ft_lstadd_back(&head, ft_lstnew(NULL));
-			current = ft_lstlast(head);
-			current->content = get_current_cmd(args, &i); // HERE, if not current->content is uninitialized
+			if (!current)
+			{
+				cmdadd_back(&head, get_current_cmd(args, &i)); // HERE, if not current->content is uninitialized
+				current = cmdlast(head);
+			}
+			else
+				assignarg(&current, args, &i);
+			if (tmp != -1)
+			{
+				assign_infile(&current, args, &tmp);
+				tmp = -1;
+			}
 		}
 		else if (!ft_strncmp(args[i], "<", 1))
-			current = assign_infile(&current, args, &i);
+		{
+			if (current)
+				assign_infile(&current, args, &i);
+			else
+				tmp = i++;
+		}
 		else if (!ft_strncmp(args[i], ">", 1) && ft_strncmp(args[i + 1], ">", 1))
-			current = assign_outfile(&current, args, &i, 0);
+			assign_outfile(&current, args, &i, 0);
 		else if (!ft_strncmp(args[i], ">", 1) && !ft_strncmp(args[i + 1], ">", 1))
 		{
 			i++;
-			current = assign_outfile(&current, args, &i, 1);
+			assign_outfile(&current, args, &i, 1);
 		}
 	}
 	return (head);
 }
 
-t_list	*assign_outfile(t_list **current, char **args, int *begin, int app)
+void	assign_outfile(t_cmd **current, char **args, int *begin, int app)
 {
 	int		i;
-	t_cmd	*cmd;
 
 	if (!(*current))
-		return (NULL);
-	cmd = (t_cmd *)(*current)->content;
+		return ;
 	i = *begin;
 	if (!args[++i])
-		return (*current);
+		return ;
 	else if (args[i] && !is_operator(args[i]))
-		newfileout(cmd->outfiles, ft_strdup(args[i]), app);
-	(*current)->content = cmd;
+		newfileout((*current)->outfiles, ft_strdup(args[i]), app);
 	*begin = i;
-	return ((*current));
 }
 
-t_list	*assign_infile(t_list **current, char **args, int *begin)
+void	assign_infile(t_cmd **current, char **args, int *begin)
 {
 	int		i;
-	t_cmd	*cmd;
 
 	if (!(*current))
-		return (NULL);
-	cmd = (t_cmd *)(*current)->content;
+		return ;
 	i = *begin;
 	if (!args[++i])
-		return ((*current));
+		return ;
 	if (args[i] && !is_operator(args[i]))
-		cmd->infile = ft_strdup(args[i]);
+		(*current)->infile = ft_strdup(args[i]);
 	else if (args[++i])
-		cmd->lim = ft_strdup(args[i]);
+		(*current)->lim = ft_strdup(args[i]);
 	*begin = i;
-	(*current)->content = cmd;
-	return ((*current));
 }
 
 t_cmd	*get_current_cmd(char **args, int *begin)
@@ -100,9 +109,13 @@ t_cmd	*get_current_cmd(char **args, int *begin)
 	cmd = ft_calloc(1, sizeof(t_cmd));
 	cmd->argc = argc;
 	cmd->lim = NULL;
+	cmd->oginput = NULL;
+	cmd->next = NULL;
+	cmd->prev = NULL;
 	cmd->infile = NULL;
 	cmd->outfiles = ft_calloc(1, sizeof(t_fout *));
 	cmd->cmd = ft_strdup(args[*begin]);
+	cmd->path = NULL;
 	cmd->argv = ft_calloc(argc + 1, sizeof(char *));
 	i = -1;
 	while (++i < argc && args[*begin + i])
@@ -134,10 +147,9 @@ int	check_operator_syntax(char **args)
 	return (0);
 }
 
-void	print_cmd_list(t_list *head)
+void	print_cmd_list(t_cmd *head)
 {
-	t_list	*current;
-	t_cmd	*cmd;
+	t_cmd	*current;
 	t_fout	*outf;
 	int		i;
 
@@ -145,45 +157,43 @@ void	print_cmd_list(t_list *head)
 	current = head;
 	while (current)
 	{
-		if (current->content)
+		if (current)
 		{
-			cmd = (t_cmd *)current->content;
-			outf = *cmd->outfiles;
-			if (!cmd)
+			outf = *current->outfiles;
+			if (!current->cmd)
 				return ;
-			printf("Cmd: %s\n", cmd->cmd);
+			printf("Cmd: %s\n", current->cmd);
 			printf("Argv: {");
 			i = -1;
-			while (cmd->argv[++i])
-				printf("%s, ", cmd->argv[i]);
-			if (cmd->argv[i] == NULL)
+			while (current->argv[++i])
+				printf("%s, ", current->argv[i]);
+			if (current->argv[i] == NULL)
 				printf("(nil)");
 			printf("}\n");
-			printf("Argc: %d\n", cmd->argc);
-			printf("Lim: %s\n", cmd->lim);
+			printf("Argc: %d\n", current->argc);
+			printf("Lim: %s\n", current->lim);
 			while (outf)
 			{
 				printf("Outfile: %s\n", outf->file);
 				outf = outf->next;
 			}
-			printf("Infile: %s\n", cmd->infile);
+			printf("Infile: %s\n", current->infile);
 		}
 		current = current->next;
 	}
 }
 
 // Need to strdup from args when copying argv.
-void	free_cmd_list(t_list *head)
+void	free_cmd_list(t_cmd **head)
 {
-	t_list	*current;
+	t_cmd	*current;
 
-	current = head;
-	while (head)
+	current = *head;
+	while (*head)
 	{
-		free_cmd(head->content);
 		current = current->next;
-		free (head);
-		head = current;
+		free_cmd(*head);
+		*head = current;
 	}
 }
 
@@ -197,10 +207,33 @@ void	free_cmd(t_cmd *cmd)
 		free (cmd->infile);
 	if (cmd->lim)
 		free (cmd->lim);
+	if (cmd->oginput)
+		free (cmd->oginput);
+	if (cmd->env)
+		freedoublepointer(cmd->env);
+	if (cmd->path)
+		free (cmd->path);
 	if (cmd->outfiles)
 	{
 		freeoutfiles(cmd->outfiles);
 		free(cmd->outfiles);
 	}
 	free (cmd);
+}
+
+void	assignarg(t_cmd **cmd, char **args, int *begin)
+{
+	int		argc;
+	int		i;
+
+	argc = 0;
+	while (args[*begin + argc] && !is_operator(args[*begin + argc]))
+		argc++;
+	freedoublepointer((*cmd)->argv);
+	(*cmd)->argv = ft_calloc(argc + 2, sizeof(char *));
+	i = 0;
+	(*cmd)->argv[0] = ft_strdup((*cmd)->cmd);
+	while (++i <= argc && args[*begin + i - 1])
+		(*cmd)->argv[i] = ft_strdup(args[*begin + i - 1]);
+	(*cmd)->argv[i] = NULL;
 }

@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 12:14:17 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/06 02:56:55 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/08 19:19:39 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,10 @@ void	doecho(t_cmd *cmd, int fd)
 		while (cmd->argv[++i])
 			write(fd, cmd->argv[i], ft_strlen(cmd->argv[i]));
 	}
-	if (fd > 2)
+	if (fd > 2 && fd != -1)
 		close(fd);
 }
-//export WIP, without options works fine, need to fix option handle got frozen
+
 int	doexport(t_mini *mini, t_cmd *cmd, int fd)
 {
 	int		argc;
@@ -85,7 +85,7 @@ int	doexport(t_mini *mini, t_cmd *cmd, int fd)
 	}
 	if (argc == 1)
 		print_temp_env(mini->env, fd);
-	else
+	else if (fd > 2 && fd != -1)
 		close(fd);
 	return (status);
 }
@@ -108,29 +108,54 @@ void	dounset(t_mini *mini, t_cmd	*cmd)
 
 int	builtins(t_mini *mini, t_cmd *cmd)
 {
-	int	fd[2];
-
+	if (cmd->prev)
+		close(cmd->prev->fd[READ_FD]);
+	cmd->isbltin = 1;
+	if (checkkill(cmd->cmd))
+	{
+		if (cmd->argv[1])
+			return (exit(ft_atoi(cmd->argv[1])), 0);
+		else
+			return (exit(0), 0);
+	}
+	pipe(cmd->fd);
 	if (ft_strcmpspace("cd", cmd->cmd) == 0)
-		return (docd(checkenvvars(cmd->argv[1], mini), mini), 0);
+		return (docd(checkenvvars(cmd->argv[1], mini), mini), close(cmd->fd[READ_FD]), close(cmd->fd[WRITE_FD]), 0);
 	if (ft_strcmpspace("unset", cmd->cmd) == 0)
-		return (dounset(mini, cmd), 0);
-	// WIP with new parse
-	// if (ft_strchr(buf2, '=') && ft_strchr(buf2, '=')[-1] != ' '
-	// 	&& ft_strchr(buf2, '=')[1] != ' '
-	// 	&& ft_isgroup(ft_strchr(buf2, '=') + 1, ft_isbashprotected) == 0)
-	// {
-	// 	buf2 = checkenvvars(buf2, mini);
-	// 	entvars(&mini->env, ft_substr(buf2, 0,
-	// 			ft_strchr(buf2, '=') - buf2),
-	// 		ft_strdup(ft_strchr(buf2, '=') + 1));
-	// 	return (free(buf2), -1);
-	// }
-	pipe(fd);
+		return (dounset(mini, cmd), close(cmd->fd[READ_FD]), close(cmd->fd[WRITE_FD]), 0);
+	if (ft_strchr(cmd->cmd, '=') && cmd->argc == 1
+		&& ft_isgroup(ft_strchr(cmd->cmd, '=') + 1, ft_isbashprotected) == 0)
+	{
+		cmd->cmd = checkenvvars(cmd->cmd, mini);
+		entvars(&mini->env, ft_strndup(cmd->cmd, ft_strchr(cmd->cmd, '=') - cmd->cmd),
+			ft_strdup(ft_strchr(cmd->cmd, '=') + 1));
+		return (close(cmd->fd[READ_FD]), close(cmd->fd[WRITE_FD]), 0);
+	}
 	if (ft_strcmpspace("export", cmd->cmd) == 0)
-		return (doexport(mini, cmd, fd[WRITE_FD]), fd[READ_FD]);
+		return (doexport(mini, cmd, cmd->fd[WRITE_FD]), cmd->fd[READ_FD]);
 	if (ft_strcmpspace("env", cmd->cmd) == 0)
-		return (print_envfd(mini->env, fd[WRITE_FD]), fd[READ_FD]);
+		return (print_envfd(mini->env, cmd->fd[WRITE_FD]), cmd->fd[READ_FD]);
 	if (ft_strcmpspace("echo", cmd->cmd) == 0)
-		return (doecho(cmd, fd[WRITE_FD]), fd[READ_FD]);
-	return (close(fd[READ_FD]), close(fd[WRITE_FD]), -2);
+		return (doecho(cmd, cmd->fd[WRITE_FD]), cmd->fd[READ_FD]);
+	return (close(cmd->fd[WRITE_FD]), close(cmd->fd[READ_FD]), 0);
+}
+
+int	isbuiltin(t_cmd *cmd)
+{
+	if (ft_strcmpspace(cmd->cmd, "exit") == 0)
+		return (1);
+	if (ft_strcmpspace("cd", cmd->cmd) == 0)
+		return (1);
+	if (ft_strcmpspace("unset", cmd->cmd) == 0)
+		return (1);
+	if (ft_strchr(cmd->cmd, '=') && cmd->argc == 1
+			&& ft_isgroup(ft_strchr(cmd->cmd, '=') + 1, ft_isbashprotected) == 0)
+		return (1);
+	if (ft_strcmpspace("export", cmd->cmd) == 0)
+		return (1);
+	if (ft_strcmpspace("env", cmd->cmd) == 0)
+		return (1);
+	if (ft_strcmpspace("echo", cmd->cmd) == 0)
+		return (1);
+	return (0);
 }

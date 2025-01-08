@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 02:16:09 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/06 03:05:34 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/08 19:03:57 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,12 +46,21 @@ typedef struct s_env
 // Probably need to change infile and outfile to char ** because bash accepts many.
 typedef	struct s_cmd
 {
+	int				isbltin;
+	int				fd[2];
+	int				pid;
+	int				pidstatus;
 	char			*cmd;
+	char			*path;
+	char			*oginput;
 	char			*lim;
 	char			*infile;
 	t_fout			**outfiles;
 	char			**argv;
+	char			**env;
 	int				argc;
+	struct s_cmd	*next;
+	struct s_cmd	*prev;
 }	t_cmd;
 
 typedef struct mini
@@ -64,7 +73,7 @@ typedef struct mini
 	char					*quotesbuf;
 	int						didcheckenv;
 	int						status;
-	t_list					*header;
+	t_cmd					**header;
 	t_env					*env;
 	t_env					**quotestmps;
 }	t_mini;
@@ -73,7 +82,7 @@ typedef struct mini
 char	**ft_splitchars(char *str, char *charset);
 /* minish.c */
 char	**preppipex(char *buf, char *infile, char **buf2, t_mini *mini);
-int		alonecmdcall(int fdin, char **cmd, char *path, t_mini *mini);
+int		alonecmdcall(int fdin, t_cmd *cmd, char **env, t_mini *mini);
 void	anyfdtofile(int fd, char *filename, int app);
 /* minish2.c */
 int		recread(t_mini **mini);
@@ -92,7 +101,7 @@ int		docmd(char *buf2, char **buf, t_mini *mini);
 int		checkquotes(char *buf, t_mini *mini);
 /* minish5.c */
 void	newfileout(t_fout **head, char *file, int app);
-void	alonecmdcallutils(int fd[2], int fdin);
+void	alonecmdcallutils(t_cmd *cmd, int fdin);
 int		spacesindex(const char *str);
 int		cmdexistence(char *cmd, t_mini *mini);
 void	fdtofd(int fdin, int fdout);
@@ -122,6 +131,11 @@ void	doecho(t_cmd *cmd, int fd);
 int		doexport(t_mini *mini, t_cmd *cmd, int fd);
 void	dounset(t_mini *mini, t_cmd	*cmd);
 int		builtins(t_mini *mini, t_cmd *cmd);
+void	setasbuiltin(int fdc[2], int fdcmd[2]);
+void	setascmd(int fdc[2], int fdcmd[2]);
+int		checkifbuiltin(int fdc[2], t_cmd *cmd);
+void	fullfdcloser(t_cmd **head);
+int		isbuiltin(t_cmd *cmd);
 /* builtins2.c */
 int		is_valid_identifier(char *buf);
 int		are_numbers(char *buf);
@@ -146,19 +160,22 @@ void	print_envfd(t_env *env, int fd);
 int		envsize(t_env *env);
 char	**envtodoublechar(t_env *env);
 /* executor.c */
-int		run_cmd_list(t_mini *mini, t_list *head);
+int		run_cmd_list(t_mini *mini, t_cmd **head);
 int		execute_command(t_mini *mini, t_cmd *cmd, int infd);
-int		cmdcount(t_list **head);
+int		cmdcount(t_cmd **head);
+int		dolimitator(char *lim, t_mini *mini);
+void	fileunlinker(char *file);
 /* evaluator.c */
-t_list	*evaluate_commands(char **cmd);
-t_list	*assign_outfile(t_list **current, char **args, int *begin, int app);
-t_list	*assign_infile(t_list **current, char **args, int *begin);
+t_cmd	*evaluate_commands(char **args);
+void	assign_outfile(t_cmd **current, char **args, int *begin, int app);
+void	assign_infile(t_cmd **current, char **args, int *begin);
+void	assignarg(t_cmd **cmd, char **args, int *begin);
 t_cmd	*get_current_cmd(char **args, int *begin);
 int		is_operator(char *buf);
 int		check_operator_syntax(char **args);
-void	print_cmd_list(t_list *head);
+void	print_cmd_list(t_cmd *head);
 void	free_cmd(t_cmd *cmd);
-void	free_cmd_list(t_list *head);
+void	free_cmd_list(t_cmd **head);
 /* parsing.c */
 char	**process_input(t_mini *mini, char *buf);
 int		count_splitted_operators(char *buf);
@@ -174,5 +191,8 @@ char	*replace_content(char *str, char *content, char *start, int len);
 int		get_namelen(char *name);
 /* pipex.c */
 int		pipex(int argc, char **argv, char **envp, t_mini *mini);
+/* cmdlisthandle.c */
+void	cmdadd_back(t_cmd **lst, t_cmd *new);
+t_cmd	*cmdlast(t_cmd *lst);
 
 #endif

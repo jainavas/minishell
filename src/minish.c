@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 01:58:02 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/06 03:17:39 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/08 20:07:25 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,21 @@ void	anyfdtofile(int fd, char *filename, int app)
 	if (access(filename, F_OK) == 0)
 	{
 		if (app == 1)
+		{
+			if (access(filename, O_WRONLY | O_APPEND) == -1)
+			{
+				return ;
+			}
 			fdo = open(filename, O_WRONLY | O_APPEND);
+		}
 		else
+		{
+			if (access(filename, O_WRONLY) == -1)
+			{
+				return ;
+			}
 			fdo = open(filename, O_WRONLY);
+		}
 	}
 	else if (filename)
 		fdo = open(filename, O_RDWR | O_CREAT | O_TRUNC, 0644);
@@ -42,30 +54,27 @@ void	anyfdtofile(int fd, char *filename, int app)
 	// 	close(fd);
 }
 
-int	alonecmdcall(int fdin, char **cmd, char *path, t_mini *mini)
+int	alonecmdcall(int fdin, t_cmd *cmd, char **env, t_mini *mini)
 {
-	int	fd[2];
-	int	pid;
-	int	pid_status;
-
-	pipe(fd);
-	pid = fork();
-	if (pid == 0)
+	cmd->path = pathseekenv(&cmd->cmd, env);
+	cmd->env = env;
+	pipe(cmd->fd);
+	cmd->pid = fork();
+	if (cmd->pid == 0)
 	{
-		alonecmdcallutils(fd, fdin);
-		if (cmdcount(&mini->header) != 1 || *((t_cmd *)mini->header->content)->outfiles != NULL)
-			dup2(fd[WRITE_FD], STDOUT_FILENO);
-		closeanddupinput(fd);
-		execve(path, cmd, envtodoublechar(mini->env));
+		alonecmdcallutils(cmd, fdin);
+		if (cmdcount(mini->header) != 1 || *cmd->outfiles != NULL)
+			dup2(cmd->fd[WRITE_FD], STDOUT_FILENO);
+		closeanddupinput(cmd->fd);
+		execve(cmd->path, cmd->argv, cmd->env);
 	}
 	else
 	{
-		waitpid(pid, &pid_status, 0);
 		if (g_status == 130)
 			write(1, "\n", 1);
-		if (fdin > 2)
+		if (fdin > 2 && fdin != -1)
 			close(fdin);
-		return (close(fd[WRITE_FD]), free(path), fd[READ_FD]);
+		return (close(cmd->fd[WRITE_FD]), cmd->fd[READ_FD]);
 	}
 	return (0);
 }

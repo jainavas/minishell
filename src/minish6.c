@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 17:07:05 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/06 03:05:16 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/08 20:10:14 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	handlemfilesout(t_mini *mini, char *buf)
 		tmp = ft_strchr(tmp + 1, '>');
 	}
 }
-
+// fix the ./ op by getcwd into . correctly
 void	fdtomfiles(t_fout **head, int fd)
 {
 	t_fout	*tmp;
@@ -54,10 +54,14 @@ void	fdtomfiles(t_fout **head, int fd)
 	tmp = *head;
 	while (tmp && tmp->next)
 	{
+		if (tmp->file[0] == '.')
+			tmp->file = ft_strinsertdup(tmp->file, ".", ft_strjoin_gnl(getcwd(NULL, 0), "/"), '.');
 		anyfdtofile(-1, tmp->file, tmp->appendout);
 		tmp = tmp->next;
 	}
 	ft_putnbr_fd(fd, fd);
+	if (tmp->file[0] == '.')
+			tmp->file = ft_strinsertdup(tmp->file, ".", getcwd(NULL, 0), '.');
 	anyfdtofile(fd, tmp->file, tmp->appendout);
 	freeoutfiles(head);
 }
@@ -99,7 +103,7 @@ char	*pathseekenv(char **args, char **envp)
 		if (!tmp)
 			return (NULL);
 		tmp[ft_strlen(tmp) - 1] = '\0';
-		return (close(fd[READ_FD]), freedoublepointer(envp),tmp);
+		return (close(fd[READ_FD]), tmp);
 	}
 	return (NULL);
 }

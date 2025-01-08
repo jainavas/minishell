@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 16:38:08 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/22 23:25:41 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2025/01/07 17:23:17 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ int	exec(t_mini *mini, char *buf2, char **buf)
 		return (dolimwithpipe(buf2, buf, mini));
 	else if (ft_strchr(buf2, '|') != NULL)
 		return (dopipes(buf2, buf, mini));
-	else
-		return (docmd(buf2, buf, mini));
+	// else
+	// 	return (docmd(buf2, buf, mini));
+	return (0);
 }
