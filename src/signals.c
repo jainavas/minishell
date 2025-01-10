@@ -6,11 +6,11 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 17:45:35 by mpenas-z          #+#    #+#             */
-/*   Updated: 2024/12/22 20:45:33 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2025/01/10 18:54:33 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mini.h"
+#include "minishell.h"
 
 void	set_signals(void)
 {

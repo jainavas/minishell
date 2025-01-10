@@ -6,12 +6,12 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 16:54:34 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/03 20:04:28 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/10 18:55:59 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
-#include "mini.h"
+#include "minishell.h"
 
 void	closeanddupinput(int fd[2])
 {
@@ -39,7 +39,7 @@ int	lastcmdcall(t_pipex *var, char **cmd, char *path)
 		close(var->fd[var->actcmd - 1][WRITE_FD]);
 		close(var->fd[var->actcmd - 1][READ_FD]);
 		close(var->fd[var->actcmd][WRITE_FD]);
-		return (fdtomfiles(var->mini->mfilesout, var->fd[var->numcmds - 1][READ_FD]), 0);
+		return (fdtomfiles(var->mini->mfilesout, var->fd[var->numcmds - 1][READ_FD], var->mini), 0);
 	}
 	return (0);
 }

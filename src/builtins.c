@@ -6,11 +6,11 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 12:14:17 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/08 19:19:39 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/10 18:54:33 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/mini.h"
+#include "../inc/minishell.h"
 
 int	docd(char *path, t_mini *mini)
 {
@@ -71,7 +71,7 @@ int	doexport(t_mini *mini, t_cmd *cmd, int fd)
 		if (!is_valid_identifier(cmd->argv[argc]))
 		{
 			ft_putstr_fd("export: not a valid identifier\n", 2);
-			status = 1;
+			mini->status = 1;
 		}
 		else
 		{

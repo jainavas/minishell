@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mini.h                                             :+:      :+:    :+:   */
+/*   minishell.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 02:16:09 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/08 19:03:57 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/10 18:32:59 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINI_H
-# define MINI_H
+#ifndef MINISHELL_H
+# define MINISHELL_H
 
 # include "../libft_ext/libft.h"
 # include "../libft_ext/ft_printf.h"
@@ -19,6 +19,7 @@
 # include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <dirent.h>
 # include "pipex.h"
 
 extern int					g_status;
@@ -83,7 +84,7 @@ char	**ft_splitchars(char *str, char *charset);
 /* minish.c */
 char	**preppipex(char *buf, char *infile, char **buf2, t_mini *mini);
 int		alonecmdcall(int fdin, t_cmd *cmd, char **env, t_mini *mini);
-void	anyfdtofile(int fd, char *filename, int app);
+void	anyfdtofile(int fd, char *filename, int app, t_mini *mini);
 /* minish2.c */
 int		recread(t_mini **mini);
 int		checkinfile(t_mini *mini);
@@ -108,7 +109,7 @@ void	fdtofd(int fdin, int fdout);
 /* minish6.c */
 t_fout	*foutlast(t_fout *lst);
 void	handlemfilesout(t_mini *mini, char *buf);
-void	fdtomfiles(t_fout **head, int fd);
+void	fdtomfiles(t_fout **head, int fd, t_mini *mini);
 void	freeoutfiles(t_fout **lst);
 char	*pathseekenv(char **args, char **envp);
 /* minish7.c */
@@ -131,16 +132,13 @@ void	doecho(t_cmd *cmd, int fd);
 int		doexport(t_mini *mini, t_cmd *cmd, int fd);
 void	dounset(t_mini *mini, t_cmd	*cmd);
 int		builtins(t_mini *mini, t_cmd *cmd);
-void	setasbuiltin(int fdc[2], int fdcmd[2]);
-void	setascmd(int fdc[2], int fdcmd[2]);
-int		checkifbuiltin(int fdc[2], t_cmd *cmd);
-void	fullfdcloser(t_cmd **head);
 int		isbuiltin(t_cmd *cmd);
 /* builtins2.c */
 int		is_valid_identifier(char *buf);
 int		are_numbers(char *buf);
 int		checkkill(char *buf);
 void	chdirandoldpwd(char *new, t_mini *mini);
+int		checkpermission(char *file, int rwx, t_mini *mini);
 /* environment1.c */
 void	dpcheckenvars(char **buf, t_mini *mini);
 t_env	*envarlast(t_env *lst);
@@ -189,6 +187,7 @@ char	*remove_quotes(char *buf);
 char	*expand_var(t_mini *mini, char *str, char *name);
 char	*replace_content(char *str, char *content, char *start, int len);
 int		get_namelen(char *name);
+char	**cleannulls(char **prev);
 /* pipex.c */
 int		pipex(int argc, char **argv, char **envp, t_mini *mini);
 /* cmdlisthandle.c */

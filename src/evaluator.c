@@ -6,11 +6,11 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 18:05:55 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/08 19:32:15 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/10 18:54:33 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/mini.h"
+#include "../inc/minishell.h"
 
 // theres a problem with infile handle when <Makefile grep a,
 // tries to assign infile but the cmd struct doesnt exist yet coz is created when cmd is found
@@ -56,7 +56,7 @@ t_cmd	*evaluate_commands(char **args)
 			else
 				tmp = i++;
 		}
-		else if (!ft_strncmp(args[i], ">", 1) && ft_strncmp(args[i + 1], ">", 1))
+		else if (!ft_strcmpspace(args[i], ">") && ft_strcmpspace(args[i + 1], ">"))
 			assign_outfile(&current, args, &i, 0);
 		else if (!ft_strncmp(args[i], ">", 1) && !ft_strncmp(args[i + 1], ">", 1))
 		{
@@ -129,8 +129,8 @@ int	is_operator(char *buf)
 {
 	if (!buf)
 		return (1);
-	if (!ft_strncmp(buf, "|", 1) || !ft_strncmp(buf, "<", 1)
-		|| !ft_strncmp(buf, ">", 1))
+	if (!ft_strncmp(buf, "|", 2) || !ft_strncmp(buf, "<", 2)
+		|| !ft_strncmp(buf, ">", 2))
 		return (1);
 	return (0);
 }

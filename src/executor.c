@@ -6,11 +6,11 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/29 14:21:20 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/08 19:50:26 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/10 19:34:29 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/mini.h"
+#include "../inc/minishell.h"
 
 // This function iterates the list executing each command.
 // If a command fails, output error and keep going.
@@ -27,12 +27,13 @@ int	run_cmd_list(t_mini *mini, t_cmd **head)
 	fdret2 = 0;
 	while (curr)
 	{
+		mini->status = 0;
+		g_status = 0;
 		if (curr->infile)
 		{
-			if (access(curr->infile, O_RDONLY) == -1)
+			if (!checkpermission(curr->infile, 1, mini))
 			{
 				curr = curr->next;
-				ft_putstr_fd("Access denied\n", 2);
 				continue ;
 			}
 			fdret2 = open(curr->infile, O_RDONLY);
@@ -47,11 +48,11 @@ int	run_cmd_list(t_mini *mini, t_cmd **head)
 		if (curr->lim)
 			fileunlinker("tmp_heredoc");
 		if (*curr->outfiles)
-			fdtomfiles(curr->outfiles, fdret);
+			fdtomfiles(curr->outfiles, fdret, mini);
 		curr = curr->next;
 	}
 	if (fdret2 == -1)
-		return (ft_putstr_fd("bash: ", 1), ft_putstr_fd(curr->infile, 1), ft_putstr_fd(" does not exist\n", 1), 127);
+		return (ft_putstr_fd("bash: ", 1), ft_putstr_fd(curr->infile, 1), ft_putstr_fd(" does not exist\n", 1), g_status = 127, 0);
 	curr = *head;
 	while (curr->next)
 	{
@@ -59,7 +60,7 @@ int	run_cmd_list(t_mini *mini, t_cmd **head)
 		curr = curr->next;
 	}
 	waitpid(curr->pid, &curr->pidstatus, 0);
-	if ((cmdcount(head) == 1 && (*head)->isbltin == 1))
+	if ((cmdcount(head) == 1 && (*head)->isbltin == 1) || (cmdcount(head) > 1 && !curr->outfiles))
 		fdtofd(cmdlast(*head)->fd[READ_FD], STDOUT_FILENO);
 	return (0);
 }
@@ -69,11 +70,13 @@ int	run_cmd_list(t_mini *mini, t_cmd **head)
 int	execute_command(t_mini *mini, t_cmd *cmd, int infd)
 {
 	int	tmpfd;
+	int	tmp;
 
 	if (isbuiltin(cmd))
 		return (builtins(mini, cmd));
-	if (!cmdexistence(cmd->cmd, mini))
-		return (ft_putstr_fd(cmd->cmd, 1), ft_putstr_fd(": not exists\n", 1), 0);
+	tmp = cmdexistence(cmd->cmd, mini);
+	if (tmp == -1)
+		return (-1);
 	tmpfd = alonecmdcall(infd, cmd, envtodoublechar(mini->env), mini);
 	return (tmpfd);
 }

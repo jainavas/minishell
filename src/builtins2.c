@@ -6,11 +6,11 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 00:52:59 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/04 19:31:42 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/10 19:32:54 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/mini.h"
+#include "../inc/minishell.h"
 
 int	is_valid_identifier(char *buf)
 {
@@ -74,4 +74,38 @@ void	chdirandoldpwd(char *new, t_mini *mini)
 	entvars(&mini->env, ft_strdup("OLDPWD"), tmp);
 	chdir(new);
 	entvars(&mini->env, ft_strdup("PWD"), getcwd(NULL, 0));
+}
+
+int	checkpermission(char *file, int rwx, t_mini *mini)
+{
+	if (access(file, F_OK) == -1)
+		return (ft_putstr_fd("File not found\n", 2), mini->status = 1, 0);
+	if (rwx == 1)
+	{
+		if (access(file, R_OK) == -1)
+		{
+			if (cmdcount(mini->header) <= 1)
+				ft_putstr_fd("Access denied\n", 2);
+			return (mini->status = 126, -1);
+		}
+	}
+	if (rwx == 2)
+	{
+		if (access(file, W_OK) == -1)
+		{
+			if (cmdcount(mini->header) <= 1)
+				ft_putstr_fd("Access denied\n", 2);
+			return (mini->status = 126, -1);
+		}
+	}
+	if (rwx == 3)
+	{
+		if (access(file, X_OK) == -1)
+		{
+			if (cmdcount(mini->header) <= 1)
+				ft_putstr_fd("Access denied\n", 2);
+			return (mini->status = 126, -1);
+		}
+	}
+	return (1);
 }

@@ -6,11 +6,11 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 15:56:12 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/08 19:50:47 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/10 18:56:46 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mini.h"
+#include "minishell.h"
 
 int	recread(t_mini **mini)
 {
@@ -18,7 +18,6 @@ int	recread(t_mini **mini)
 	char	**buf;
 	// char	*buf3;
 	char	*buf2;
-	int		t;
 
 	buf2 = readline("minishell% ");
 	if (!buf2)
@@ -26,16 +25,17 @@ int	recread(t_mini **mini)
 	if (buf2[0] == '\0')
 		return (0);
 	add_history(buf2);
-	buf = process_input((*mini), ft_strdup(buf2));
+	buf = cleannulls(process_input((*mini), ft_strdup(buf2)));
 	// t = -1;
 	// while (buf[++t])
 	// 	printf("String %d: %s\n", t, buf[t]);
 	head = evaluate_commands(buf);
+	// print_cmd_list(head);
 	freedoublepointer(buf);
 	(*mini)->header = &head;
-	head->oginput = buf2;
-	// print_cmd_list(head);
-	t = run_cmd_list(*mini, &head);
+	head->oginput = ft_strdup(buf2);
+	run_cmd_list(*mini, &head);
+	free(buf2);
 	free_cmd_list(&head);
 	// CHECK KILL SHOULD BE OUTSIDE BUILTINS FOR CMD EXEC TO BE ISOLATED
 	// status = checkkill(buf3);
@@ -56,7 +56,7 @@ int	recread(t_mini **mini)
 	// buf = ft_splitchars(buf2, "<|");
 	// dpcheckenvars(buf, (*mini));
 	// g_status = exec((*mini), buf2, buf);
-	return (t);
+	return (0);
 }
 
 int	checkinfile(t_mini *mini)
@@ -77,7 +77,6 @@ int	recursiva(t_mini **mini)
 	x = recread(mini);
 	while (x == 0)
 	{
-		(*mini)->status = g_status;
 		temp = ft_itoa((*mini)->status);
 		add_envar((*mini), "?", temp, 2);
 		free (temp);
@@ -87,7 +86,7 @@ int	recursiva(t_mini **mini)
 		(*mini)->didcheckenv = 0;
 		x = recread(mini);
 	}
-	return (0);
+	return (x);
 }
 
 char	**preppipexlim(char *buf, char **antbuf, t_mini *mini)

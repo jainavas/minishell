@@ -6,39 +6,32 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 01:58:02 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/08 20:07:25 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/10 19:04:43 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mini.h"
+#include "minishell.h"
 
 int	g_status;
 
-void	anyfdtofile(int fd, char *filename, int app)
+void	anyfdtofile(int fd, char *filename, int app, t_mini *mini)
 {
 	char	*buf;
 	int		fdo;
+	int		r;
 
 	fdo = 1;
-	if (access(filename, F_OK) == 0)
+	if (fd != -1)
+		r = checkpermission(filename, 2, mini);
+	if (r == 1)
 	{
 		if (app == 1)
-		{
-			if (access(filename, O_WRONLY | O_APPEND) == -1)
-			{
-				return ;
-			}
 			fdo = open(filename, O_WRONLY | O_APPEND);
-		}
 		else
-		{
-			if (access(filename, O_WRONLY) == -1)
-			{
-				return ;
-			}
 			fdo = open(filename, O_WRONLY);
-		}
 	}
+	else if (r == -1)
+		return ;
 	else if (filename)
 		fdo = open(filename, O_RDWR | O_CREAT | O_TRUNC, 0644);
 	buf = get_next_line(fd);
@@ -102,6 +95,7 @@ char	**preppipex(char *buf, char *infile, char **buf2, t_mini *mini)
 int	main(int argc, char **argv, char **envp)
 {
 	t_mini	*mini;
+	int		ret;
 
 	g_status = 0;
 	mini = ft_calloc(1, sizeof(t_mini));
@@ -117,11 +111,16 @@ int	main(int argc, char **argv, char **envp)
 	*(mini->quotestmps) = NULL;
 	set_signals();
 	recursiva(&mini);
+	ret = mini->status;
 	freelist(mini->env);
 	freelist(*mini->quotestmps);
 	freeoutfiles(mini->mfilesout);
 	free(mini->mfilesout);
 	free(mini->quotestmps);
 	free(mini);
-	return (g_status);
+	if (ret != -1)
+		return (ret);
+	if (g_status != -1)
+		return (g_status);
+	return (0);
 }

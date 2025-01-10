@@ -6,11 +6,11 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 17:07:05 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/08 20:10:14 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/10 18:55:10 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./mini.h"
+#include "./minishell.h"
 
 t_fout	*foutlast(t_fout *lst)
 {
@@ -47,7 +47,7 @@ void	handlemfilesout(t_mini *mini, char *buf)
 	}
 }
 // fix the ./ op by getcwd into . correctly
-void	fdtomfiles(t_fout **head, int fd)
+void	fdtomfiles(t_fout **head, int fd, t_mini *mini)
 {
 	t_fout	*tmp;
 
@@ -56,13 +56,13 @@ void	fdtomfiles(t_fout **head, int fd)
 	{
 		if (tmp->file[0] == '.')
 			tmp->file = ft_strinsertdup(tmp->file, ".", ft_strjoin_gnl(getcwd(NULL, 0), "/"), '.');
-		anyfdtofile(-1, tmp->file, tmp->appendout);
+		anyfdtofile(-1, tmp->file, tmp->appendout, mini);
 		tmp = tmp->next;
 	}
 	ft_putnbr_fd(fd, fd);
 	if (tmp->file[0] == '.')
 			tmp->file = ft_strinsertdup(tmp->file, ".", getcwd(NULL, 0), '.');
-	anyfdtofile(fd, tmp->file, tmp->appendout);
+	anyfdtofile(fd, tmp->file, tmp->appendout, mini);
 	freeoutfiles(head);
 }
 

@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mpenas-z <mpenas-z@student.42madrid.com>   +#+  +:+       +#+        */
+/*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/24 18:22:58 by mpenas-z          #+#    #+#             */
-/*   Updated: 2024/12/28 18:32:49 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2025/01/10 18:54:33 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/mini.h"
+#include "../inc/minishell.h"
 
 char	**process_input(t_mini *mini, char *buf)
 {
@@ -278,4 +278,32 @@ int	get_namelen(char *name)
 	while (name[i] && (isalnum(name[i]) || name[i] == '_'))
 		i++;
 	return (i);
+}
+
+char	**cleannulls(char **prev)
+{
+	char	**res;
+	int		ct;
+	int		ct2;
+
+	ct = 0;
+	ct2 = 0;
+	while (prev[ct] != NULL)
+	{
+		if (prev[ct][0] != '\0')
+			ct2++;
+		ct++;
+	}
+	ct = 0;
+	res = ft_calloc(ct2 + 1, sizeof(char *));
+	ct2 = 0;
+	while (prev[ct] != NULL)
+	{
+		if (prev[ct][0] != '\0')
+			res[ct2++] = ft_strdup(prev[ct]);
+		ct++;
+	}
+	res[ct2] = NULL;
+	freedoublepointer(prev);
+	return (res);
 }

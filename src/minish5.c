@@ -6,11 +6,11 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 22:28:59 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/08 17:32:16 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/10 19:22:02 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mini.h"
+#include "minishell.h"
 
 void	newfileout(t_fout **head, char *file, int app)
 {
@@ -38,7 +38,7 @@ void	alonecmdcallutils(t_cmd *cmd, int fdin)
 	signal(SIGQUIT, SIG_DFL);
 	if (cmd->infile)
 		dup2(fdin, cmd->fd[READ_FD]);
-	else if (cmd->prev)
+	else if (cmd->prev && !cmd->prev->outfiles)
 	{
 		dup2(cmd->prev->fd[READ_FD], cmd->fd[READ_FD]);
 		close(cmd->prev->fd[READ_FD]);
@@ -63,15 +63,21 @@ int	cmdexistence(char *cmd, t_mini *mini)
 {
 	char	*tmp;
 	char	**tmp2;
+	DIR		*dir;
 
 	if (!cmd)
-		return (0);
+		return (ft_putstr_fd(cmd, 2), ft_putstr_fd(": not exists\n", 2), mini->status = 127, -1);
+	dir = opendir(cmd);
 	tmp2 = envtodoublechar(mini->env);
 	tmp = pathseekenv(&cmd, tmp2);
 	if (tmp)
 		return (free(tmp), freedoublepointer(tmp2), 1);
 	else
-		return (freedoublepointer(tmp2), 0);
+	{
+		if (dir)
+			return (closedir(dir), ft_putstr_fd(cmd, 2), ft_putstr_fd(": is a directory\n", 2), mini->status = 126, -1);
+		return (freedoublepointer(tmp2), ft_putstr_fd(cmd, 2), ft_putstr_fd(": not exists\n", 2), mini->status = 127, -1);
+	}
 }
 
 void	fdtofd(int fdin, int fdout)
