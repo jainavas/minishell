@@ -19,6 +19,7 @@
 # include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <sys/stat.h>
 # include <dirent.h>
 # include "pipex.h"
 
@@ -29,6 +30,7 @@ typedef struct sigaction	t_sig;
 typedef struct s_fileout
 {
 	char					*file;
+	int						foutn;
 	int						out;
 	int						appendout;
 	struct s_fileout		*next;
@@ -47,6 +49,7 @@ typedef struct s_env
 // Probably need to change infile and outfile to char ** because bash accepts many.
 typedef	struct s_cmd
 {
+	int				cmdn;
 	int				isbltin;
 	int				fd[2];
 	int				pid;
@@ -84,7 +87,7 @@ char	**ft_splitchars(char *str, char *charset);
 /* minish.c */
 char	**preppipex(char *buf, char *infile, char **buf2, t_mini *mini);
 int		alonecmdcall(int fdin, t_cmd *cmd, char **env, t_mini *mini);
-void	anyfdtofile(int fd, char *filename, int app, t_mini *mini);
+int		anyfdtofile(int fd, t_fout *out, int outct, t_mini *mini);
 /* minish2.c */
 int		recread(t_mini **mini);
 int		checkinfile(t_mini *mini);
@@ -106,16 +109,23 @@ void	alonecmdcallutils(t_cmd *cmd, int fdin);
 int		spacesindex(const char *str);
 int		cmdexistence(char *cmd, t_mini *mini);
 void	fdtofd(int fdin, int fdout);
+t_cmd	*cmdsearchbyfd(int fd, t_cmd **head);
 /* minish6.c */
 t_fout	*foutlast(t_fout *lst);
 void	handlemfilesout(t_mini *mini, char *buf);
 void	fdtomfiles(t_fout **head, int fd, t_mini *mini);
 void	freeoutfiles(t_fout **lst);
 char	*pathseekenv(char **args, char **envp);
+int		filesearch(t_fout *tmp, t_mini *mini);
 /* minish7.c */
 int		counttmps(t_env *lst);
 char	*initialdebug(t_mini *mini, char *buf2);
 int		exec(t_mini *mini, char *buf2, char **buf);
+char	*fileseek(char *file, char *directory);
+char	*directory_seek(char *target_dir, char *directory);
+char	*pathbuilder(char *dir, char *file);
+void	putcmdn(t_cmd **head);
+void	putoutfn(t_fout **head);
 /* minish8.c */
 char	*putonlycmds(t_mini *mini, char *buf2, char *tmp);
 char	*simplequote(t_mini *mini, char *buf, char *tmp);
@@ -127,7 +137,7 @@ void	set_signals(void);
 void	handle_sigint(int sig);
 void	new_prompt(void);
 /* builtins.c */
-int		docd(char *path, t_mini *mini);
+int		docd(t_cmd *cmd, t_mini *mini);
 void	doecho(t_cmd *cmd, int fd);
 int		doexport(t_mini *mini, t_cmd *cmd, int fd);
 void	dounset(t_mini *mini, t_cmd	*cmd);
@@ -139,6 +149,9 @@ int		are_numbers(char *buf);
 int		checkkill(char *buf);
 void	chdirandoldpwd(char *new, t_mini *mini);
 int		checkpermission(char *file, int rwx, t_mini *mini);
+char	*prevpath(char *path);
+char	*prevcwd();
+int		checkpermouts(t_cmd *cmd, char *file, t_mini *mini);
 /* environment1.c */
 void	dpcheckenvars(char **buf, t_mini *mini);
 t_env	*envarlast(t_env *lst);
@@ -193,5 +206,8 @@ int		pipex(int argc, char **argv, char **envp, t_mini *mini);
 /* cmdlisthandle.c */
 void	cmdadd_back(t_cmd **lst, t_cmd *new);
 t_cmd	*cmdlast(t_cmd *lst);
+t_fout	*outfilelast(t_fout *lst);
+t_fout	*outfilesearchbyfile(char *file, t_fout *lst);
+int		outfcount(t_fout **head);
 
 #endif

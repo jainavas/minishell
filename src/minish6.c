@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 17:07:05 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/10 18:55:10 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/12 23:08:50 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,24 +46,56 @@ void	handlemfilesout(t_mini *mini, char *buf)
 		tmp = ft_strchr(tmp + 1, '>');
 	}
 }
-// fix the ./ op by getcwd into . correctly
+
 void	fdtomfiles(t_fout **head, int fd, t_mini *mini)
 {
 	t_fout	*tmp;
 
 	tmp = *head;
-	while (tmp && tmp->next)
+	while (tmp)
 	{
 		if (tmp->file[0] == '.')
-			tmp->file = ft_strinsertdup(tmp->file, ".", ft_strjoin_gnl(getcwd(NULL, 0), "/"), '.');
-		anyfdtofile(-1, tmp->file, tmp->appendout, mini);
+			filesearch(tmp, mini);
+		if (tmp->out != -2)
+			if (anyfdtofile(fd, tmp, outfcount(head), mini) == -1)
+				break ;
 		tmp = tmp->next;
 	}
-	ft_putnbr_fd(fd, fd);
-	if (tmp->file[0] == '.')
-			tmp->file = ft_strinsertdup(tmp->file, ".", getcwd(NULL, 0), '.');
-	anyfdtofile(fd, tmp->file, tmp->appendout, mini);
 	freeoutfiles(head);
+}
+
+int	filesearch(t_fout *tmp, t_mini *mini)
+{
+	char	*tmp2;
+	char	*tmp3;
+
+	tmp2 = ft_strtrim(tmp->file, " ./");
+	if (ft_strchr(tmp2, '/'))
+	{
+		tmp3 = fileseek(ft_strdup(&tmp2[(ft_strrchr(tmp2, '/') - tmp2) + 1]),
+			directory_seek(ft_strndup(tmp2, ft_strrchr(tmp2, '/') - tmp2),
+				getcwd(NULL, 0)));
+		if (tmp3 == NULL)
+		{
+			tmp3 = directory_seek(ft_strndup(tmp2, ft_strrchr(tmp2, '/') - tmp2),
+				getcwd(NULL, 0));
+			if (!tmp3)
+				return (tmp->out = -2, ft_putendl_fd("File not found", 2), mini->status = 1, 0);
+			else
+				return (free(tmp2), free(tmp3), 0);
+		}
+		else
+			return (free(tmp2), free(tmp->file), tmp->file = tmp3, 0);
+	}
+	else
+	{
+		tmp3 = fileseek(tmp2, getcwd(NULL, 0));
+		if (tmp3 == NULL)
+			return (ft_putendl_fd("File not found", 2), mini->status = 1, 0);
+		else
+			return (free(tmp->file), tmp->file = tmp3, 0);
+	}
+	return (0);
 }
 
 void	freeoutfiles(t_fout **lst)

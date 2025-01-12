@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 01:58:02 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/10 19:04:43 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/12 23:08:03 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,37 +14,29 @@
 
 int	g_status;
 
-void	anyfdtofile(int fd, char *filename, int app, t_mini *mini)
+int	anyfdtofile(int fd, t_fout *out, int outct, t_mini *mini)
 {
-	char	*buf;
 	int		fdo;
 	int		r;
 
 	fdo = 1;
-	if (fd != -1)
-		r = checkpermission(filename, 2, mini);
+	r = checkpermouts(cmdsearchbyfd(fd, mini->header), out->file, mini);
 	if (r == 1)
 	{
-		if (app == 1)
-			fdo = open(filename, O_WRONLY | O_APPEND);
+		if (out->appendout == 1)
+			fdo = open(out->file, O_WRONLY | O_APPEND);
 		else
-			fdo = open(filename, O_WRONLY);
+			fdo = open(out->file, O_WRONLY);
 	}
 	else if (r == -1)
-		return ;
-	else if (filename)
-		fdo = open(filename, O_RDWR | O_CREAT | O_TRUNC, 0644);
-	buf = get_next_line(fd);
-	while (buf)
-	{
-		write(fdo, buf, ft_strlen(buf));
-		free(buf);
-		buf = get_next_line(fd);
-	}
-	if (fdo != 0 && fdo != 1 && fdo != 2)
+		return (-1);
+	else if (out->file)
+		fdo = open(out->file, O_RDWR | O_CREAT | O_TRUNC, 0644);
+	if (outct == out->foutn)
+		fdtofd(fd, fdo);
+	else
 		close(fdo);
-	// if (fd != -1)
-	// 	close(fd);
+	return (0);
 }
 
 int	alonecmdcall(int fdin, t_cmd *cmd, char **env, t_mini *mini)

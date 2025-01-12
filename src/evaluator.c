@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 18:05:55 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/10 18:54:33 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/12 22:31:27 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ t_cmd	*evaluate_commands(char **args)
 			assign_outfile(&current, args, &i, 1);
 		}
 	}
-	return (head);
+	return (putcmdn(&head), head);
 }
 
 void	assign_outfile(t_cmd **current, char **args, int *begin, int app)

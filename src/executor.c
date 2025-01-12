@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/29 14:21:20 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/10 19:34:29 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/12 19:54:04 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,10 @@ int	run_cmd_list(t_mini *mini, t_cmd **head)
 			}
 			fdret2 = open(curr->infile, O_RDONLY);
 			if (fdret2 == -1)
-				break ;
+			{
+				curr = curr->next;
+				continue;
+			}
 			else
 				fdret = fdret2;
 		}
@@ -52,7 +55,7 @@ int	run_cmd_list(t_mini *mini, t_cmd **head)
 		curr = curr->next;
 	}
 	if (fdret2 == -1)
-		return (ft_putstr_fd("bash: ", 1), ft_putstr_fd(curr->infile, 1), ft_putstr_fd(" does not exist\n", 1), g_status = 127, 0);
+		return (ft_putstr_fd("bash: ", 1), ft_putstr_fd(curr->infile, 1), ft_putstr_fd(" does not exist\n", 1), mini->status = 127, 0);
 	curr = *head;
 	while (curr->next)
 	{
@@ -60,7 +63,7 @@ int	run_cmd_list(t_mini *mini, t_cmd **head)
 		curr = curr->next;
 	}
 	waitpid(curr->pid, &curr->pidstatus, 0);
-	if ((cmdcount(head) == 1 && (*head)->isbltin == 1) || (cmdcount(head) > 1 && !curr->outfiles))
+	if ((cmdlast(*head)->isbltin == 1) && !*cmdlast(*head)->outfiles)
 		fdtofd(cmdlast(*head)->fd[READ_FD], STDOUT_FILENO);
 	return (0);
 }

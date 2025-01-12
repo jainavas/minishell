@@ -50,6 +50,32 @@ int	ft_atoi(const char *str)
 	return (res);
 }
 
+int	checkovrfandchar(const char *str)
+{
+	int		i;
+	long	res;
+	int		minus;
+
+	i = spaces(str);
+	minus = 1;
+	res = 0;
+	if (str[i] == '-' || str[i] == '+')
+		i++;
+	if (str[i] == '-')
+		minus = -minus;
+	if (ft_isdigit((int)str[i]) == 0)
+		return (0);
+	while (ft_isdigit((int)str[i]) == 1)
+	{
+		res *= 10;
+		res += str[i] - '0';
+		i++;
+		if (res * minus > INT_MAX || res * minus < -2147483648)
+			return (0);
+	}
+	return (1);
+}
+
 // int main(int argc, char **argv)
 // {
 // 	if(argc != 2)

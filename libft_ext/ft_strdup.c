@@ -40,6 +40,21 @@ char	*ft_strndup(const char *s, size_t n)
 	return (res);
 }
 
+char	*ft_strmiddupf(char *s, int start, int stop)
+{
+	char	*res;
+
+	if (!s || start < 0 || start >= (int)ft_strlen(s))
+		return (free(s), ft_strdup(""));
+	if (stop >= (int)ft_strlen(s))
+		stop = (int)ft_strlen(s);
+	res = malloc(((stop - start) + 1) * sizeof(char));
+	if (res == NULL)
+		return (NULL);
+	ft_strlcpy(res, &s[start], (stop - start) + 1);
+	return (free(s), res);
+}
+
 char	*ft_strfilterdup(const char *s, char filter)
 {
 	char	*res;

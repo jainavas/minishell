@@ -26,6 +26,7 @@ typedef struct s_list
 }					t_list;
 
 int					ft_atoi(const char *str);
+int					checkovrfandchar(const char *str);
 void				ft_bzero(void *s, size_t n);
 void				*ft_calloc(size_t count, size_t size);
 int					ft_isgroup(char	*tolook, int group(int));
@@ -57,6 +58,7 @@ size_t				ft_strlcpy(char *dst, const char *src, size_t dstsize);
 size_t				ft_strlen(const char *s);
 char				*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 int					ft_strncmp(const char *s1, const char *s2, size_t n);
+int					ft_strcmpff(char *s1, char *s2);
 int					ft_strcmpspace(const char *s1, const char *s2);
 int					ft_strcmpalnum(const char *s1, const char *s2);
 int					ft_strcmpoptions(const char *s1, const char *option);
@@ -71,6 +73,7 @@ int					ft_toupper(int c);
 int					ft_strcount(const char *s, int c);
 void				freedoublepointer(char **split);
 void				freedp(int **dp);
+char				*ft_strmiddupf(char *s, int start, int stop);
 char				*ft_strfilterdup(const char *s, char filter);
 char				*ft_strinsertdup(char *s, char *var, char *content,
 						char flag);
