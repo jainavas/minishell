@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 18:05:55 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/12 22:31:27 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/13 20:16:59 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -236,4 +236,52 @@ void	assignarg(t_cmd **cmd, char **args, int *begin)
 	while (++i <= argc && args[*begin + i - 1])
 		(*cmd)->argv[i] = ft_strdup(args[*begin + i - 1]);
 	(*cmd)->argv[i] = NULL;
+}
+
+//WIP
+
+int	argsearch(char **file, t_mini *mini)
+{
+	char	*tmp2;
+	char	*tmp3;
+
+	tmp2 = ft_strtrim(*file, " ./\"");
+	if (ft_strchr(tmp2, '/'))
+	{
+		tmp3 = fileseek(ft_strdup(&tmp2[(ft_strrchr(tmp2, '/') - tmp2) + 1]),
+			directory_seek(ft_strndup(tmp2, ft_strrchr(tmp2, '/') - tmp2),
+				getcwd(NULL, 0)));
+		if (tmp3 == NULL)
+		{
+			tmp3 = directory_seek(ft_strndup(tmp2, ft_strrchr(tmp2, '/') - tmp2),
+				getcwd(NULL, 0));
+			if (!tmp3)
+				return (ft_putendl_fd("File not found", 2), mini->status = 1, 0);
+			else
+				return (free(tmp2), free(tmp3), 0);
+		}
+		else
+			return (free(tmp2), free(*file), *file = tmp3, 0);
+	}
+	else
+	{
+		tmp3 = fileseek(tmp2, getcwd(NULL, 0));
+		if (tmp3 == NULL)
+			return (ft_putendl_fd("File not found", 2), mini->status = 1, 0);
+		else
+			return (free(*file), *file = tmp3, 0);
+	}
+	return (0);
+}
+
+void	argsfilesearcher(t_cmd **head, t_mini *mini)
+{
+	t_cmd	*tmp;
+
+	tmp = *head;
+	while (tmp)
+	{
+		if (tmp->argv[1] && !strncmp("./", tmp->argv[1], 2))
+			argsearch(&tmp->argv[1], mini);
+	}
 }

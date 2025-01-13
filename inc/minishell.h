@@ -187,6 +187,8 @@ int		check_operator_syntax(char **args);
 void	print_cmd_list(t_cmd *head);
 void	free_cmd(t_cmd *cmd);
 void	free_cmd_list(t_cmd **head);
+int		argsearch(char **file, t_mini *mini);
+void	argsfilesearcher(t_cmd **head, t_mini *mini);
 /* parsing.c */
 char	**process_input(t_mini *mini, char *buf);
 int		count_splitted_operators(char *buf);

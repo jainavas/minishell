@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 12:40:23 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/10 18:54:33 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/13 20:00:33 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,10 @@ void	add_envar(t_mini *mini, char *varname, char *value, int is_temp)
 		aux_env->next = NULL;
 		env = envarlast(mini->env);
 		env->next = aux_env;
-		aux_env->prev = env;
+		if (env)
+			aux_env->prev = env;
+		else
+			aux_env->prev = NULL;
 	}
 }
 
@@ -146,7 +149,10 @@ void	remove_envar(t_mini *mini, char *varname)
 	{
 		aux_env = get_env_var(&mini->env, varname);
 		env = aux_env->prev;
-		env->next = aux_env->next;
+		if (env)
+			env->next = aux_env->next;
+		else
+			mini->env = aux_env->next;
 		if (aux_env->next)
 			aux_env->next->prev = env;
 		if (aux_env->content)

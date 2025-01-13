@@ -1,6 +1,6 @@
 NAME = minishell
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -g3 -fPIE
+CFLAGS = -Wall -Wextra -Werror -g3
 CLIBS = -lreadline
 
 SRC_PATH = src/
