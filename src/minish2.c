@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 15:56:12 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/10 18:56:46 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/14 19:33:03 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ int	recread(t_mini **mini)
 	head = evaluate_commands(buf);
 	// print_cmd_list(head);
 	freedoublepointer(buf);
+	if (!head)
+		return (0);
 	(*mini)->header = &head;
 	head->oginput = ft_strdup(buf2);
 	run_cmd_list(*mini, &head);

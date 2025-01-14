@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 12:14:17 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/12 19:05:27 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/14 19:31:30 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,18 +45,26 @@ void	doecho(t_cmd *cmd, int fd)
 {
 	int	i;
 
-	if (ft_strcmpoptions(cmd->argv[1], "-n") != 0)
-	{
-		i = 0;
-		while (cmd->argv[++i])
-			write(fd, cmd->argv[i], ft_strlen(cmd->argv[i]));
-		write(fd, "\n", 1);
-	}
-	else
+	if (cmd->argv[1] && ft_strcmpoptions(cmd->argv[1], "-n") != 0)
 	{
 		i = 1;
+		write(fd, cmd->argv[i], ft_strlen(cmd->argv[i]));
 		while (cmd->argv[++i])
+		{
+			write(fd, " ", 1);
 			write(fd, cmd->argv[i], ft_strlen(cmd->argv[i]));
+		}
+		write(fd, "\n", 1);
+	}
+	else if (cmd->argv[1])
+	{
+		i = 2;
+		write(fd, cmd->argv[i], ft_strlen(cmd->argv[i]));
+		while (cmd->argv[++i])
+		{
+			write(fd, " ", 1);
+			write(fd, cmd->argv[i], ft_strlen(cmd->argv[i]));
+		}
 	}
 	if (fd > 2 && fd != -1)
 		close(fd);
