@@ -60,6 +60,7 @@ typedef	struct s_cmd
 	char			*lim;
 	char			*infile;
 	t_fout			**outfiles;
+	int				ifouts;
 	char			**argv;
 	char			**env;
 	int				argc;
@@ -87,7 +88,7 @@ char	**ft_splitchars(char *str, char *charset);
 /* minish.c */
 char	**preppipex(char *buf, char *infile, char **buf2, t_mini *mini);
 int		alonecmdcall(int fdin, t_cmd *cmd, char **env, t_mini *mini);
-int		anyfdtofile(int fd, t_fout *out, int outct, t_mini *mini);
+int		anyfdtofile(int fd, t_fout *out, t_cmd *cmd, t_mini *mini);
 /* minish2.c */
 int		recread(t_mini **mini);
 int		checkinfile(t_mini *mini);
@@ -113,7 +114,7 @@ t_cmd	*cmdsearchbyfd(int fd, t_cmd **head);
 /* minish6.c */
 t_fout	*foutlast(t_fout *lst);
 void	handlemfilesout(t_mini *mini, char *buf);
-void	fdtomfiles(t_fout **head, int fd, t_mini *mini);
+void	fdtomfiles(t_fout **head, int fd, t_mini *mini, t_cmd *cmd);
 void	freeoutfiles(t_fout **lst);
 char	*pathseekenv(char **args, char **envp);
 int		filesearch(t_fout *tmp, t_mini *mini);

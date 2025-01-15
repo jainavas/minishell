@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 22:28:59 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/15 17:14:49 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/15 19:12:06 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ t_cmd	*cmdsearchbyfd(int fd, t_cmd **head)
 	tmp = *head;
 	while (tmp)
 	{
-		if (tmp->fd[READ_FD] == fd || tmp->fd[WRITE_FD] == fd)
+		if (tmp->fd[READ_FD] == fd)
 			return (tmp);
 		tmp = tmp->next;
 	}

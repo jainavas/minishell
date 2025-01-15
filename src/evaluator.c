@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 18:05:55 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/15 16:53:16 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/15 19:05:29 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,7 @@ t_cmd	*get_current_cmd(char **args, int *begin)
 		argc++;
 	cmd = ft_calloc(1, sizeof(t_cmd));
 	cmd->argc = argc;
+	cmd->ifouts = 0;
 	cmd->lim = NULL;
 	cmd->oginput = NULL;
 	cmd->next = NULL;

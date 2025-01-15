@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 16:38:08 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/12 22:54:56 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/15 19:04:19 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,6 +172,8 @@ void	putcmdn(t_cmd **head)
 	while (tmp)
 	{
 		tmp->cmdn = ++i;
+		if (*tmp->outfiles)
+			tmp->ifouts = 1;
 		putoutfn(tmp->outfiles);
 		tmp = tmp->next;
 	}

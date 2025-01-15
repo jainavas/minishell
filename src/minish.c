@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 01:58:02 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/12 23:08:03 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/15 18:48:21 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 
 int	g_status;
 
-int	anyfdtofile(int fd, t_fout *out, int outct, t_mini *mini)
+int	anyfdtofile(int fd, t_fout *out, t_cmd *cmd, t_mini *mini)
 {
 	int		fdo;
 	int		r;
 
 	fdo = 1;
-	r = checkpermouts(cmdsearchbyfd(fd, mini->header), out->file, mini);
+	r = checkpermouts(cmd, out->file, mini);
 	if (r == 1)
 	{
 		if (out->appendout == 1)
@@ -32,9 +32,9 @@ int	anyfdtofile(int fd, t_fout *out, int outct, t_mini *mini)
 		return (-1);
 	else if (out->file)
 		fdo = open(out->file, O_RDWR | O_CREAT | O_TRUNC, 0644);
-	if (outct == out->foutn)
+	if (outfcount(cmd->outfiles) == out->foutn && fdo != 1)
 		fdtofd(fd, fdo);
-	else
+	else if (fdo != 1)
 		close(fdo);
 	return (0);
 }
