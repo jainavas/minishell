@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/29 14:21:20 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/12 19:54:04 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/15 17:20:50 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,18 @@ int	run_cmd_list(t_mini *mini, t_cmd **head)
 		g_status = 0;
 		if (curr->infile)
 		{
-			if (!checkpermission(curr->infile, 1, mini))
+			if (!checkpermission(curr->infile, 1, mini, curr))
 			{
+				pipe(curr->fd);
+				close(curr->fd[WRITE_FD]);
 				curr = curr->next;
 				continue ;
 			}
 			fdret2 = open(curr->infile, O_RDONLY);
 			if (fdret2 == -1)
 			{
+				pipe(curr->fd);
+				close(curr->fd[WRITE_FD]);
 				curr = curr->next;
 				continue;
 			}

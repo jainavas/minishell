@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 18:05:55 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/13 20:16:59 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/15 16:53:16 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ t_cmd	*evaluate_commands(char **args)
 			assign_outfile(&current, args, &i, 1);
 		}
 	}
-	return (putcmdn(&head), head);
+	return (putcmdn(&head), argsfilesearcher(&head), head);
 }
 
 void	assign_outfile(t_cmd **current, char **args, int *begin, int app)
@@ -240,12 +240,12 @@ void	assignarg(t_cmd **cmd, char **args, int *begin)
 
 //WIP
 
-int	argsearch(char **file, t_mini *mini)
+char	*argsearch(char *file)
 {
 	char	*tmp2;
 	char	*tmp3;
 
-	tmp2 = ft_strtrim(*file, " ./\"");
+	tmp2 = ft_strtrim(file, " ./\"");
 	if (ft_strchr(tmp2, '/'))
 	{
 		tmp3 = fileseek(ft_strdup(&tmp2[(ft_strrchr(tmp2, '/') - tmp2) + 1]),
@@ -256,32 +256,40 @@ int	argsearch(char **file, t_mini *mini)
 			tmp3 = directory_seek(ft_strndup(tmp2, ft_strrchr(tmp2, '/') - tmp2),
 				getcwd(NULL, 0));
 			if (!tmp3)
-				return (ft_putendl_fd("File not found", 2), mini->status = 1, 0);
+				return (free(tmp2), file);
 			else
-				return (free(tmp2), free(tmp3), 0);
+				return (tmp3 = ft_strjoin_gnl(tmp3, &tmp2[(ft_strrchr(tmp2, '/') - tmp2) + 1]), free(tmp2), tmp3);
 		}
 		else
-			return (free(tmp2), free(*file), *file = tmp3, 0);
+			return (free(tmp2), free(file), tmp3);
 	}
 	else
 	{
 		tmp3 = fileseek(tmp2, getcwd(NULL, 0));
 		if (tmp3 == NULL)
-			return (ft_putendl_fd("File not found", 2), mini->status = 1, 0);
+			return (tmp2 = ft_strtrim(file, " ./\""), free(file), tmp3 = ft_strjoin_gnl(getcwd(NULL, 0), "/"), tmp3 = ft_strjoin_gnl(tmp3, tmp2), free(tmp2), tmp3);
 		else
-			return (free(*file), *file = tmp3, 0);
+			return (free(file), tmp3);
 	}
 	return (0);
 }
 
-void	argsfilesearcher(t_cmd **head, t_mini *mini)
+void	argsfilesearcher(t_cmd **head)
 {
 	t_cmd	*tmp;
+	int		i;
 
 	tmp = *head;
 	while (tmp)
 	{
-		if (tmp->argv[1] && !strncmp("./", tmp->argv[1], 2))
-			argsearch(&tmp->argv[1], mini);
+		i = -1;
+		while (tmp->argv[++i])
+		{
+			if (tmp->argv[i] && !strncmp("./", tmp->argv[i], 2))
+				tmp->argv[i] = argsearch(tmp->argv[i]);
+		}
+		if (tmp->infile && !strncmp("./", tmp->infile, 2))
+			tmp->infile = argsearch(tmp->infile);
+		tmp = tmp->next;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 22:28:59 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/12 22:59:07 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/15 17:14:49 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	alonecmdcallutils(t_cmd *cmd, int fdin)
 	signal(SIGQUIT, SIG_DFL);
 	if (cmd->infile)
 		dup2(fdin, cmd->fd[READ_FD]);
-	else if (cmd->prev && !cmd->prev->outfiles)
+	else if (cmd->prev && !*cmd->prev->outfiles)
 	{
 		dup2(cmd->prev->fd[READ_FD], cmd->fd[READ_FD]);
 		close(cmd->prev->fd[READ_FD]);

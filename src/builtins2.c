@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 00:52:59 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/12 22:33:32 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/15 16:46:46 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ void	chdirandoldpwd(char *new, t_mini *mini)
 	free(new);
 }
 
-int	checkpermission(char *file, int rwx, t_mini *mini)
+int	checkpermission(char *file, int rwx, t_mini *mini, t_cmd *actcmd)
 {
 	if (access(file, F_OK) == -1)
 		return (ft_putstr_fd("File not found\n", 2), mini->status = 1, 0);
@@ -85,7 +85,7 @@ int	checkpermission(char *file, int rwx, t_mini *mini)
 	{
 		if (access(file, R_OK) == -1)
 		{
-			if (cmdcount(mini->header) <= 1)
+			if (cmdlast(*mini->header) == actcmd)
 				return (ft_putstr_fd("Access denied\n", 2), mini->status = 1, -1);
 			else
 				return (mini->status = 126, -1);
