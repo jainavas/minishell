@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 15:56:12 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/14 19:33:03 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/16 14:00:57 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int	checkinfile(t_mini *mini)
 {
 	if (access(mini->infile, R_OK) != 0)
 		return (ft_putstr_fd("minishell: ", 1),
-			ft_putstr_fd("No such file or directory", 2), 1);
+			ft_putstr_fd("No such file or directory", 2), mini->status = 1, 1);
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 17:07:05 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/15 18:49:20 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/16 13:53:10 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ int	filesearch(t_fout *tmp, t_mini *mini)
 			tmp3 = directory_seek(ft_strndup(tmp2, ft_strrchr(tmp2, '/') - tmp2),
 				getcwd(NULL, 0));
 			if (!tmp3)
-				return (tmp->out = -2, ft_putendl_fd("File not found", 2), mini->status = 1, 0);
+				return (free(tmp2), tmp->out = -2, ft_putendl_fd("File not found", 2), mini->status = 1, 0);
 			else
 				return (free(tmp2), free(tmp3), 0);
 		}

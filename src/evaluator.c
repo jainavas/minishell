@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 18:05:55 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/15 19:05:29 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/16 13:58:32 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,8 @@ void	assign_infile(t_cmd **current, char **args, int *begin)
 	i = *begin;
 	if (!args[++i])
 		return ;
+	if ((*current)->infile)
+		free((*current)->infile);
 	if (args[i] && !is_operator(args[i]))
 		(*current)->infile = ft_strdup(args[i]);
 	else if (args[++i])
@@ -224,19 +226,25 @@ void	free_cmd(t_cmd *cmd)
 
 void	assignarg(t_cmd **cmd, char **args, int *begin)
 {
+	char	**newargv;
 	int		argc;
 	int		i;
 
 	argc = 0;
 	while (args[*begin + argc] && !is_operator(args[*begin + argc]))
 		argc++;
+	newargv = ft_calloc(argc + (*cmd)->argc + 2, sizeof(char *));
+	i = -1;
+	while ((*cmd)->argv[++i])
+		newargv[i] = ft_strdup((*cmd)->argv[i]);
 	freedoublepointer((*cmd)->argv);
-	(*cmd)->argv = ft_calloc(argc + 2, sizeof(char *));
-	i = 0;
-	(*cmd)->argv[0] = ft_strdup((*cmd)->cmd);
-	while (++i <= argc && args[*begin + i - 1])
-		(*cmd)->argv[i] = ft_strdup(args[*begin + i - 1]);
-	(*cmd)->argv[i] = NULL;
+	i = -1;
+	while (++i < argc + (*cmd)->argc && args[*begin + i] && !is_operator(args[*begin + i]))
+		newargv[i + (*cmd)->argc] = ft_strdup(args[*begin + i]);
+	newargv[i + (*cmd)->argc] = NULL;
+	(*cmd)->argv = newargv;
+	(*cmd)->argc = i + (*cmd)->argc;
+	*begin = *begin + i - 1;
 }
 
 //WIP
