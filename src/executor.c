@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/29 14:21:20 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/15 19:08:00 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/16 15:51:05 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,16 +33,22 @@ int	run_cmd_list(t_mini *mini, t_cmd **head)
 		{
 			if (!checkpermission(curr->infile, 1, mini, curr))
 			{
-				pipe(curr->fd);
-				close(curr->fd[WRITE_FD]);
+				if (curr->next)
+				{
+					pipe(curr->fd);
+					close(curr->fd[WRITE_FD]);
+				}
 				curr = curr->next;
 				continue ;
 			}
 			fdret2 = open(curr->infile, O_RDONLY);
 			if (fdret2 == -1)
 			{
-				pipe(curr->fd);
-				close(curr->fd[WRITE_FD]);
+				if (curr->next)
+				{
+					pipe(curr->fd);
+					close(curr->fd[WRITE_FD]);
+				}
 				curr = curr->next;
 				continue;
 			}
@@ -64,9 +70,13 @@ int	run_cmd_list(t_mini *mini, t_cmd **head)
 	while (curr->next)
 	{
 		waitpid(curr->pid, &curr->pidstatus, 0);
+		if (WIFEXITED(curr->pidstatus) != 0 && mini->status == 0)
+			mini->status = WEXITSTATUS(curr->pidstatus);
 		curr = curr->next;
 	}
 	waitpid(curr->pid, &curr->pidstatus, 0);
+	if (WIFEXITED(curr->pidstatus) != 0 && mini->status == 0)
+		mini->status = WEXITSTATUS(curr->pidstatus);
 	if ((cmdlast(*head)->ifouts == 0) && mini->status == 0)
 		fdtofd(cmdlast(*head)->fd[READ_FD], STDOUT_FILENO);
 	return (0);
