@@ -83,6 +83,8 @@ char	*ft_strinsertdup(char *s, char *var, char *content, char flag)
 	i = -1;
 	j = -1;
 	res = NULL;
+	if (!var)
+		return (s);
 	res = malloc((ft_strlen(s) - (ft_strlen(var))
 				+ ft_strlen(content) + 1) * sizeof(char));
 	if (res == NULL || s == NULL)
@@ -91,11 +93,9 @@ char	*ft_strinsertdup(char *s, char *var, char *content, char flag)
 		res[i] = s[i];
 	while (content[++j])
 		res[i++] = content[j];
-	while (s[i + ft_strlen(var) - (j - 1)])
-	{
+	i--;
+	while (s[++i + ft_strlen(var) - (j - 1)])
 		res[i] = s[i + ft_strlen(var) - (j - 1)];
-		i++;
-	}
 	res[i] = '\0';
 	if (j == 0)
 		return (ft_strdup(""));

@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/29 14:21:20 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/17 14:40:55 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/17 18:08:05 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,43 +20,19 @@ int	run_cmd_list(t_mini *mini, t_cmd **head)
 {
 	t_cmd	*curr;
 	int		fdret;
-	int		fdret2;
 
 	curr = *head;
 	fdret = 0;
-	fdret2 = 0;
 	while (curr)
 	{
 		mini->status = 0;
 		g_status = 0;
-		if (curr->infile)
+		fdret = selectinflim(curr, mini);
+		if (fdret == -1)
 		{
-			if (!checkpermission(curr->infile, 1, mini, curr))
-			{
-				if (curr->next)
-				{
-					pipe(curr->fd);
-					close(curr->fd[WRITE_FD]);
-				}
-				curr = curr->next;
-				continue ;
-			}
-			fdret2 = open(curr->infile, O_RDONLY);
-			if (fdret2 == -1)
-			{
-				if (curr->next)
-				{
-					pipe(curr->fd);
-					close(curr->fd[WRITE_FD]);
-				}
-				curr = curr->next;
-				continue;
-			}
-			else
-				fdret = fdret2;
+			curr = curr->next;
+			continue ;
 		}
-		if (curr->lim)
-			fdret = dolimitator(curr->lim, mini);
 		fdret = execute_command(mini, curr, fdret);
 		if (curr->lim)
 			fileunlinker("tmp_heredoc");
@@ -64,8 +40,6 @@ int	run_cmd_list(t_mini *mini, t_cmd **head)
 			fdtomfiles(curr->outfiles, fdret, mini, curr);
 		curr = curr->next;
 	}
-	if (fdret2 == -1)
-		return (ft_putstr_fd("bash: ", 1), ft_putstr_fd(curr->infile, 1), ft_putstr_fd(" does not exist\n", 1), mini->status = 127, 0);
 	curr = *head;
 	while (curr->next)
 	{
@@ -147,4 +121,37 @@ void	closecmdsfd(t_cmd **head)
 			close(tmp->fd[WRITE_FD]);
 		tmp = tmp->next;
 	}
+}
+
+int	selectinflim(t_cmd *cmd, t_mini *mini)
+{
+	int	fdret;
+
+	fdret = 0;
+	if (cmd->priorinflim == 1 && cmd->infile)
+	{
+		if (!checkpermission(cmd->infile, 1, mini, cmd))
+		{
+			if (cmd->next)
+			{
+				pipe(cmd->fd);
+				close(cmd->fd[WRITE_FD]);
+			}
+			if (cmdcount(mini->header) == cmd->cmdn)
+				return (-1);
+		}
+		fdret = open(cmd->infile, O_RDONLY);
+		if (fdret == -1)
+		{
+			if (cmd->next)
+			{
+				pipe(cmd->fd);
+				close(cmd->fd[WRITE_FD]);
+			}
+			return (-1);
+		}
+	}
+	if (cmd->priorinflim == 2 && cmd->lim)
+		fdret = dolimitator(cmd->lim, mini);
+	return (fdret);
 }

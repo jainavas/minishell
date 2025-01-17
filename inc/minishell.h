@@ -61,6 +61,7 @@ typedef	struct s_cmd
 	char			*infile;
 	t_fout			**outfiles;
 	int				ifouts;
+	int				priorinflim;
 	char			**argv;
 	char			**env;
 	int				argc;
@@ -178,6 +179,7 @@ int		cmdcount(t_cmd **head);
 int		dolimitator(char *lim, t_mini *mini);
 void	fileunlinker(char *file);
 void	closecmdsfd(t_cmd **head);
+int		selectinflim(t_cmd *cmd, t_mini *mini);
 /* evaluator.c */
 t_cmd	*evaluate_commands(char **args);
 void	assign_outfile(t_cmd **current, char **args, int *begin, int app);

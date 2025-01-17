@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 18:05:55 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/16 15:33:41 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/17 17:37:31 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,12 +90,20 @@ void	assign_infile(t_cmd **current, char **args, int *begin)
 	i = *begin;
 	if (!args[++i])
 		return ;
-	if ((*current)->infile)
-		free((*current)->infile);
 	if (args[i] && !is_operator(args[i]))
+	{
+		if ((*current)->infile)
+			free((*current)->infile); 
 		(*current)->infile = ft_strdup(args[i]);
+		(*current)->priorinflim = 1;
+	}
 	else if (args[++i])
+	{
+		if ((*current)->lim)
+			free((*current)->lim);
 		(*current)->lim = ft_strdup(args[i]);
+		(*current)->priorinflim = 2;
+	}
 	*begin = i;
 }
 
@@ -111,6 +119,7 @@ t_cmd	*get_current_cmd(char **args, int *begin)
 	cmd = ft_calloc(1, sizeof(t_cmd));
 	cmd->argc = argc;
 	cmd->ifouts = 0;
+	cmd->priorinflim = 0;
 	cmd->lim = NULL;
 	cmd->oginput = NULL;
 	cmd->next = NULL;
