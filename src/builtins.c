@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 12:14:17 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/17 14:28:13 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/17 18:29:07 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ int	docd(t_cmd *cmd, t_mini *mini)
 	else if (path[0] == '~')
 	{
 		tmp = get_env_var(&mini->env, "HOME");
+		if (!tmp)
+			return (1);
 		str = ft_strinsertdup(strdup(path + spacesindex(path + 2) + 2), "",
 				tmp->content, '~');
 		chdirandoldpwd(ft_strdup(str), mini);
