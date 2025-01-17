@@ -177,6 +177,7 @@ int		execute_command(t_mini *mini, t_cmd *cmd, int infd);
 int		cmdcount(t_cmd **head);
 int		dolimitator(char *lim, t_mini *mini);
 void	fileunlinker(char *file);
+void	closecmdsfd(t_cmd **head);
 /* evaluator.c */
 t_cmd	*evaluate_commands(char **args);
 void	assign_outfile(t_cmd **current, char **args, int *begin, int app);

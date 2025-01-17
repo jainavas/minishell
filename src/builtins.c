@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 12:14:17 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/16 15:50:14 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/17 14:28:13 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ int	doexport(t_mini *mini, t_cmd *cmd, int fd)
 		if (!is_valid_identifier(cmd->argv[argc]))
 		{
 			ft_putstr_fd("export: not a valid identifier\n", 2);
+			close(cmd->fd[READ_FD]);
 			mini->status = 1;
 		}
 		else

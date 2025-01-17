@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 17:07:05 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/16 13:53:10 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/17 14:49:34 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,7 @@ char	*pathseekenv(char **args, char **envp)
 		wait(NULL);
 		tmp = get_next_line(fd[READ_FD]);
 		if (!tmp)
-			return (NULL);
+			return (close(fd[READ_FD]), NULL);
 		tmp[ft_strlen(tmp) - 1] = '\0';
 		return (close(fd[READ_FD]), tmp);
 	}

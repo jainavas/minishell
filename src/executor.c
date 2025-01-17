@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/29 14:21:20 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/16 15:51:05 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/17 14:40:55 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int	run_cmd_list(t_mini *mini, t_cmd **head)
 		mini->status = WEXITSTATUS(curr->pidstatus);
 	if ((cmdlast(*head)->ifouts == 0) && mini->status == 0)
 		fdtofd(cmdlast(*head)->fd[READ_FD], STDOUT_FILENO);
-	return (0);
+	return (closecmdsfd(head), 0);
 }
 
 // This function executes the current command once all pipes, 
@@ -132,4 +132,19 @@ void	fileunlinker(char *file)
 	tmp = ft_strjoin_gnl(tmp, file);
 	unlink(tmp);
 	free(tmp);
+}
+
+void	closecmdsfd(t_cmd **head)
+{
+	t_cmd	*tmp;
+
+	tmp = *head;
+	while (tmp)
+	{
+		if (tmp->fd[READ_FD] > 2)
+			close(tmp->fd[READ_FD]);
+		if (tmp->fd[WRITE_FD] > 2)
+			close(tmp->fd[WRITE_FD]);
+		tmp = tmp->next;
+	}
 }
