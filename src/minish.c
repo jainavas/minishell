@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 01:58:02 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/20 17:54:31 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/20 18:17:50 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,26 +64,6 @@ int	alonecmdcall(int fdin, t_cmd *cmd, char **env, t_mini *mini)
 	return (0);
 }
 
-char	**preppipex(char *buf, char *infile, char **buf2, t_mini *mini)
-{
-	char	**res;
-	int		i;
-
-	i = -1;
-	res = ft_calloc((ft_strcount(buf, '|') + 1) + 4, sizeof(char *));
-	res[1] = infile;
-	res[0] = ft_strdup("a");
-	while (buf2[++i])
-	{
-		if (checkprepaths(ft_split(buf2[i], ' '), mini))
-			return (ft_putstr_fd("mini: command not found\n", 2),
-				freedoublepointer(buf2), freedoublepointer(res), NULL);
-		res [i + 2] = ft_strdup(buf2[i]);
-	}
-	res[i + 2] = NULL;
-	return (freedoublepointer(buf2), res);
-}
-
 int	main(int argc, char **argv, char **envp)
 {
 	t_mini	*mini;
@@ -97,8 +77,6 @@ int	main(int argc, char **argv, char **envp)
 	mini->envp = envp;
 	mini->env = init_env_vars(envp);
 	add_envar(mini, "?", "0", 2);
-	mini->mfilesout = ft_calloc(1, sizeof(t_fout *));
-	*(mini->mfilesout) = NULL;
 	mini->quotestmps = ft_calloc(1, sizeof(t_env *));
 	*(mini->quotestmps) = NULL;
 	set_signals();
@@ -106,13 +84,9 @@ int	main(int argc, char **argv, char **envp)
 	ret = mini->status;
 	freelist(mini->env);
 	freelist(*mini->quotestmps);
-	freeoutfiles(mini->mfilesout);
-	free(mini->mfilesout);
-	free(mini->quotestmps);
-	free(mini);
 	if (ret != -1)
-		return (ret);
+		return (free(mini->quotestmps), free(mini), ret);
 	if (g_status != -1)
-		return (g_status);
-	return (0);
+		return (free(mini->quotestmps), free(mini), g_status);
+	return (free(mini->quotestmps), free(mini), 0);
 }

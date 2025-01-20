@@ -15,10 +15,6 @@ SRC =	minish.c \
 		minish6.c \
 		minish7.c \
 		minish8.c \
-		pipex.c \
-		pipex2.c \
-		pipex3.c \
-		pipex4.c \
 		ft_splitchars.c \
 		signals.c \
 		builtins.c \

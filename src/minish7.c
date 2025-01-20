@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 16:38:08 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/15 19:04:19 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/20 18:07:32 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,46 +26,6 @@ int	counttmps(t_env *lst)
 		new = new->next;
 	}
 	return (i);
-}
-
-char	*initialdebug(t_mini *mini, char *buf2)
-{
-	char	*tmp;
-
-	if (!buf2)
-		return (NULL);
-	if (buf2[0] == '\0')
-		return (free(buf2), NULL);
-	tmp = ft_strtrim(buf2, " ");
-	free(buf2);
-	buf2 = tmp;
-	add_history(buf2);
-	if (ft_strchrtwo(buf2, '"', 39))
-	{
-		if (checkquotes(buf2, mini) == -1)
-			return (write(1, "Error\n", 6), free(buf2),
-				free(mini->quotesbuf), mini->quotesbuf = NULL, NULL);
-		free(buf2);
-		buf2 = ft_strdup(mini->quotesbuf);
-		free(mini->quotesbuf);
-		mini->quotesbuf = NULL;
-		return (buf2);
-	}
-	else
-		return (checkenvvars(buf2, mini));
-}
-
-int	exec(t_mini *mini, char *buf2, char **buf)
-{
-	g_status = 0;
-	if ((ft_strchr(buf2, '<') != NULL && ft_strchr(buf2, '<')[1] == '<') &&
-		ft_strchr(buf2, '|') != NULL)
-		return (dolimwithpipe(buf2, buf, mini));
-	else if (ft_strchr(buf2, '|') != NULL)
-		return (dopipes(buf2, buf, mini));
-	// else
-	// 	return (docmd(buf2, buf, mini));
-	return (0);
 }
 
 char	*fileseek(char *file, char *directory)

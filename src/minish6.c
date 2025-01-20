@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 17:07:05 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/20 16:26:30 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/20 18:07:10 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,30 +21,6 @@ t_fout	*foutlast(t_fout *lst)
 		while (tmp->next)
 			tmp = tmp->next;
 	return (tmp);
-}
-
-void	handlemfilesout(t_mini *mini, char *buf)
-{
-	char	*tmp;
-	int		i;
-	int		a;
-
-	tmp = ft_strchr(buf, '>');
-	i = 1;
-	a = 0;
-	while (tmp)
-	{
-		if (tmp[1] == '>')
-		{
-			a = 1;
-			tmp++;
-		}
-		while (ft_isalnum(tmp[i]) || tmp[i] == '.' || tmp[i] == ' ')
-			i++;
-		newfileout(mini->mfilesout, ft_substr(tmp, 0, i), a, 0);
-		i = 1;
-		tmp = ft_strchr(tmp + 1, '>');
-	}
 }
 
 void	fdtomfiles(t_fout **head, int fd, t_mini *mini, t_cmd *cmd)

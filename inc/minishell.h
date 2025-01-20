@@ -77,9 +77,7 @@ typedef struct mini
 	int						argc;
 	char					**argv;
 	char					**envp;
-	t_fout					**mfilesout;
 	char					*infile;
-	char					*quotesbuf;
 	int						didcheckenv;
 	int						status;
 	t_cmd					**header;
