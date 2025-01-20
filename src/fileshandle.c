@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 22:28:59 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/20 19:32:57 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/20 21:11:31 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ void	freeoutfiles(t_fout **lst)
 
 int	filesearch(t_fout *tmp, t_mini *mini)
 {
+	t_ffdr	*var;
 	char	*tmp2;
 	char	*tmp3;
 
@@ -78,7 +79,10 @@ int	filesearch(t_fout *tmp, t_mini *mini)
 		return (seekcasebar(tmp, tmp2, tmp3, mini));
 	else
 	{
-		tmp3 = fileseek(tmp2, getcwd(NULL, 0));
+		var = ft_calloc(1, sizeof(t_ffdr));
+		var->directory = getcwd(NULL, 0);
+		var->f = ft_strdup(tmp2);
+		tmp3 = fileseek(var);
 		if (tmp3 == NULL)
 			return (ft_putendl_fd("File not found", 2), mini->status = 1, 0);
 		else

@@ -6,54 +6,30 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 16:38:08 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/20 19:31:19 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/20 22:31:14 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*fileseek(char *file, char *directory)
+char	*fileseek(t_ffdr *var)
 {
-	DIR				*dir;
-	struct dirent	*entry;
-	struct stat		statbuf;
-	char			*pathf;
+	char	*ret;
 
-	if (!directory)
-		return (free(file), NULL);
-	dir = opendir(directory);
-	if (!dir)
-		return (NULL);
-	entry = readdir(dir);
-	while (entry)
+	if (!var->directory)
+		return (freeffdr(var), NULL);
+	var->dir = opendir(var->directory);
+	if (!var->dir)
+		return (freeffdr(var), NULL);
+	var->entry = readdir(var->dir);
+	while (var->entry)
 	{
-		if (entry->d_name[0] == '.')
-		{
-			entry = readdir(dir);
-			continue ;
-		}
-		pathf = pathbuilder(directory, entry->d_name);
-		if (stat(pathf, &statbuf) == -1)
-		{
-			free(pathf);
-			continue ;
-		}
-		if (S_ISDIR(statbuf.st_mode))
-		{
-			pathf = fileseek(ft_strdup(file), pathf);
-			if (pathf)
-				return (closedir(dir), free(directory), free(file), pathf);
-		}
-		else
-		{
-			if (!ft_strcmpff(pathbuilder(directory, file),
-					pathbuilder(directory, entry->d_name)))
-				return (closedir(dir), free(directory), free(file), pathf);
-			free(pathf);
-		}
-		entry = readdir(dir);
+		ret = fileseekutils(var);
+		if (ret)
+			return (ret);
+		var->entry = readdir(var->dir);
 	}
-	return (closedir(dir), free(directory), free(file), NULL);
+	return (freeffdr(var), NULL);
 }
 
 char	*pathbuilder(char *dir, char *file)
@@ -67,44 +43,24 @@ char	*pathbuilder(char *dir, char *file)
 
 char	*dir_seek(char *target_dir, char *directory)
 {
-	DIR				*dir;
-	struct dirent	*entry;
-	struct stat		statbuf;
-	char			*path;
+	t_ffdr	*var;
+	char	*ret;
 
-	dir = opendir(directory);
-	if (!dir)
-		return (NULL);
-	entry = readdir(dir);
-	while (entry)
+	var = ft_calloc(1, sizeof(t_ffdr));
+	var->f = target_dir;
+	var->directory = directory;
+	var->dir = opendir(var->directory);
+	if (!var->dir)
+		return (freeffdr(var), NULL);
+	var->entry = readdir(var->dir);
+	while (var->entry)
 	{
-		if (entry->d_name[0] == '.')
-		{
-			entry = readdir(dir);
-			continue ;
-		}
-		path = pathbuilder(directory, entry->d_name);
-		if (stat(path, &statbuf) == -1)
-		{
-			free(path);
-			entry = readdir(dir);
-			continue ;
-		}
-		if (S_ISDIR(statbuf.st_mode))
-		{
-			if (!ft_strncmp(target_dir, entry->d_name, ft_strlen(target_dir)))
-				return (closedir(dir), free(directory), free(target_dir), path);
-			path = dir_seek(ft_strdup(target_dir), path);
-			if (path)
-				return (closedir(dir), free(directory), free(target_dir), path);
-		}
-		free(path);
-		entry = readdir(dir);
+		ret = dirseekutils(var);
+		if (ret)
+			return (ret);
+		var->entry = readdir(var->dir);
 	}
-	closedir(dir);
-	free(directory);
-	free(target_dir);
-	return (NULL);
+	return (freeffdr(var), NULL);
 }
 
 void	putcmdn(t_cmd **head)
@@ -126,9 +82,13 @@ void	putcmdn(t_cmd **head)
 
 int	seekcasebar(t_fout *tmp, char *tmp2, char *tmp3, t_mini *mini)
 {
-	tmp3 = fileseek(ft_strdup(&tmp2[(ft_strrchr(tmp2, '/') - tmp2) + 1]),
-			dir_seek(ft_strndup(tmp2, ft_strrchr(tmp2, '/') - tmp2),
-				getcwd(NULL, 0)));
+	t_ffdr	*var;
+
+	var = ft_calloc(1, sizeof(t_ffdr));
+	var->directory = dir_seek(ft_strndup(tmp2, ft_strrchr(tmp2, '/') - tmp2),
+			getcwd(NULL, 0));
+	var->f = ft_strdup(&tmp2[(ft_strrchr(tmp2, '/') - tmp2) + 1]);
+	tmp3 = fileseek(var);
 	if (tmp3 == NULL)
 	{
 		tmp3 = dir_seek(ft_strndup(tmp2, ft_strrchr(tmp2, '/') - tmp2),
@@ -140,5 +100,5 @@ int	seekcasebar(t_fout *tmp, char *tmp2, char *tmp3, t_mini *mini)
 			return (free(tmp2), free(tmp3), 0);
 	}
 	else
-			return (free(tmp2), free(tmp->file), tmp->file = tmp3, 0);
+		return (free(tmp2), free(tmp->file), tmp->file = tmp3, 0);
 }

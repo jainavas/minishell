@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 18:05:55 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/20 19:25:59 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/20 22:51:52 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,10 @@ t_cmd	*evaluate_commands(char **args)
 				assignarg(&current, args, &i);
 			if (tmp != -1)
 			{
-				assign_infile(&current, args, &tmp);
+				if (!ft_strncmp(args[tmp], "<", 1))
+					assign_infile(&current, args, &tmp);
+				if (!ft_strncmp(args[tmp], ">", 1))
+					assign_outfile(&current, args, &tmp, 0);
 				tmp = -1;
 			}
 		}
@@ -51,14 +54,12 @@ t_cmd	*evaluate_commands(char **args)
 			else
 				tmp = i++;
 		}
-		else if (!ft_strcmpspace(args[i], ">")
-			&& ft_strcmpspace(args[i + 1], ">"))
-			assign_outfile(&current, args, &i, 0);
-		else if (!ft_strncmp(args[i], ">", 1)
-			&& !ft_strncmp(args[i + 1], ">", 1))
+		else if (!ft_strcmpspace(args[i], ">"))
 		{
-			i++;
-			assign_outfile(&current, args, &i, 1);
+			if (current)
+				assign_outfile(&current, args, &i, 0);
+			else
+				tmp = i++;
 		}
 	}
 	return (putcmdn(&head), argsfilesearcher(&head), head);
@@ -73,7 +74,12 @@ void	assign_outfile(t_cmd **current, char **args, int *begin, int app)
 	i = *begin;
 	if (!args[++i])
 		return ;
-	else if (args[i] && !is_operator(args[i]))
+	if (!ft_strncmp(args[i], ">", 2))
+	{
+		app = 1;
+		i++;
+	}
+	if (args[i] && !is_operator(args[i]))
 		newfileout((*current)->outfiles, ft_strdup(args[i]), app, i);
 	*begin = i;
 }
@@ -118,10 +124,6 @@ t_cmd	*get_current_cmd(char **args, int *begin)
 	cmd->argc = argc;
 	cmd->ifouts = 0;
 	cmd->priorinflim = 0;
-	cmd->lim = NULL;
-	cmd->oginput = NULL;
-	cmd->next = NULL;
-	cmd->prev = NULL;
 	cmd->infile = NULL;
 	cmd->outfiles = ft_calloc(1, sizeof(t_fout *));
 	cmd->cmd = ft_strdup(args[*begin]);
@@ -132,7 +134,7 @@ t_cmd	*get_current_cmd(char **args, int *begin)
 		cmd->argv[i] = ft_strdup(args[*begin + i]);
 	cmd->argv[i] = NULL;
 	*begin = *begin + argc - 1;
-	return (cmd);
+	return (cmd->next = NULL, cmd->prev = NULL, cmd->lim = NULL, cmd);
 }
 
 void	assignarg(t_cmd **cmd, char **args, int *begin)

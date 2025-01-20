@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 19:00:12 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/20 19:02:01 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/20 22:09:09 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ char	*process_vars(t_mini *mini, char *buf)
 
 	mode = 0;
 	i = -1;
-	while (buf[++i])
+	while (++i < (int)ft_strlen(buf) && buf[i])
 	{
 		if (mode == 0 && buf[i] == '"')
 			mode = 1;

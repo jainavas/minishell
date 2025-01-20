@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 18:52:43 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/20 19:11:55 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/20 20:14:32 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,8 +94,6 @@ void	free_cmd(t_cmd *cmd)
 		free (cmd->infile);
 	if (cmd->lim)
 		free (cmd->lim);
-	if (cmd->oginput)
-		free (cmd->oginput);
 	if (cmd->env)
 		freedoublepointer(cmd->env);
 	if (cmd->path)

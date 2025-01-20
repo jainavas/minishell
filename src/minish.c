@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 01:58:02 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/20 19:44:03 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/20 22:10:39 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,15 +52,14 @@ int	recread(t_mini **mini)
 	if (!buf2)
 		return (1);
 	if (buf2[0] == '\0')
-		return (0);
+		return (free(buf2), 0);
 	add_history(buf2);
 	buf = cleannulls(process_input((*mini), ft_strdup(buf2)));
 	head = evaluate_commands(buf);
 	freedoublepointer(buf);
 	if (!head)
-		return (0);
+		return (free(buf2), 0);
 	(*mini)->header = &head;
-	head->oginput = ft_strdup(buf2);
 	run_cmd_list(*mini, &head);
 	free(buf2);
 	free_cmd_list(&head);

@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/29 14:21:20 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/20 18:50:12 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/20 20:10:09 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,19 +36,7 @@ int	run_cmd_list(t_mini *mini, t_cmd **head)
 			fdtomfiles(curr->outfiles, fdret, mini, curr);
 		curr = curr->next;
 	}
-	curr = *head;
-	while (curr->next)
-	{
-		waitpid(curr->pid, &curr->pidstatus, 0);
-		if (WIFEXITED(curr->pidstatus) != 0 && mini->status == 0)
-			mini->status = WEXITSTATUS(curr->pidstatus);
-		curr = curr->next;
-	}
-	waitpid(curr->pid, &curr->pidstatus, 0);
-	if (WIFEXITED(curr->pidstatus) != 0 && mini->status == 0)
-		mini->status = WEXITSTATUS(curr->pidstatus);
-	if ((cmdlast(*head)->ifouts == 0) && mini->status == 0)
-		fdtofd(cmdlast(*head)->fd[READ_FD], STDOUT_FILENO);
+	postexec(head, mini);
 	return (closecmdsfd(head), 0);
 }
 
@@ -90,4 +78,23 @@ int	dolimitator(char *lim, t_mini *mini)
 	close(fd);
 	fd = open("tmp_heredoc", O_RDONLY);
 	return (fd);
+}
+
+void	postexec(t_cmd **head, t_mini *mini)
+{
+	t_cmd	*curr;
+
+	curr = *head;
+	while (curr->next)
+	{
+		waitpid(curr->pid, &curr->pidstatus, 0);
+		if (WIFEXITED(curr->pidstatus) != 0 && mini->status == 0)
+			mini->status = WEXITSTATUS(curr->pidstatus);
+		curr = curr->next;
+	}
+	waitpid(curr->pid, &curr->pidstatus, 0);
+	if (WIFEXITED(curr->pidstatus) != 0 && mini->status == 0)
+		mini->status = WEXITSTATUS(curr->pidstatus);
+	if ((cmdlast(*head)->ifouts == 0) && mini->status == 0)
+		fdtofd(cmdlast(*head)->fd[READ_FD], STDOUT_FILENO);
 }

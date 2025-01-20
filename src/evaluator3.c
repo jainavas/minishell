@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 18:53:08 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/20 19:22:34 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/20 22:36:28 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,40 +14,28 @@
 
 char	*argsearch(char *file)
 {
-	char	*tmp2;
+	t_ffdr	*var;
+	char	*tp2;
 	char	*tmp3;
 
-	tmp2 = ft_strtrim(file, " ./\"");
-	if (ft_strchr(tmp2, '/'))
-	{
-		tmp3 = fileseek(ft_strdup(&tmp2[(ft_strrchr(tmp2, '/') - tmp2) + 1]),
-				dir_seek(ft_strndup(tmp2, ft_strrchr(tmp2, '/') - tmp2),
-					getcwd(NULL, 0)));
-		if (tmp3 == NULL)
-		{
-			tmp3 = dir_seek(ft_strndup(tmp2, ft_strrchr(tmp2, '/') - tmp2),
-					getcwd(NULL, 0));
-			if (!tmp3)
-				return (free(tmp2), file);
-			else
-				return (tmp3 = ft_strjoin_gnl(tmp3,
-						&tmp2[(ft_strrchr(tmp2, '/') - tmp2) + 1]),
-					free(tmp2), tmp3);
-		}
-		else
-			return (free(tmp2), free(file), tmp3);
-	}
+	tmp3 = NULL;
+	tp2 = ft_strtrim(file, " ./\"");
+	var = ft_calloc(1, sizeof(t_ffdr));
+	if (ft_strchr(tp2, '/'))
+		return (caseargsearch(var, tp2, file, tmp3));
 	else
 	{
-		tmp3 = fileseek(tmp2, getcwd(NULL, 0));
+		var->f = tp2;
+		var->directory = getcwd(NULL, 0);
+		tmp3 = fileseek(var);
 		if (tmp3 == NULL)
-			return (tmp2 = ft_strtrim(file, " ./\""), free(file),
+			return (tp2 = ft_strtrim(file, " ./\""), free(file),
 				tmp3 = ft_strjoin_gnl(getcwd(NULL, 0), "/"),
-				tmp3 = ft_strjoin_gnl(tmp3, tmp2), free(tmp2), tmp3);
+				tmp3 = ft_strjoin_gnl(tmp3, tp2), free(tp2), tmp3);
 		else
 			return (free(file), tmp3);
 	}
-	return (0);
+	return (freeffdr(var), NULL);
 }
 
 void	argsfilesearcher(t_cmd **head)
@@ -68,4 +56,25 @@ void	argsfilesearcher(t_cmd **head)
 			tmp->infile = argsearch(tmp->infile);
 		tmp = tmp->next;
 	}
+}
+
+char	*caseargsearch(t_ffdr *var, char *tp2, char *file, char *tmp3)
+{
+	var->f = ft_strdup(&tp2[(ft_strrchr(tp2, '/') - tp2) + 1]);
+	var->directory = dir_seek(ft_strndup(tp2, ft_strrchr(tp2, '/') - tp2),
+			getcwd(NULL, 0));
+	tmp3 = fileseek(var);
+	if (tmp3 == NULL)
+	{
+		tmp3 = dir_seek(ft_strndup(tp2, ft_strrchr(tp2, '/') - tp2),
+				getcwd(NULL, 0));
+		if (!tmp3)
+			return (free(tp2), file);
+		else
+			return (tmp3 = ft_strjoin_gnl(tmp3,
+					&tp2[(ft_strrchr(tp2, '/') - tp2) + 1]),
+				free(tp2), tmp3);
+	}
+	else
+		return (free(tp2), free(file), tmp3);
 }

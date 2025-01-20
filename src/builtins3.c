@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 18:39:14 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/20 19:47:15 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/20 19:54:09 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,12 +74,15 @@ int	isbuiltin(t_cmd *cmd)
 	return (0);
 }
 
-void	dowriteecho(char **argv, int fd, int i)
+int	tildecasecd(t_env *tmp, t_mini *mini, char *path)
 {
-	write(fd, argv[i], ft_strlen(argv[i]));
-	while (argv[++i])
-	{
-		write(fd, " ", 1);
-		write(fd, argv[i], ft_strlen(argv[i]));
-	}
+	char	*str;
+
+	tmp = get_env_var(&mini->env, "HOME");
+	if (!tmp)
+		return (1);
+	str = ft_strinsertdup(strdup(path + spacesindex(path + 2) + 2), "",
+			tmp->content, '~');
+	chdirandoldpwd(ft_strdup(str), mini);
+	return (0);
 }

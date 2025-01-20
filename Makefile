@@ -1,6 +1,6 @@
 NAME = minishell
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -g3
+CFLAGS = -Wall -Wextra -Werror -g3 -fsanitize=leak
 CLIBS = -lreadline
 
 SRC_PATH = src/
@@ -12,14 +12,16 @@ SRC =	minish.c \
 		minish3.c \
 		minish4.c \
 		fileshandle.c \
-		minish6.c \
 		fileshandle2.c \
+		fileshandle3.c \
+		minish6.c \
 		minish8.c \
 		ft_splitchars.c \
 		signals.c \
 		builtins.c \
 		builtins2.c \
 		builtins3.c \
+		builtins4.c \
 		environment1.c \
 		environment2.c \
 		environment3.c \

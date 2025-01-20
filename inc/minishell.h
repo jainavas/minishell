@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 02:16:09 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/20 19:47:27 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/20 22:35:39 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,16 @@ typedef struct s_env
 	struct s_env			*prev;
 }	t_env;
 
+typedef struct s_filefinder
+{
+	DIR				*dir;
+	struct dirent	*entry;
+	struct stat		statbuf;
+	char			*pathf;
+	char			*f;
+	char			*directory;
+}	t_ffdr;
+
 typedef struct s_cmd
 {
 	int				cmdn;
@@ -63,7 +73,6 @@ typedef struct s_cmd
 	int				pidstatus;
 	char			*cmd;
 	char			*path;
-	char			*oginput;
 	char			*lim;
 	char			*infile;
 	t_fout			**outfiles;
@@ -118,11 +127,15 @@ void	freeoutfiles(t_fout **lst);
 int		filesearch(t_fout *tmp, t_mini *mini);
 t_fout	*foutlast(t_fout *lst);
 /* fileshandle2.c */
-char	*fileseek(char *file, char *directory);
+char	*fileseek(t_ffdr *var);
 char	*dir_seek(char *target_dir, char *directory);
 char	*pathbuilder(char *dir, char *file);
 void	putcmdn(t_cmd **head);
 int		seekcasebar(t_fout *tmp, char *tmp2, char *tmp3, t_mini *mini);
+/* fileshandle3.c */
+char	*fileseekutils(t_ffdr *var);
+char	*dirseekutils(t_ffdr *var);
+void	freeffdr(t_ffdr *var);
 /* minish6.c */
 char	*pathseekenv(char **args, char **envp);
 int		counttmps(t_env *lst);
@@ -151,20 +164,22 @@ char	*prevpath(char *path);
 char	*prevcwd(void);
 int		checkpermouts(t_cmd *cmd, char *file, t_mini *mini);
 int		isbuiltin(t_cmd *cmd);
-void	dowriteecho(char **argv, int fd, int i);
+int		tildecasecd(t_env *tmp, t_mini *mini, char *path);
+/* builtins4.c */
+int		doexit(t_cmd *cmd);
+int		donewvarent(t_cmd *cmd, t_mini *mini);
 /* environment1.c */
-void	dpcheckenvars(char **buf, t_mini *mini);
 t_env	*envarlast(t_env *lst);
 char	*checkenvlist(t_mini *mini, char **buf, char *tmp);
 int		entvars(t_env **head, char *var, char *content);
 char	*checkenvvars(char *buf, t_mini *mini);
+int		exists_env_var(t_mini *mini, char *varname);
 /* environment2.c */
 t_env	*get_env_head(t_env *env);
 t_env	*get_env_var(t_env **head, char *varname);
 t_env	*init_env_vars(char **envp);
 void	add_temp_envar(t_mini *mini, char *varname);
 void	add_envar(t_mini *mini, char *varname, char *value, int is_temp);
-int		exists_env_var(t_mini *mini, char *varname);
 /* environment3.c */
 void	remove_envar(t_mini *mini, char *varname);
 void	print_temp_env(t_env *env, int fd);
@@ -176,6 +191,7 @@ int		run_cmd_list(t_mini *mini, t_cmd **head);
 int		execute_command(t_mini *mini, t_cmd *cmd, int infd);
 int		cmdcount(t_cmd **head);
 int		dolimitator(char *lim, t_mini *mini);
+void	postexec(t_cmd **head, t_mini *mini);
 /* executor2.c */
 void	fileunlinker(char *file);
 void	closecmdsfd(t_cmd **head);
@@ -196,6 +212,7 @@ void	free_cmd_list(t_cmd **head);
 /* evaluator3.c */
 char	*argsearch(char *file);
 void	argsfilesearcher(t_cmd **head);
+char	*caseargsearch(t_ffdr *var, char *tp2, char *file, char *tmp3);
 /* parsing.c */
 char	**process_input(t_mini *mini, char *buf);
 int		count_splitted_operators(char *buf);

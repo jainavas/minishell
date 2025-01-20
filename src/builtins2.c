@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 00:52:59 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/20 19:17:37 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/20 22:14:24 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ int	is_valid_identifier(char *buf)
 	int		i;
 
 	i = -1;
+	if (buf[0] == '=' && !buf[1])
+		return (0);
 	while (buf[++i])
 		if (buf[i] == '='
 			&& (!buf[i - 1] || buf[i - 1] == ' ' || buf[i - 1] == '=')
@@ -81,38 +83,26 @@ int	checkpermission(char *file, int rwx, t_mini *mini, t_cmd *actcmd)
 {
 	if (access(file, F_OK) == -1)
 		return (ft_putstr_fd("File not found\n", 2), mini->status = 1, 0);
-	if (rwx == 1)
+	if (rwx == 1 && access(file, R_OK) == -1)
 	{
-		if (access(file, R_OK) == -1)
-		{
-			if (cmdlast(*mini->header) == actcmd)
-				return (ft_putstr_fd("Access denied\n", 2),
-					mini->status = 126, -1);
-			else
-				return (mini->status = 126, -1);
-		}
+		if (cmdlast(*mini->header) == actcmd)
+			return (ft_putstr_fd("Access denied\n", 2), mini->status = 126, -1);
+		else
+			return (mini->status = 126, -1);
 	}
-	if (rwx == 2)
+	if (rwx == 2 && access(file, W_OK) == -1)
 	{
-		if (access(file, W_OK) == -1)
-		{
-			if (cmdcount(mini->header) <= 1)
-				return (ft_putstr_fd("Access denied\n", 2),
-					mini->status = 126, -1);
-			else
-				return (mini->status = 126, -1);
-		}
+		if (cmdcount(mini->header) <= 1)
+			return (ft_putstr_fd("Access denied\n", 2), mini->status = 126, -1);
+		else
+			return (mini->status = 126, -1);
 	}
-	if (rwx == 3)
+	if (rwx == 3 && access(file, X_OK) == -1)
 	{
-		if (access(file, X_OK) == -1)
-		{
-			if (cmdcount(mini->header) <= 1)
-				return (ft_putstr_fd("Access denied\n", 2),
-					mini->status = 126, -1);
-			else
-				return (mini->status = 126, -1);
-		}
+		if (cmdcount(mini->header) <= 1)
+			return (ft_putstr_fd("Access denied\n", 2), mini->status = 126, -1);
+		else
+			return (mini->status = 126, -1);
 	}
 	return (1);
 }

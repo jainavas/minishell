@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 18:49:38 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/20 18:50:19 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/20 20:06:10 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,16 +56,6 @@ int	selectinflim(t_cmd *cmd, t_mini *mini)
 				return (openoutferrinf(cmd, mini), -1);
 		}
 		fdret = open(cmd->infile, O_RDONLY);
-		if (fdret == -1)
-		{
-			if (cmd->next)
-			{
-				pipe(cmd->fd);
-				close(cmd->fd[WRITE_FD]);
-				openoutferrinf(cmd, mini);
-			}
-			return (openoutferrinf(cmd, mini), -1);
-		}
 	}
 	if (cmd->priorinflim == 2 && cmd->lim)
 		fdret = dolimitator(cmd->lim, mini);

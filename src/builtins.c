@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 12:14:17 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/20 19:47:55 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/20 20:01:31 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 int	docd(t_cmd *cmd, t_mini *mini)
 {
 	t_env	*tmp;
-	char	*str;
 	char	*path;
 
+	tmp = NULL;
 	path = checkenvvars(cmd->argv[1], mini);
 	if (cmd->argc > 2)
 		return (ft_putstr_fd("cd: too many arguments\n", 2),
@@ -26,15 +26,7 @@ int	docd(t_cmd *cmd, t_mini *mini)
 		return (tmp = get_env_var(&mini->env, "HOME"),
 			chdirandoldpwd(ft_strdup(tmp->content), mini), 0);
 	else if (path[0] == '~')
-	{
-		tmp = get_env_var(&mini->env, "HOME");
-		if (!tmp)
-			return (1);
-		str = ft_strinsertdup(strdup(path + spacesindex(path + 2) + 2), "",
-				tmp->content, '~');
-		chdirandoldpwd(ft_strdup(str), mini);
-		return (0);
-	}
+		return (tildecasecd(tmp, mini, path));
 	else if (!ft_strcmpalnum(path, ".."))
 		return (chdirandoldpwd(prevpath(path), mini), 0);
 	else if (access(path, F_OK) == 0)
@@ -51,13 +43,23 @@ void	doecho(t_cmd *cmd, int fd)
 	if (cmd->argv[1] && ft_strcmpoptions(cmd->argv[1], "-n") != 0)
 	{
 		i = 1;
-		dowriteecho(cmd->argv, fd, i);
+		write(fd, cmd->argv[i], ft_strlen(cmd->argv[i]));
+		while (cmd->argv[++i])
+		{
+			write(fd, " ", 1);
+			write(fd, cmd->argv[i], ft_strlen(cmd->argv[i]));
+		}
 		write(fd, "\n", 1);
 	}
 	else if (cmd->argv[1])
 	{
 		i = 2;
-		dowriteecho(cmd->argv, fd, i);
+		write(fd, cmd->argv[i], ft_strlen(cmd->argv[i]));
+		while (cmd->argv[++i])
+		{
+			write(fd, " ", 1);
+			write(fd, cmd->argv[i], ft_strlen(cmd->argv[i]));
+		}
 	}
 	if (fd > 2 && fd != -1)
 		close(fd);
@@ -114,16 +116,7 @@ int	builtins(t_mini *mini, t_cmd *cmd)
 		close(cmd->prev->fd[READ_FD]);
 	cmd->isbltin = 1;
 	if (checkkill(cmd->cmd))
-	{
-		if (cmd->argc > 2)
-			return (ft_putstr_fd("exit: too many arguments\n", 2), exit(1), 1);
-		if (cmd->argv[1] && checkovrfandchar(cmd->argv[1]))
-			return (exit(ft_atoi(cmd->argv[1])), 0);
-		if (cmd->argv[1])
-			return (ft_putstr_fd("exit: incorrect arguments\n", 2), exit(2), 1);
-		else
-			return (exit(0), 0);
-	}
+		return (doexit(cmd));
 	pipe(cmd->fd);
 	if (ft_strcmpspace("cd", cmd->cmd) == 0)
 		return (docd(cmd, mini), close(cmd->fd[READ_FD]),
@@ -133,13 +126,7 @@ int	builtins(t_mini *mini, t_cmd *cmd)
 			close(cmd->fd[WRITE_FD]), 0);
 	if (ft_strchr(cmd->cmd, '=') && cmd->argc == 1
 		&& ft_isgroup(ft_strchr(cmd->cmd, '=') + 1, ft_isbashprotected) == 0)
-	{
-		cmd->cmd = checkenvvars(cmd->cmd, mini);
-		entvars(&mini->env,
-			ft_strndup(cmd->cmd, ft_strchr(cmd->cmd, '=') - cmd->cmd),
-			ft_strdup(ft_strchr(cmd->cmd, '=') + 1));
-		return (close(cmd->fd[READ_FD]), close(cmd->fd[WRITE_FD]), 0);
-	}
+		return (donewvarent(cmd, mini));
 	if (ft_strcmpspace("export", cmd->cmd) == 0)
 		return (doexport(mini, cmd, cmd->fd[WRITE_FD]), cmd->fd[READ_FD]);
 	if (ft_strcmpspace("env", cmd->cmd) == 0)

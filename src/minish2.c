@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 15:56:12 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/20 19:08:41 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/20 22:41:47 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,22 +64,22 @@ int	cmdexistence(char *cmd, t_mini *mini)
 {
 	char	*tmp;
 	char	**tmp2;
-	DIR		*dir;
+	DIR		*dr;
 
 	if (!cmd)
 		return (ft_putstr_fd(cmd, 2), ft_putstr_fd(": not exists\n", 2),
 			mini->status = 127, -1);
-	dir = opendir(cmd);
+	dr = opendir(cmd);
 	tmp2 = envtodoublechar(mini->env);
 	tmp = pathseekenv(&cmd, tmp2);
 	if (tmp)
 		return (free(tmp), freedoublepointer(tmp2), 1);
 	else
 	{
-		if (dir && (cmd[0] == '.' || cmd[0] == '/'))
-			return (closedir(dir), ft_putstr_fd(cmd, 2),
+		if (dr && (cmd[0] == '.' || cmd[0] == '/'))
+			return (freedoublepointer(tmp2), closedir(dr), ft_putstr_fd(cmd, 2),
 				ft_putstr_fd(": is a directory\n", 2), mini->status = 126, -1);
-		return (freedoublepointer(tmp2), ft_putstr_fd(cmd, 2),
+		return (closedir(dr), freedoublepointer(tmp2), ft_putstr_fd(cmd, 2),
 			ft_putstr_fd(": not exists\n", 2), mini->status = 127, -1);
 	}
 }
