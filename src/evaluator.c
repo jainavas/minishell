@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 18:05:55 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/17 17:37:31 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/20 16:41:08 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ void	assign_outfile(t_cmd **current, char **args, int *begin, int app)
 	if (!args[++i])
 		return ;
 	else if (args[i] && !is_operator(args[i]))
-		newfileout((*current)->outfiles, ft_strdup(args[i]), app);
+		newfileout((*current)->outfiles, ft_strdup(args[i]), app, i);
 	*begin = i;
 }
 
@@ -104,6 +104,7 @@ void	assign_infile(t_cmd **current, char **args, int *begin)
 		(*current)->lim = ft_strdup(args[i]);
 		(*current)->priorinflim = 2;
 	}
+	(*current)->priorinfout = i;
 	*begin = i;
 }
 

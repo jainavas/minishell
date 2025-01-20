@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/29 14:21:20 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/17 18:08:05 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/20 16:33:17 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,9 +136,10 @@ int	selectinflim(t_cmd *cmd, t_mini *mini)
 			{
 				pipe(cmd->fd);
 				close(cmd->fd[WRITE_FD]);
+				openoutferrinf(cmd, mini);
 			}
 			if (cmdcount(mini->header) == cmd->cmdn)
-				return (-1);
+				return (openoutferrinf(cmd, mini), -1);
 		}
 		fdret = open(cmd->infile, O_RDONLY);
 		if (fdret == -1)
@@ -147,11 +148,31 @@ int	selectinflim(t_cmd *cmd, t_mini *mini)
 			{
 				pipe(cmd->fd);
 				close(cmd->fd[WRITE_FD]);
+				openoutferrinf(cmd, mini);
 			}
-			return (-1);
+			return (openoutferrinf(cmd, mini), -1);
 		}
 	}
 	if (cmd->priorinflim == 2 && cmd->lim)
 		fdret = dolimitator(cmd->lim, mini);
 	return (fdret);
+}
+
+void	openoutferrinf(t_cmd *cmd, t_mini *mini)
+{
+	t_fout	*tmp;
+
+	if (!*cmd->outfiles)
+		return ;
+	tmp = *cmd->outfiles;
+	while (tmp)
+	{
+		if (tmp->file[0] == '.')
+			filesearch(tmp, mini);
+		if (tmp->out != -2 && tmp->priorinfout < cmd->priorinfout)
+			if (anyfdtofile(-1, tmp, cmd, mini) == -1)
+				break ;
+		tmp = tmp->next;
+	}
+	freeoutfiles(cmd->outfiles);
 }

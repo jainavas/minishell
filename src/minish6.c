@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 17:07:05 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/17 14:49:34 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/20 16:26:30 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	handlemfilesout(t_mini *mini, char *buf)
 		}
 		while (ft_isalnum(tmp[i]) || tmp[i] == '.' || tmp[i] == ' ')
 			i++;
-		newfileout(mini->mfilesout, ft_substr(tmp, 0, i), a);
+		newfileout(mini->mfilesout, ft_substr(tmp, 0, i), a, 0);
 		i = 1;
 		tmp = ft_strchr(tmp + 1, '>');
 	}

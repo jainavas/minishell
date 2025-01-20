@@ -32,6 +32,7 @@ typedef struct s_fileout
 	char					*file;
 	int						foutn;
 	int						out;
+	int						priorinfout;
 	int						appendout;
 	struct s_fileout		*next;
 	struct s_fileout		*prev;
@@ -60,8 +61,10 @@ typedef	struct s_cmd
 	char			*lim;
 	char			*infile;
 	t_fout			**outfiles;
+	int				fdinf;
 	int				ifouts;
 	int				priorinflim;
+	int				priorinfout;
 	char			**argv;
 	char			**env;
 	int				argc;
@@ -106,7 +109,7 @@ int		dopipes(char *buf2, char **buf, t_mini *mini);
 int		docmd(char *buf2, char **buf, t_mini *mini);
 int		checkquotes(char *buf, t_mini *mini);
 /* minish5.c */
-void	newfileout(t_fout **head, char *file, int app);
+void	newfileout(t_fout **head, char *file, int app, int prior);
 void	alonecmdcallutils(t_cmd *cmd, int fdin);
 int		spacesindex(const char *str);
 int		cmdexistence(char *cmd, t_mini *mini);
@@ -180,6 +183,7 @@ int		dolimitator(char *lim, t_mini *mini);
 void	fileunlinker(char *file);
 void	closecmdsfd(t_cmd **head);
 int		selectinflim(t_cmd *cmd, t_mini *mini);
+void	openoutferrinf(t_cmd *cmd, t_mini *mini);
 /* evaluator.c */
 t_cmd	*evaluate_commands(char **args);
 void	assign_outfile(t_cmd **current, char **args, int *begin, int app);

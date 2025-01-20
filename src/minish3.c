@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 21:06:20 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/10 18:54:33 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/20 16:33:33 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ char	*debuginout(char *buf2, t_mini *mini)
 			tmp = ft_substr(buf2, 0, ft_strchr(buf2, '>') - buf2),
 			free(buf2), tmp);
 	else
-		return (newfileout(mini->mfilesout, ft_strdup("/dev/stdout"), 0), buf2);
+		return (newfileout(mini->mfilesout, ft_strdup("/dev/stdout"), 0, 0), buf2);
 }
 
 int	dolimitonecmd(char **buf, t_mini *mini)

@@ -6,13 +6,13 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 22:28:59 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/15 19:12:06 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/20 16:19:32 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	newfileout(t_fout **head, char *file, int app)
+void	newfileout(t_fout **head, char *file, int app, int prior)
 {
 	t_fout	*new;
 
@@ -20,6 +20,7 @@ void	newfileout(t_fout **head, char *file, int app)
 	new->file = ft_strtrim(file, " >");
 	new->out = 1;
 	new->appendout = app;
+	new->priorinfout = prior;
 	new->next = NULL;
 	new->prev = NULL;
 	if (!*head)

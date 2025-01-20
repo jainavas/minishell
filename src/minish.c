@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 01:58:02 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/17 14:36:57 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/20 16:29:16 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	anyfdtofile(int fd, t_fout *out, t_cmd *cmd, t_mini *mini)
 		return (-1);
 	else if (out->file)
 		fdo = open(out->file, O_RDWR | O_CREAT | O_TRUNC, 0644);
-	if (outfcount(cmd->outfiles) == out->foutn && fdo != 1)
+	if (outfcount(cmd->outfiles) == out->foutn && fdo != 1 && fd != -1)
 		fdtofd(fd, fdo);
 	else if (fdo != 1)
 		close(fdo);
