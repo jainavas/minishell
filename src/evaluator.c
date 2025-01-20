@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 18:05:55 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/20 22:51:52 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/20 23:10:10 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,38 +29,12 @@ t_cmd	*evaluate_commands(char **args)
 	{
 		if (args[i][0] == '|')
 			current = NULL;
-		if (!is_operator(args[i]))
-		{
-			if (!current)
-			{
-				cmdadd_back(&head, get_current_cmd(args, &i));
-				current = cmdlast(head);
-			}
-			else
-				assignarg(&current, args, &i);
-			if (tmp != -1)
-			{
-				if (!ft_strncmp(args[tmp], "<", 1))
-					assign_infile(&current, args, &tmp);
-				if (!ft_strncmp(args[tmp], ">", 1))
-					assign_outfile(&current, args, &tmp, 0);
-				tmp = -1;
-			}
-		}
-		else if (!ft_strncmp(args[i], "<", 1))
-		{
-			if (current)
-				assign_infile(&current, args, &i);
-			else
-				tmp = i++;
-		}
-		else if (!ft_strcmpspace(args[i], ">"))
-		{
-			if (current)
-				assign_outfile(&current, args, &i, 0);
-			else
-				tmp = i++;
-		}
+		if (!is_operator(args[i]) && !current)
+			current = caseisopevals(&head, args, &i, &tmp);
+		else if (!is_operator(args[i]))
+			assignarg(&current, args, &i);
+		else
+			casenoopevals(args, &i, &current, &tmp);
 	}
 	return (putcmdn(&head), argsfilesearcher(&head), head);
 }
