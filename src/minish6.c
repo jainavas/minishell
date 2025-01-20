@@ -6,86 +6,11 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 17:07:05 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/20 18:07:10 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/20 19:19:51 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./minishell.h"
-
-t_fout	*foutlast(t_fout *lst)
-{
-	t_fout	*tmp;
-
-	tmp = lst;
-	if (lst)
-		while (tmp->next)
-			tmp = tmp->next;
-	return (tmp);
-}
-
-void	fdtomfiles(t_fout **head, int fd, t_mini *mini, t_cmd *cmd)
-{
-	t_fout	*tmp;
-
-	tmp = *head;
-	while (tmp)
-	{
-		if (tmp->file[0] == '.')
-			filesearch(tmp, mini);
-		if (tmp->out != -2)
-			if (anyfdtofile(fd, tmp, cmd, mini) == -1)
-				break ;
-		tmp = tmp->next;
-	}
-	freeoutfiles(head);
-}
-
-int	filesearch(t_fout *tmp, t_mini *mini)
-{
-	char	*tmp2;
-	char	*tmp3;
-
-	tmp2 = ft_strtrim(tmp->file, " ./");
-	if (ft_strchr(tmp2, '/'))
-	{
-		tmp3 = fileseek(ft_strdup(&tmp2[(ft_strrchr(tmp2, '/') - tmp2) + 1]),
-			directory_seek(ft_strndup(tmp2, ft_strrchr(tmp2, '/') - tmp2),
-				getcwd(NULL, 0)));
-		if (tmp3 == NULL)
-		{
-			tmp3 = directory_seek(ft_strndup(tmp2, ft_strrchr(tmp2, '/') - tmp2),
-				getcwd(NULL, 0));
-			if (!tmp3)
-				return (free(tmp2), tmp->out = -2, ft_putendl_fd("File not found", 2), mini->status = 1, 0);
-			else
-				return (free(tmp2), free(tmp3), 0);
-		}
-		else
-			return (free(tmp2), free(tmp->file), tmp->file = tmp3, 0);
-	}
-	else
-	{
-		tmp3 = fileseek(tmp2, getcwd(NULL, 0));
-		if (tmp3 == NULL)
-			return (ft_putendl_fd("File not found", 2), mini->status = 1, 0);
-		else
-			return (free(tmp->file), tmp->file = tmp3, 0);
-	}
-	return (0);
-}
-
-void	freeoutfiles(t_fout **lst)
-{
-	t_fout	*new;
-
-	while (*lst != NULL)
-	{
-		new = *lst;
-		*lst = new->next;
-		free(new->file);
-		free(new);
-	}
-}
 
 char	*pathseekenv(char **args, char **envp)
 {
@@ -114,4 +39,34 @@ char	*pathseekenv(char **args, char **envp)
 		return (close(fd[READ_FD]), tmp);
 	}
 	return (NULL);
+}
+
+int	counttmps(t_env *lst)
+{
+	t_env	*new;
+	int		i;
+
+	new = lst;
+	i = 0;
+	while (new != NULL)
+	{
+		if (strncmp("holatmp_", new->name, 8) == 0)
+			i++;
+		new = new->next;
+	}
+	return (i);
+}
+
+void	putoutfn(t_fout **head)
+{
+	t_fout	*tmp;
+	int		i;
+
+	tmp = *head;
+	i = 0;
+	while (tmp)
+	{
+		tmp->foutn = ++i;
+		tmp = tmp->next;
+	}
 }

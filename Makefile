@@ -11,20 +11,27 @@ SRC =	minish.c \
 		minish2.c \
 		minish3.c \
 		minish4.c \
-		minish5.c \
+		fileshandle.c \
 		minish6.c \
-		minish7.c \
+		fileshandle2.c \
 		minish8.c \
 		ft_splitchars.c \
 		signals.c \
 		builtins.c \
 		builtins2.c \
+		builtins3.c \
 		environment1.c \
 		environment2.c \
+		environment3.c \
 		parsing.c \
+		parsing2.c \
+		parsing3.c \
 		evaluator.c \
+		evaluator2.c \
+		evaluator3.c \
 		cmdlisthandle.c \
-		executor.c
+		executor.c \
+		executor2.c
 
 SRCS = $(addprefix $(SRC_PATH), $(SRC))
 OBJS = $(patsubst $(SRC_PATH)%.c,$(OBJ_PATH)%.o,$(SRCS))

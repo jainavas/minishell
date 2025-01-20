@@ -6,17 +6,12 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 18:05:55 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/20 17:54:27 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/20 19:25:59 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-// theres a problem with infile handle when <Makefile grep a,
-// tries to assign infile but the cmd struct doesnt exist yet coz is created when cmd is found
-
-// theres two options in my op, or we just strdup it somewhere and do the assign infile after cmd,
-// or we create it elsewhere
 t_cmd	*evaluate_commands(char **args)
 {
 	t_cmd	*head;
@@ -38,7 +33,7 @@ t_cmd	*evaluate_commands(char **args)
 		{
 			if (!current)
 			{
-				cmdadd_back(&head, get_current_cmd(args, &i)); // HERE, if not current->content is uninitialized
+				cmdadd_back(&head, get_current_cmd(args, &i));
 				current = cmdlast(head);
 			}
 			else
@@ -56,9 +51,11 @@ t_cmd	*evaluate_commands(char **args)
 			else
 				tmp = i++;
 		}
-		else if (!ft_strcmpspace(args[i], ">") && ft_strcmpspace(args[i + 1], ">"))
+		else if (!ft_strcmpspace(args[i], ">")
+			&& ft_strcmpspace(args[i + 1], ">"))
 			assign_outfile(&current, args, &i, 0);
-		else if (!ft_strncmp(args[i], ">", 1) && !ft_strncmp(args[i + 1], ">", 1))
+		else if (!ft_strncmp(args[i], ">", 1)
+			&& !ft_strncmp(args[i + 1], ">", 1))
 		{
 			i++;
 			assign_outfile(&current, args, &i, 1);
@@ -93,7 +90,7 @@ void	assign_infile(t_cmd **current, char **args, int *begin)
 	if (args[i] && !is_operator(args[i]))
 	{
 		if ((*current)->infile)
-			free((*current)->infile); 
+			free((*current)->infile);
 		(*current)->infile = ft_strdup(args[i]);
 		(*current)->priorinflim = 1;
 	}
@@ -138,102 +135,6 @@ t_cmd	*get_current_cmd(char **args, int *begin)
 	return (cmd);
 }
 
-int	is_operator(char *buf)
-{
-	if (!buf)
-		return (1);
-	if (!ft_strncmp(buf, "|", 2) || !ft_strncmp(buf, "<", 2)
-		|| !ft_strncmp(buf, ">", 2))
-		return (1);
-	return (0);
-}
-
-// WIP
-// Need to look for syntax errors like: "echo hello >", "cat <", or "cat |".
-// Should we implement stuff like "cat < infile < infile2" or
-// "echo hola > outfile > outfile2"? -> If so do it in assign_outfile;
-// Also make sure cat < < lim WILL NOT WORK, probably is better to split << as one.
-// It automatically shall call mini_error system on error, otherwise return 0.
-int	check_operator_syntax(char **args)
-{
-	(void)args;
-	return (0);
-}
-
-void	print_cmd_list(t_cmd *head)
-{
-	t_cmd	*current;
-	t_fout	*outf;
-	int		i;
-
-	printf("Printing cmd list: %p\n", head);
-	current = head;
-	while (current)
-	{
-		if (current)
-		{
-			outf = *current->outfiles;
-			if (!current->cmd)
-				return ;
-			printf("Cmd: %s\n", current->cmd);
-			printf("Argv: {");
-			i = -1;
-			while (current->argv[++i])
-				printf("%s, ", current->argv[i]);
-			if (current->argv[i] == NULL)
-				printf("(nil)");
-			printf("}\n");
-			printf("Argc: %d\n", current->argc);
-			printf("Lim: %s\n", current->lim);
-			while (outf)
-			{
-				printf("Outfile: %s\n", outf->file);
-				outf = outf->next;
-			}
-			printf("Infile: %s\n", current->infile);
-		}
-		current = current->next;
-	}
-}
-
-// Need to strdup from args when copying argv.
-void	free_cmd_list(t_cmd **head)
-{
-	t_cmd	*current;
-
-	current = *head;
-	while (*head)
-	{
-		current = current->next;
-		free_cmd(*head);
-		*head = current;
-	}
-}
-
-void	free_cmd(t_cmd *cmd)
-{
-	if (cmd->cmd)
-		free (cmd->cmd);
-	if (cmd->argv)
-		freedoublepointer(cmd->argv);
-	if (cmd->infile)
-		free (cmd->infile);
-	if (cmd->lim)
-		free (cmd->lim);
-	if (cmd->oginput)
-		free (cmd->oginput);
-	if (cmd->env)
-		freedoublepointer(cmd->env);
-	if (cmd->path)
-		free (cmd->path);
-	if (cmd->outfiles)
-	{
-		freeoutfiles(cmd->outfiles);
-		free(cmd->outfiles);
-	}
-	free (cmd);
-}
-
 void	assignarg(t_cmd **cmd, char **args, int *begin)
 {
 	char	**newargv;
@@ -249,66 +150,11 @@ void	assignarg(t_cmd **cmd, char **args, int *begin)
 		newargv[i] = ft_strdup((*cmd)->argv[i]);
 	freedoublepointer((*cmd)->argv);
 	i = -1;
-	while (++i < argc + (*cmd)->argc && args[*begin + i] && !is_operator(args[*begin + i]))
+	while (++i < argc + (*cmd)->argc && args[*begin + i]
+		&& !is_operator(args[*begin + i]))
 		newargv[i + (*cmd)->argc] = ft_strdup(args[*begin + i]);
 	newargv[i + (*cmd)->argc] = NULL;
 	(*cmd)->argv = newargv;
 	(*cmd)->argc = i + (*cmd)->argc;
 	*begin = *begin + i - 1;
-}
-
-//WIP
-
-char	*argsearch(char *file)
-{
-	char	*tmp2;
-	char	*tmp3;
-
-	tmp2 = ft_strtrim(file, " ./\"");
-	if (ft_strchr(tmp2, '/'))
-	{
-		tmp3 = fileseek(ft_strdup(&tmp2[(ft_strrchr(tmp2, '/') - tmp2) + 1]),
-			directory_seek(ft_strndup(tmp2, ft_strrchr(tmp2, '/') - tmp2),
-				getcwd(NULL, 0)));
-		if (tmp3 == NULL)
-		{
-			tmp3 = directory_seek(ft_strndup(tmp2, ft_strrchr(tmp2, '/') - tmp2),
-				getcwd(NULL, 0));
-			if (!tmp3)
-				return (free(tmp2), file);
-			else
-				return (tmp3 = ft_strjoin_gnl(tmp3, &tmp2[(ft_strrchr(tmp2, '/') - tmp2) + 1]), free(tmp2), tmp3);
-		}
-		else
-			return (free(tmp2), free(file), tmp3);
-	}
-	else
-	{
-		tmp3 = fileseek(tmp2, getcwd(NULL, 0));
-		if (tmp3 == NULL)
-			return (tmp2 = ft_strtrim(file, " ./\""), free(file), tmp3 = ft_strjoin_gnl(getcwd(NULL, 0), "/"), tmp3 = ft_strjoin_gnl(tmp3, tmp2), free(tmp2), tmp3);
-		else
-			return (free(file), tmp3);
-	}
-	return (0);
-}
-
-void	argsfilesearcher(t_cmd **head)
-{
-	t_cmd	*tmp;
-	int		i;
-
-	tmp = *head;
-	while (tmp)
-	{
-		i = -1;
-		while (tmp->argv[++i])
-		{
-			if (tmp->argv[i] && !strncmp("./", tmp->argv[i], 2))
-				tmp->argv[i] = argsearch(tmp->argv[i]);
-		}
-		if (tmp->infile && !strncmp("./", tmp->infile, 2))
-			tmp->infile = argsearch(tmp->infile);
-		tmp = tmp->next;
-	}
 }

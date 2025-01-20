@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 01:58:02 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/20 18:17:50 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/20 19:44:03 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,28 +14,56 @@
 
 int	g_status;
 
-int	anyfdtofile(int fd, t_fout *out, t_cmd *cmd, t_mini *mini)
+void	closebutstds(int fd)
 {
-	int		fdo;
-	int		r;
+	if (fd > 2 && fd != -1)
+		close(fd);
+}
 
-	fdo = 1;
-	r = checkpermouts(cmd, out->file, mini);
-	if (r == 1)
+int	recursiva(t_mini **mini)
+{
+	int		x;
+	char	*temp;
+
+	(*mini)->infile = NULL;
+	(*mini)->didcheckenv = 0;
+	x = recread(mini);
+	while (x == 0)
 	{
-		if (out->appendout == 1)
-			fdo = open(out->file, O_WRONLY | O_APPEND);
-		else
-			fdo = open(out->file, O_WRONLY);
+		temp = ft_itoa((*mini)->status);
+		add_envar((*mini), "?", temp, 2);
+		free (temp);
+		freelist(*(*mini)->quotestmps);
+		*(*mini)->quotestmps = NULL;
+		(*mini)->infile = NULL;
+		(*mini)->didcheckenv = 0;
+		x = recread(mini);
 	}
-	else if (r == -1)
-		return (-1);
-	else if (out->file)
-		fdo = open(out->file, O_RDWR | O_CREAT | O_TRUNC, 0644);
-	if (outfcount(cmd->outfiles) == out->foutn && fdo != 1 && fd != -1)
-		fdtofd(fd, fdo);
-	else if (fdo != 1)
-		close(fdo);
+	return (x);
+}
+
+int	recread(t_mini **mini)
+{
+	t_cmd	*head;
+	char	**buf;
+	char	*buf2;
+
+	buf2 = readline("minishell% ");
+	if (!buf2)
+		return (1);
+	if (buf2[0] == '\0')
+		return (0);
+	add_history(buf2);
+	buf = cleannulls(process_input((*mini), ft_strdup(buf2)));
+	head = evaluate_commands(buf);
+	freedoublepointer(buf);
+	if (!head)
+		return (0);
+	(*mini)->header = &head;
+	head->oginput = ft_strdup(buf2);
+	run_cmd_list(*mini, &head);
+	free(buf2);
+	free_cmd_list(&head);
 	return (0);
 }
 

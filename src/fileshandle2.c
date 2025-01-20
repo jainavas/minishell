@@ -1,32 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minish7.c                                          :+:      :+:    :+:   */
+/*   fileshandle2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 16:38:08 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/20 18:07:32 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/20 19:31:19 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	counttmps(t_env *lst)
-{
-	t_env	*new;
-	int		i;
-
-	new = lst;
-	i = 0;
-	while (new != NULL)
-	{
-		if (strncmp("holatmp_", new->name, 8) == 0)
-			i++;
-		new = new->next;
-	}
-	return (i);
-}
 
 char	*fileseek(char *file, char *directory)
 {
@@ -52,7 +36,7 @@ char	*fileseek(char *file, char *directory)
 		if (stat(pathf, &statbuf) == -1)
 		{
 			free(pathf);
-            continue ;
+			continue ;
 		}
 		if (S_ISDIR(statbuf.st_mode))
 		{
@@ -62,7 +46,8 @@ char	*fileseek(char *file, char *directory)
 		}
 		else
 		{
-			if (!ft_strcmpff(pathbuilder(directory, file), pathbuilder(directory, entry->d_name)))
+			if (!ft_strcmpff(pathbuilder(directory, file),
+					pathbuilder(directory, entry->d_name)))
 				return (closedir(dir), free(directory), free(file), pathf);
 			free(pathf);
 		}
@@ -80,7 +65,7 @@ char	*pathbuilder(char *dir, char *file)
 	return (res);
 }
 
-char	*directory_seek(char *target_dir, char *directory)
+char	*dir_seek(char *target_dir, char *directory)
 {
 	DIR				*dir;
 	struct dirent	*entry;
@@ -89,7 +74,7 @@ char	*directory_seek(char *target_dir, char *directory)
 
 	dir = opendir(directory);
 	if (!dir)
-	    return (NULL);
+		return (NULL);
 	entry = readdir(dir);
 	while (entry)
 	{
@@ -109,7 +94,7 @@ char	*directory_seek(char *target_dir, char *directory)
 		{
 			if (!ft_strncmp(target_dir, entry->d_name, ft_strlen(target_dir)))
 				return (closedir(dir), free(directory), free(target_dir), path);
-			path = directory_seek(ft_strdup(target_dir), path);
+			path = dir_seek(ft_strdup(target_dir), path);
 			if (path)
 				return (closedir(dir), free(directory), free(target_dir), path);
 		}
@@ -139,16 +124,21 @@ void	putcmdn(t_cmd **head)
 	}
 }
 
-void	putoutfn(t_fout **head)
+int	seekcasebar(t_fout *tmp, char *tmp2, char *tmp3, t_mini *mini)
 {
-	t_fout	*tmp;
-	int		i;
-
-	tmp = *head;
-	i = 0;
-	while (tmp)
+	tmp3 = fileseek(ft_strdup(&tmp2[(ft_strrchr(tmp2, '/') - tmp2) + 1]),
+			dir_seek(ft_strndup(tmp2, ft_strrchr(tmp2, '/') - tmp2),
+				getcwd(NULL, 0)));
+	if (tmp3 == NULL)
 	{
-		tmp->foutn = ++i;
-		tmp = tmp->next;
+		tmp3 = dir_seek(ft_strndup(tmp2, ft_strrchr(tmp2, '/') - tmp2),
+				getcwd(NULL, 0));
+		if (!tmp3)
+			return (free(tmp2), tmp->out = -2,
+				ft_putendl_fd("File not found", 2), mini->status = 1, 0);
+		else
+			return (free(tmp2), free(tmp3), 0);
 	}
+	else
+			return (free(tmp2), free(tmp->file), tmp->file = tmp3, 0);
 }

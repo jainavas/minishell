@@ -6,16 +6,12 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/29 14:21:20 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/20 17:49:25 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/20 18:50:12 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-// This function iterates the list executing each command.
-// If a command fails, output error and keep going.
-// For some reason, in bash echo after a failed pipe prints before error.
-// -> Should we store cmd outputs and then evaluate priority?
 int	run_cmd_list(t_mini *mini, t_cmd **head)
 {
 	t_cmd	*curr;
@@ -56,8 +52,6 @@ int	run_cmd_list(t_mini *mini, t_cmd **head)
 	return (closecmdsfd(head), 0);
 }
 
-// This function executes the current command once all pipes, 
-// files and redirections have been set up.
 int	execute_command(t_mini *mini, t_cmd *cmd, int infd)
 {
 	int	tmpfd;
@@ -96,83 +90,4 @@ int	dolimitator(char *lim, t_mini *mini)
 	close(fd);
 	fd = open("tmp_heredoc", O_RDONLY);
 	return (fd);
-}
-
-void	fileunlinker(char *file)
-{
-	char	*tmp;
-
-	tmp = ft_strjoin_gnl(getcwd(NULL, 0), "/");
-	tmp = ft_strjoin_gnl(tmp, file);
-	unlink(tmp);
-	free(tmp);
-}
-
-void	closecmdsfd(t_cmd **head)
-{
-	t_cmd	*tmp;
-
-	tmp = *head;
-	while (tmp)
-	{
-		if (tmp->fd[READ_FD] > 2)
-			close(tmp->fd[READ_FD]);
-		if (tmp->fd[WRITE_FD] > 2)
-			close(tmp->fd[WRITE_FD]);
-		tmp = tmp->next;
-	}
-}
-
-int	selectinflim(t_cmd *cmd, t_mini *mini)
-{
-	int	fdret;
-
-	fdret = 0;
-	if (cmd->priorinflim == 1 && cmd->infile)
-	{
-		if (!checkpermission(cmd->infile, 1, mini, cmd))
-		{
-			if (cmd->next)
-			{
-				pipe(cmd->fd);
-				close(cmd->fd[WRITE_FD]);
-				openoutferrinf(cmd, mini);
-			}
-			if (cmdcount(mini->header) == cmd->cmdn)
-				return (openoutferrinf(cmd, mini), -1);
-		}
-		fdret = open(cmd->infile, O_RDONLY);
-		if (fdret == -1)
-		{
-			if (cmd->next)
-			{
-				pipe(cmd->fd);
-				close(cmd->fd[WRITE_FD]);
-				openoutferrinf(cmd, mini);
-			}
-			return (openoutferrinf(cmd, mini), -1);
-		}
-	}
-	if (cmd->priorinflim == 2 && cmd->lim)
-		fdret = dolimitator(cmd->lim, mini);
-	return (fdret);
-}
-
-void	openoutferrinf(t_cmd *cmd, t_mini *mini)
-{
-	t_fout	*tmp;
-
-	if (!*cmd->outfiles)
-		return ;
-	tmp = *cmd->outfiles;
-	while (tmp)
-	{
-		if (tmp->file[0] == '.')
-			filesearch(tmp, mini);
-		if (tmp->out != -2 && tmp->priorinfout < cmd->priorinfout)
-			if (anyfdtofile(-1, tmp, cmd, mini) == -1)
-				break ;
-		tmp = tmp->next;
-	}
-	freeoutfiles(cmd->outfiles);
 }

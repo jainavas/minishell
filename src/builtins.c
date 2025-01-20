@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 12:14:17 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/20 16:09:03 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/20 19:47:55 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,13 @@ int	docd(t_cmd *cmd, t_mini *mini)
 	char	*str;
 	char	*path;
 
-
 	path = checkenvvars(cmd->argv[1], mini);
 	if (cmd->argc > 2)
-		return (ft_putstr_fd("cd: too many arguments\n", 2), mini->status = 1, 1);
+		return (ft_putstr_fd("cd: too many arguments\n", 2),
+			mini->status = 1, 1);
 	if (!path)
 		return (tmp = get_env_var(&mini->env, "HOME"),
-				chdirandoldpwd(ft_strdup(tmp->content), mini), 0);
+			chdirandoldpwd(ft_strdup(tmp->content), mini), 0);
 	else if (path[0] == '~')
 	{
 		tmp = get_env_var(&mini->env, "HOME");
@@ -40,7 +40,8 @@ int	docd(t_cmd *cmd, t_mini *mini)
 	else if (access(path, F_OK) == 0)
 		return (chdirandoldpwd(ft_strdup(path), mini), 0);
 	else
-		return (ft_putstr_fd("cd: no such file or directory\n", 2), mini->status = 1, 1);
+		return (ft_putstr_fd("cd: no such file or directory\n", 2),
+			mini->status = 1, 1);
 }
 
 void	doecho(t_cmd *cmd, int fd)
@@ -50,23 +51,13 @@ void	doecho(t_cmd *cmd, int fd)
 	if (cmd->argv[1] && ft_strcmpoptions(cmd->argv[1], "-n") != 0)
 	{
 		i = 1;
-		write(fd, cmd->argv[i], ft_strlen(cmd->argv[i]));
-		while (cmd->argv[++i])
-		{
-			write(fd, " ", 1);
-			write(fd, cmd->argv[i], ft_strlen(cmd->argv[i]));
-		}
+		dowriteecho(cmd->argv, fd, i);
 		write(fd, "\n", 1);
 	}
 	else if (cmd->argv[1])
 	{
 		i = 2;
-		write(fd, cmd->argv[i], ft_strlen(cmd->argv[i]));
-		while (cmd->argv[++i])
-		{
-			write(fd, " ", 1);
-			write(fd, cmd->argv[i], ft_strlen(cmd->argv[i]));
-		}
+		dowriteecho(cmd->argv, fd, i);
 	}
 	if (fd > 2 && fd != -1)
 		close(fd);
@@ -74,23 +65,23 @@ void	doecho(t_cmd *cmd, int fd)
 
 int	doexport(t_mini *mini, t_cmd *cmd, int fd)
 {
-	int		argc;
-	int		status;
 	char	**parsed_line;
+	int		i;
 
-	argc = 0;
-	status = 0;
-	while (cmd->argv[++argc])
+	i = 0;
+	if (cmd->argc == 1)
+		return (print_temp_env(mini->env, fd), 0);
+	closebutstds(fd);
+	while (cmd->argv[++i])
 	{
-		if (!is_valid_identifier(cmd->argv[argc]))
+		if (!is_valid_identifier(cmd->argv[i]))
 		{
 			ft_putstr_fd("export: not a valid identifier\n", 2);
-			close(cmd->fd[READ_FD]);
 			mini->status = 1;
 		}
 		else
 		{
-			parsed_line = ft_split(cmd->argv[argc], '=');
+			parsed_line = ft_split(cmd->argv[i], '=');
 			if (!parsed_line[1])
 				add_temp_envar(mini, parsed_line[0]);
 			else
@@ -98,11 +89,7 @@ int	doexport(t_mini *mini, t_cmd *cmd, int fd)
 			freedoublepointer(parsed_line);
 		}
 	}
-	if (argc == 1)
-		print_temp_env(mini->env, fd);
-	else if (fd > 2 && fd != -1)
-		close(fd);
-	return (status);
+	return (0);
 }
 
 void	dounset(t_mini *mini, t_cmd	*cmd)
@@ -139,14 +126,17 @@ int	builtins(t_mini *mini, t_cmd *cmd)
 	}
 	pipe(cmd->fd);
 	if (ft_strcmpspace("cd", cmd->cmd) == 0)
-		return (docd(cmd, mini), close(cmd->fd[READ_FD]), close(cmd->fd[WRITE_FD]), 0);
+		return (docd(cmd, mini), close(cmd->fd[READ_FD]),
+			close(cmd->fd[WRITE_FD]), 0);
 	if (ft_strcmpspace("unset", cmd->cmd) == 0)
-		return (dounset(mini, cmd), close(cmd->fd[READ_FD]), close(cmd->fd[WRITE_FD]), 0);
+		return (dounset(mini, cmd), close(cmd->fd[READ_FD]),
+			close(cmd->fd[WRITE_FD]), 0);
 	if (ft_strchr(cmd->cmd, '=') && cmd->argc == 1
 		&& ft_isgroup(ft_strchr(cmd->cmd, '=') + 1, ft_isbashprotected) == 0)
 	{
 		cmd->cmd = checkenvvars(cmd->cmd, mini);
-		entvars(&mini->env, ft_strndup(cmd->cmd, ft_strchr(cmd->cmd, '=') - cmd->cmd),
+		entvars(&mini->env,
+			ft_strndup(cmd->cmd, ft_strchr(cmd->cmd, '=') - cmd->cmd),
 			ft_strdup(ft_strchr(cmd->cmd, '=') + 1));
 		return (close(cmd->fd[READ_FD]), close(cmd->fd[WRITE_FD]), 0);
 	}
@@ -157,24 +147,4 @@ int	builtins(t_mini *mini, t_cmd *cmd)
 	if (ft_strcmpspace("echo", cmd->cmd) == 0)
 		return (doecho(cmd, cmd->fd[WRITE_FD]), cmd->fd[READ_FD]);
 	return (close(cmd->fd[WRITE_FD]), close(cmd->fd[READ_FD]), 0);
-}
-
-int	isbuiltin(t_cmd *cmd)
-{
-	if (ft_strcmpspace(cmd->cmd, "exit") == 0)
-		return (1);
-	if (ft_strcmpspace("cd", cmd->cmd) == 0)
-		return (1);
-	if (ft_strcmpspace("unset", cmd->cmd) == 0)
-		return (1);
-	if (ft_strchr(cmd->cmd, '=') && cmd->argc == 1
-			&& ft_isgroup(ft_strchr(cmd->cmd, '=') + 1, ft_isbashprotected) == 0)
-		return (1);
-	if (ft_strcmpspace("export", cmd->cmd) == 0)
-		return (1);
-	if (ft_strcmpspace("env", cmd->cmd) == 0)
-		return (1);
-	if (ft_strcmpspace("echo", cmd->cmd) == 0)
-		return (1);
-	return (0);
 }

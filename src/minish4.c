@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 20:05:57 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/20 18:11:48 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/20 19:04:32 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,4 +44,18 @@ void	limmitator(char *lim, int fdin, struct mini *mini)
 			return ;
 	}
 	free(buf);
+}
+
+void	freelist(t_env *lst)
+{
+	t_env	*new;
+
+	while (lst != NULL)
+	{
+		new = lst;
+		lst = new->next;
+		free(new->content);
+		free(new->name);
+		free(new);
+	}
 }
