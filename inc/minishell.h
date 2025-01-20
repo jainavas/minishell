@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 02:16:09 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/20 23:08:42 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/20 23:12:39 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,6 @@ void	alonecmdcallutils(t_cmd *cmd, int fdin);
 int		spacesindex(const char *str);
 int		cmdexistence(char *cmd, t_mini *mini);
 void	fdtofd(int fdin, int fdout);
-/* minish3.c */
 /* minish4.c */
 void	closeanddupinput(int fd[2]);
 void	closeanddupoutput(int fd[2]);

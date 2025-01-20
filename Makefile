@@ -9,15 +9,14 @@ LIB_PATH = ./libft_ext/
 
 SRC =	minish.c \
 		minish2.c \
-		minish3.c \
 		minish4.c \
-		fileshandle.c \
-		fileshandle2.c \
-		fileshandle3.c \
 		minish6.c \
 		minish8.c \
 		ft_splitchars.c \
 		signals.c \
+		fileshandle.c \
+		fileshandle2.c \
+		fileshandle3.c \
 		builtins.c \
 		builtins2.c \
 		builtins3.c \
