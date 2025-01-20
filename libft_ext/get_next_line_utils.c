@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 21:23:47 by jainavas          #+#    #+#             */
-/*   Updated: 2024/10/08 18:32:34 by jainavas         ###   ########.fr       */
+/*   Updated: 2024/12/25 19:58:11 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ char	*ft_strjoin_gnl(char *s1, char *s2)
 			return (0);
 		s1[0] = 0;
 	}
-	str = (char *)malloc(sizeof(char) * ft_strlen(s1) + ft_strlen(s2) + 1);
+	str = (char *)malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
 	if (!str)
 		return (ft_free(&s1));
 	i = -1;

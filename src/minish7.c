@@ -6,11 +6,11 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 16:38:08 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/22 23:25:41 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2025/01/15 19:04:19 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mini.h"
+#include "minishell.h"
 
 int	counttmps(t_env *lst)
 {
@@ -63,6 +63,132 @@ int	exec(t_mini *mini, char *buf2, char **buf)
 		return (dolimwithpipe(buf2, buf, mini));
 	else if (ft_strchr(buf2, '|') != NULL)
 		return (dopipes(buf2, buf, mini));
-	else
-		return (docmd(buf2, buf, mini));
+	// else
+	// 	return (docmd(buf2, buf, mini));
+	return (0);
+}
+
+char	*fileseek(char *file, char *directory)
+{
+	DIR				*dir;
+	struct dirent	*entry;
+	struct stat		statbuf;
+	char			*pathf;
+
+	if (!directory)
+		return (free(file), NULL);
+	dir = opendir(directory);
+	if (!dir)
+		return (NULL);
+	entry = readdir(dir);
+	while (entry)
+	{
+		if (entry->d_name[0] == '.')
+		{
+			entry = readdir(dir);
+			continue ;
+		}
+		pathf = pathbuilder(directory, entry->d_name);
+		if (stat(pathf, &statbuf) == -1)
+		{
+			free(pathf);
+            continue ;
+		}
+		if (S_ISDIR(statbuf.st_mode))
+		{
+			pathf = fileseek(ft_strdup(file), pathf);
+			if (pathf)
+				return (closedir(dir), free(directory), free(file), pathf);
+		}
+		else
+		{
+			if (!ft_strcmpff(pathbuilder(directory, file), pathbuilder(directory, entry->d_name)))
+				return (closedir(dir), free(directory), free(file), pathf);
+			free(pathf);
+		}
+		entry = readdir(dir);
+	}
+	return (closedir(dir), free(directory), free(file), NULL);
+}
+
+char	*pathbuilder(char *dir, char *file)
+{
+	char	*res;
+
+	res = ft_strjoin(dir, "/");
+	res = ft_strjoin_gnl(res, file);
+	return (res);
+}
+
+char	*directory_seek(char *target_dir, char *directory)
+{
+	DIR				*dir;
+	struct dirent	*entry;
+	struct stat		statbuf;
+	char			*path;
+
+	dir = opendir(directory);
+	if (!dir)
+	    return (NULL);
+	entry = readdir(dir);
+	while (entry)
+	{
+		if (entry->d_name[0] == '.')
+		{
+			entry = readdir(dir);
+			continue ;
+		}
+		path = pathbuilder(directory, entry->d_name);
+		if (stat(path, &statbuf) == -1)
+		{
+			free(path);
+			entry = readdir(dir);
+			continue ;
+		}
+		if (S_ISDIR(statbuf.st_mode))
+		{
+			if (!ft_strncmp(target_dir, entry->d_name, ft_strlen(target_dir)))
+				return (closedir(dir), free(directory), free(target_dir), path);
+			path = directory_seek(ft_strdup(target_dir), path);
+			if (path)
+				return (closedir(dir), free(directory), free(target_dir), path);
+		}
+		free(path);
+		entry = readdir(dir);
+	}
+	closedir(dir);
+	free(directory);
+	free(target_dir);
+	return (NULL);
+}
+
+void	putcmdn(t_cmd **head)
+{
+	t_cmd	*tmp;
+	int		i;
+
+	tmp = *head;
+	i = 0;
+	while (tmp)
+	{
+		tmp->cmdn = ++i;
+		if (*tmp->outfiles)
+			tmp->ifouts = 1;
+		putoutfn(tmp->outfiles);
+		tmp = tmp->next;
+	}
+}
+
+void	putoutfn(t_fout **head)
+{
+	t_fout	*tmp;
+	int		i;
+
+	tmp = *head;
+	i = 0;
+	while (tmp)
+	{
+		tmp->foutn = ++i;
+		tmp = tmp->next;
+	}
 }

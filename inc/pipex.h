@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 17:22:26 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/18 00:47:30 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/10 18:54:33 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 # include <errno.h>
 # include "../libft_ext/libft.h"
 # include "../libft_ext/ft_printf.h"
-# include "mini.h"
+# include "minishell.h"
 
 typedef struct pipex
 {

@@ -6,72 +6,91 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 12:14:17 by mpenas-z          #+#    #+#             */
-/*   Updated: 2024/12/24 16:18:39 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2025/01/20 16:09:03 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/mini.h"
+#include "../inc/minishell.h"
 
-int	docd(char *path, t_mini *mini)
+int	docd(t_cmd *cmd, t_mini *mini)
 {
 	t_env	*tmp;
 	char	*str;
+	char	*path;
 
-	if (path[spacesindex(path + 2) + 2] == '\0')
+
+	path = checkenvvars(cmd->argv[1], mini);
+	if (cmd->argc > 2)
+		return (ft_putstr_fd("cd: too many arguments\n", 2), mini->status = 1, 1);
+	if (!path)
+		return (tmp = get_env_var(&mini->env, "HOME"),
+				chdirandoldpwd(ft_strdup(tmp->content), mini), 0);
+	else if (path[0] == '~')
 	{
 		tmp = get_env_var(&mini->env, "HOME");
-		chdirandoldpwd(tmp->content, mini);
-		return (free(path), 0);
-	}
-	else if (path[spacesindex(path + 2) + 2] == '~')
-	{
-		tmp = get_env_var(&mini->env, "HOME");
+		if (!tmp)
+			return (1);
 		str = ft_strinsertdup(strdup(path + spacesindex(path + 2) + 2), "",
 				tmp->content, '~');
-		chdirandoldpwd(str, mini);
-		return (free(str), free(path), 0);
+		chdirandoldpwd(ft_strdup(str), mini);
+		return (0);
 	}
-	else if (access(&path[spacesindex(path + 2) + 2], F_OK) == 0)
-		return (chdirandoldpwd(&path[spacesindex(path + 2) + 2], mini),
-			free(path), 0);
+	else if (!ft_strcmpalnum(path, ".."))
+		return (chdirandoldpwd(prevpath(path), mini), 0);
+	else if (access(path, F_OK) == 0)
+		return (chdirandoldpwd(ft_strdup(path), mini), 0);
 	else
-		return (ft_putstr_fd("cd: no such file or directory\n", 2),
-			free(path), 1);
+		return (ft_putstr_fd("cd: no such file or directory\n", 2), mini->status = 1, 1);
 }
 
-void	doecho(char *buf)
+void	doecho(t_cmd *cmd, int fd)
 {
-	if (ft_strcmpspace(buf, "echo -n") != 0)
+	int	i;
+
+	if (cmd->argv[1] && ft_strcmpoptions(cmd->argv[1], "-n") != 0)
 	{
-		write(1, &buf[5], ft_strlen(&buf[5]));
-		if (buf[ft_strlen(buf) - 1] != '\n')
-			write(1, "\n", 1);
+		i = 1;
+		write(fd, cmd->argv[i], ft_strlen(cmd->argv[i]));
+		while (cmd->argv[++i])
+		{
+			write(fd, " ", 1);
+			write(fd, cmd->argv[i], ft_strlen(cmd->argv[i]));
+		}
+		write(fd, "\n", 1);
 	}
-	else
-		write(1, &buf[8], ft_strlen(&buf[8]));
-	free(buf);
+	else if (cmd->argv[1])
+	{
+		i = 2;
+		write(fd, cmd->argv[i], ft_strlen(cmd->argv[i]));
+		while (cmd->argv[++i])
+		{
+			write(fd, " ", 1);
+			write(fd, cmd->argv[i], ft_strlen(cmd->argv[i]));
+		}
+	}
+	if (fd > 2 && fd != -1)
+		close(fd);
 }
 
-int	doexport(t_mini *mini, char *buf)
+int	doexport(t_mini *mini, t_cmd *cmd, int fd)
 {
 	int		argc;
 	int		status;
-	char	**args;
 	char	**parsed_line;
 
-	args = ft_split(buf, ' ');
 	argc = 0;
 	status = 0;
-	while (args[++argc])
+	while (cmd->argv[++argc])
 	{
-		if (!is_valid_identifier(args[argc]))
+		if (!is_valid_identifier(cmd->argv[argc]))
 		{
 			ft_putstr_fd("export: not a valid identifier\n", 2);
-			status = 1;
+			close(cmd->fd[READ_FD]);
+			mini->status = 1;
 		}
 		else
 		{
-			parsed_line = ft_split(args[argc], '=');
+			parsed_line = ft_split(cmd->argv[argc], '=');
 			if (!parsed_line[1])
 				add_temp_envar(mini, parsed_line[0]);
 			else
@@ -80,58 +99,82 @@ int	doexport(t_mini *mini, char *buf)
 		}
 	}
 	if (argc == 1)
-		print_temp_env(mini->env);
-	freedoublepointer(args);
+		print_temp_env(mini->env, fd);
+	else if (fd > 2 && fd != -1)
+		close(fd);
 	return (status);
 }
 
-void	dounset(t_mini *mini, char *buf)
+void	dounset(t_mini *mini, t_cmd	*cmd)
 {
 	int		argc;
-	char	**parsed_line;
 
 	(void)mini;
-	parsed_line = ft_split(buf, ' ');
 	argc = 0;
-	while (parsed_line[argc])
-		argc++;
-	if (argc == 1)
+	if (cmd->argc == 1)
 		return ;
-	else if (argc >= 2)
+	else if (cmd->argc >= 2)
 	{
 		argc = 0;
-		while (parsed_line[++argc])
-			remove_envar(mini, parsed_line[argc]);
+		while (cmd->argv[++argc])
+			remove_envar(mini, cmd->argv[argc]);
 	}
-	freedoublepointer(parsed_line);
 }
 
-int	builtins(t_mini *mini, char *buf2)
+int	builtins(t_mini *mini, t_cmd *cmd)
 {
-	int	status;
-
-	status = checkkill(buf2);
-	if (status != 0)
-		return (free(buf2), rl_clear_history(), status);
-	if (ft_strcmpspace("cd", buf2) == 0)
-		return (status = docd(checkenvvars(buf2, mini), mini), status);
-	if (ft_strcmpspace("export", buf2) == 0)
-		return (status = doexport(mini, buf2), free(buf2), status);
-	if (ft_strcmpspace("unset", buf2) == 0)
-		return (dounset(mini, buf2), free(buf2), status);
-	if (ft_strcmpspace("env", buf2) == 0)
-		return (print_env(mini->env), free(buf2), status);
-	if (ft_strcmpspace("echo", buf2) == 0)
-		return (buf2 = checkenvvars(buf2, mini), doecho(buf2), status);
-	if (ft_strchr(buf2, '=') && ft_strchr(buf2, '=')[-1] != ' '
-		&& ft_strchr(buf2, '=')[1] != ' '
-		&& ft_isgroup(ft_strchr(buf2, '=') + 1, ft_isbashprotected) == 0)
+	if (cmd->prev)
+		close(cmd->prev->fd[READ_FD]);
+	cmd->isbltin = 1;
+	if (checkkill(cmd->cmd))
 	{
-		buf2 = checkenvvars(buf2, mini);
-		entvars(&mini->env, ft_substr(buf2, 0,
-				ft_strchr(buf2, '=') - buf2),
-			ft_strdup(ft_strchr(buf2, '=') + 1));
-		return (free(buf2), 0);
+		if (cmd->argc > 2)
+			return (ft_putstr_fd("exit: too many arguments\n", 2), exit(1), 1);
+		if (cmd->argv[1] && checkovrfandchar(cmd->argv[1]))
+			return (exit(ft_atoi(cmd->argv[1])), 0);
+		if (cmd->argv[1])
+			return (ft_putstr_fd("exit: incorrect arguments\n", 2), exit(2), 1);
+		else
+			return (exit(0), 0);
 	}
-	return (-2);
+	pipe(cmd->fd);
+	if (ft_strcmpspace("cd", cmd->cmd) == 0)
+		return (docd(cmd, mini), close(cmd->fd[READ_FD]), close(cmd->fd[WRITE_FD]), 0);
+	if (ft_strcmpspace("unset", cmd->cmd) == 0)
+		return (dounset(mini, cmd), close(cmd->fd[READ_FD]), close(cmd->fd[WRITE_FD]), 0);
+	if (ft_strchr(cmd->cmd, '=') && cmd->argc == 1
+		&& ft_isgroup(ft_strchr(cmd->cmd, '=') + 1, ft_isbashprotected) == 0)
+	{
+		cmd->cmd = checkenvvars(cmd->cmd, mini);
+		entvars(&mini->env, ft_strndup(cmd->cmd, ft_strchr(cmd->cmd, '=') - cmd->cmd),
+			ft_strdup(ft_strchr(cmd->cmd, '=') + 1));
+		return (close(cmd->fd[READ_FD]), close(cmd->fd[WRITE_FD]), 0);
+	}
+	if (ft_strcmpspace("export", cmd->cmd) == 0)
+		return (doexport(mini, cmd, cmd->fd[WRITE_FD]), cmd->fd[READ_FD]);
+	if (ft_strcmpspace("env", cmd->cmd) == 0)
+		return (print_envfd(mini->env, cmd->fd[WRITE_FD]), cmd->fd[READ_FD]);
+	if (ft_strcmpspace("echo", cmd->cmd) == 0)
+		return (doecho(cmd, cmd->fd[WRITE_FD]), cmd->fd[READ_FD]);
+	return (close(cmd->fd[WRITE_FD]), close(cmd->fd[READ_FD]), 0);
+}
+
+int	isbuiltin(t_cmd *cmd)
+{
+	if (ft_strcmpspace(cmd->cmd, "exit") == 0)
+		return (1);
+	if (ft_strcmpspace("cd", cmd->cmd) == 0)
+		return (1);
+	if (ft_strcmpspace("unset", cmd->cmd) == 0)
+		return (1);
+	if (ft_strchr(cmd->cmd, '=') && cmd->argc == 1
+			&& ft_isgroup(ft_strchr(cmd->cmd, '=') + 1, ft_isbashprotected) == 0)
+		return (1);
+	if (ft_strcmpspace("export", cmd->cmd) == 0)
+		return (1);
+	if (ft_strcmpspace("env", cmd->cmd) == 0)
+		return (1);
+	if (ft_strcmpspace("echo", cmd->cmd) == 0)
+		return (1);
+	return (0);
 }

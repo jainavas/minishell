@@ -6,11 +6,11 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 12:40:23 by mpenas-z          #+#    #+#             */
-/*   Updated: 2024/12/22 23:36:29 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2025/01/13 20:00:33 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/mini.h"
+#include "../inc/minishell.h"
 
 void	freelist(t_env *lst)
 {
@@ -133,7 +133,10 @@ void	add_envar(t_mini *mini, char *varname, char *value, int is_temp)
 		aux_env->next = NULL;
 		env = envarlast(mini->env);
 		env->next = aux_env;
-		aux_env->prev = env;
+		if (env)
+			aux_env->prev = env;
+		else
+			aux_env->prev = NULL;
 	}
 }
 
@@ -146,7 +149,10 @@ void	remove_envar(t_mini *mini, char *varname)
 	{
 		aux_env = get_env_var(&mini->env, varname);
 		env = aux_env->prev;
-		env->next = aux_env->next;
+		if (env)
+			env->next = aux_env->next;
+		else
+			mini->env = aux_env->next;
 		if (aux_env->next)
 			aux_env->next->prev = env;
 		if (aux_env->content)
@@ -159,7 +165,7 @@ void	remove_envar(t_mini *mini, char *varname)
 	(void)env;
 }
 
-void	print_temp_env(t_env *env)
+void	print_temp_env(t_env *env, int fd)
 {
 	t_env	*aux;
 	
@@ -168,25 +174,84 @@ void	print_temp_env(t_env *env)
 	{
 		env = aux;
 		if (env->is_temp != 2 && env->content)
-			printf("declare -x %s=\"%s\"\n", env->name, env->content);
+		{
+			ft_putstr_fd("declare -x ", fd);
+			ft_putstr_fd(env->name, fd);
+			ft_putstr_fd("=\"", fd);
+			ft_putstr_fd(env->content, fd);
+			ft_putstr_fd("\"\n", fd);
+		}
 		else if (env->is_temp != 2 && !env->content)
-			printf("declare -x %s\n", env->name);
+		{
+			ft_putstr_fd("declare -x ", fd);
+			ft_putendl_fd(env->name, fd);
+		}
 		aux = env->next;
 	}
-	return ;
+	if (fd > 2 && fd != -1)
+		close(fd);
 }
 
-void	print_env(t_env *env)
+void	print_envfd(t_env *env, int fd)
 {
 	t_env	*aux;
 	
 	aux = env;
-	while (aux)
+	while (aux && fd != -1)
 	{
 		env = aux;
-		if (env->is_temp == 0)
-			printf("%s=%s\n", env->name, env->content);
+		if (env->is_temp == 0 && env->name && env->content)
+		{
+			ft_putstr_fd(env->name, fd);
+			ft_putstr_fd("=", fd);
+			ft_putendl_fd(env->content, fd);
+		}
 		aux = env->next;
 	}
-	return ;
+	if (fd > 2 && fd != -1)
+		close(fd);
+}
+
+int	envsize(t_env *env)
+{
+	t_env	*aux;
+	int		res;
+	
+	aux = env;
+	res = 0;
+	while (aux)
+	{
+		if (env->is_temp == 0)
+			res++;
+		aux = aux->next;
+	}
+	return (res);
+}
+
+char	**envtodoublechar(t_env *env)
+{
+	int		tmpfd;
+	int		i;
+	char	*tmp;
+	char	**res;
+
+	i = -1;
+	tmpfd = open("tmpenv", O_CREAT, O_RDWR);
+	print_envfd(env, tmpfd);
+	tmpfd = open("tmpenv", O_RDWR);
+	tmp = get_next_line(tmpfd);
+	res = ft_calloc(envsize(env) + 1, sizeof(char *));
+	while (tmp)
+	{
+		res[++i] = tmp;
+		printf("%s", res[i]);
+		tmp = get_next_line(tmpfd);
+	}
+	res[++i] = NULL;
+	if (tmpfd != -1)
+		close(tmpfd);
+	tmp = ft_strjoin_gnl(getcwd(NULL, 0), "/tmpenv");
+	unlink(tmp);
+	free(tmp);
+	return (res);
 }

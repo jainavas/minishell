@@ -6,11 +6,11 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 12:27:04 by mpenas-z          #+#    #+#             */
-/*   Updated: 2024/12/24 13:48:30 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2025/01/10 18:54:33 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/mini.h"
+#include "../inc/minishell.h"
 
 void	dpcheckenvars(char **buf, t_mini *mini)
 {
@@ -25,7 +25,7 @@ char	*checkenvvars(char *buf, t_mini *mini)
 {
 	char	*tmp;
 
-	if (mini->didcheckenv == 1)
+	if (mini->didcheckenv == 1 || !buf)
 		return (buf);
 	tmp = ft_strchr(buf, '$');
 	if (!tmp)

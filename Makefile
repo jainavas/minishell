@@ -1,6 +1,6 @@
-NAME = mini
+NAME = minishell
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -g3 -fPIE
+CFLAGS = -Wall -Wextra -Werror -g3
 CLIBS = -lreadline
 
 SRC_PATH = src/
@@ -24,7 +24,11 @@ SRC =	minish.c \
 		builtins.c \
 		builtins2.c \
 		environment1.c \
-		environment2.c
+		environment2.c \
+		parsing.c \
+		evaluator.c \
+		cmdlisthandle.c \
+		executor.c
 
 SRCS = $(addprefix $(SRC_PATH), $(SRC))
 OBJS = $(patsubst $(SRC_PATH)%.c,$(OBJ_PATH)%.o,$(SRCS))

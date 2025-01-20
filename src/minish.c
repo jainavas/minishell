@@ -6,67 +6,60 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 01:58:02 by jainavas          #+#    #+#             */
-/*   Updated: 2024/12/24 16:19:22 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2025/01/20 17:54:31 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mini.h"
+#include "minishell.h"
 
 int	g_status;
 
-void	anyfdtofile(int fd, char *filename, int app)
+int	anyfdtofile(int fd, t_fout *out, t_cmd *cmd, t_mini *mini)
 {
-	char	*buf;
 	int		fdo;
+	int		r;
 
 	fdo = 1;
-	if (access(filename, F_OK) == 0)
+	r = checkpermouts(cmd, out->file, mini);
+	if (r == 1)
 	{
-		if (app == 1)
-			fdo = open(filename, O_WRONLY | O_APPEND);
+		if (out->appendout == 1)
+			fdo = open(out->file, O_WRONLY | O_APPEND);
 		else
-			fdo = open(filename, O_WRONLY);
+			fdo = open(out->file, O_WRONLY);
 	}
-	else if (filename)
-		fdo = open(filename, O_RDWR | O_CREAT | O_TRUNC, 0644);
-	buf = get_next_line(fd);
-	while (buf)
-	{
-		write(fdo, buf, ft_strlen(buf));
-		free(buf);
-		buf = get_next_line(fd);
-	}
-	if (fdo != 0 && fdo != 1 && fdo != 2)
+	else if (r == -1)
+		return (-1);
+	else if (out->file)
+		fdo = open(out->file, O_RDWR | O_CREAT | O_TRUNC, 0644);
+	if (outfcount(cmd->outfiles) == out->foutn && fdo != 1 && fd != -1)
+		fdtofd(fd, fdo);
+	else if (fdo != 1)
 		close(fdo);
-	if (fd != -1)
-		close(fd);
+	return (0);
 }
 
-int	alonecmdcall(int fdin, char **cmd, char *path, t_mini *mini)
+int	alonecmdcall(int fdin, t_cmd *cmd, char **env, t_mini *mini)
 {
-	int	fd[2];
-	int	pid;
-	int	pid_status;
-	int	status;
-
-	pipe(fd);
-	pid = fork();
-	if (pid == 0)
+	cmd->path = pathseekenv(&cmd->cmd, env);
+	cmd->env = env;
+	pipe(cmd->fd);
+	cmd->pid = fork();
+	if (cmd->pid == 0)
 	{
-		alonecmdcallutils(fd, fdin);
-		if (ft_strcmpalnum((*mini->mfilesout)->file, "/dev/stdout") != 0)
-			dup2(fd[WRITE_FD], STDOUT_FILENO);
-		closeanddupinput(fd);
-		execve(path, cmd, mini->envp);
+		alonecmdcallutils(cmd, fdin);
+		if (cmdcount(mini->header) != 1 || *cmd->outfiles != NULL)
+			dup2(cmd->fd[WRITE_FD], STDOUT_FILENO);
+		closeanddupinput(cmd->fd);
+		execve(cmd->path, cmd->argv, cmd->env);
 	}
 	else
 	{
-		waitpid(pid, &pid_status, 0);
 		if (g_status == 130)
 			write(1, "\n", 1);
-		status = g_status;
-		return (close(fdin), close(fd[WRITE_FD]), free(path),
-			fdtomfiles(mini, fd[READ_FD]), status);
+		if (fdin > 2 && fdin != -1)
+			close(fdin);
+		return (close(cmd->fd[WRITE_FD]), cmd->fd[READ_FD]);
 	}
 	return (0);
 }
@@ -83,7 +76,7 @@ char	**preppipex(char *buf, char *infile, char **buf2, t_mini *mini)
 	while (buf2[++i])
 	{
 		if (checkprepaths(ft_split(buf2[i], ' '), mini))
-			return (ft_printf("mini: command not found: %s\n", buf2[i]),
+			return (ft_putstr_fd("mini: command not found\n", 2),
 				freedoublepointer(buf2), freedoublepointer(res), NULL);
 		res [i + 2] = ft_strdup(buf2[i]);
 	}
@@ -94,6 +87,7 @@ char	**preppipex(char *buf, char *infile, char **buf2, t_mini *mini)
 int	main(int argc, char **argv, char **envp)
 {
 	t_mini	*mini;
+	int		ret;
 
 	g_status = 0;
 	mini = ft_calloc(1, sizeof(t_mini));
@@ -109,11 +103,16 @@ int	main(int argc, char **argv, char **envp)
 	*(mini->quotestmps) = NULL;
 	set_signals();
 	recursiva(&mini);
+	ret = mini->status;
 	freelist(mini->env);
 	freelist(*mini->quotestmps);
 	freeoutfiles(mini->mfilesout);
 	free(mini->mfilesout);
 	free(mini->quotestmps);
 	free(mini);
-	return (g_status);
+	if (ret != -1)
+		return (ret);
+	if (g_status != -1)
+		return (g_status);
+	return (0);
 }
