@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 17:45:35 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/10 18:54:33 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/24 14:02:21 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,11 @@ void	set_signals(void)
 void	handle_sigint(int sig)
 {
 	(void)sig;
-	g_status = 130;
-	new_prompt();
+	if (g_signal != -1)
+		new_prompt();
+	else
+		ft_putstr_fd("\n", 2);
+	g_signal = 130;
 }
 
 void	new_prompt(void)

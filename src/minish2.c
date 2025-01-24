@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 15:56:12 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/20 22:41:47 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/24 14:03:11 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,9 +78,11 @@ int	cmdexistence(char *cmd, t_mini *mini)
 	{
 		if (dr && (cmd[0] == '.' || cmd[0] == '/'))
 			return (freedoublepointer(tmp2), closedir(dr), ft_putstr_fd(cmd, 2),
-				ft_putstr_fd(": is a directory\n", 2), mini->status = 126, -1);
-		return (closedir(dr), freedoublepointer(tmp2), ft_putstr_fd(cmd, 2),
-			ft_putstr_fd(": not exists\n", 2), mini->status = 127, -1);
+				ft_putstr_fd(": is a directory\n", 2), g_signal = 0, \
+				mini->status = 126, -1);
+		return (closedir(dr), freedoublepointer(tmp2), \
+			ft_putstr_fd(cmd, 2), ft_putstr_fd(": does not exist\n", 2), \
+			g_signal = 0, mini->status = 127, -1);
 	}
 }
 

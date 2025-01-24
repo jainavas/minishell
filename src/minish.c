@@ -6,13 +6,13 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 01:58:02 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/20 22:10:39 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/24 13:58:01 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	g_status;
+int	g_signal;
 
 void	closebutstds(int fd)
 {
@@ -23,16 +23,13 @@ void	closebutstds(int fd)
 int	recursiva(t_mini **mini)
 {
 	int		x;
-	char	*temp;
 
 	(*mini)->infile = NULL;
 	(*mini)->didcheckenv = 0;
 	x = recread(mini);
 	while (x == 0)
 	{
-		temp = ft_itoa((*mini)->status);
-		add_envar((*mini), "?", temp, 2);
-		free (temp);
+		set_status((*mini)->status, mini);
 		freelist(*(*mini)->quotestmps);
 		*(*mini)->quotestmps = NULL;
 		(*mini)->infile = NULL;
@@ -49,6 +46,8 @@ int	recread(t_mini **mini)
 	char	*buf2;
 
 	buf2 = readline("minishell% ");
+	if (g_signal == 130)
+		set_status(130, mini);
 	if (!buf2)
 		return (1);
 	if (buf2[0] == '\0')
@@ -82,8 +81,6 @@ int	alonecmdcall(int fdin, t_cmd *cmd, char **env, t_mini *mini)
 	}
 	else
 	{
-		if (g_status == 130)
-			write(1, "\n", 1);
 		if (fdin > 2 && fdin != -1)
 			close(fdin);
 		return (close(cmd->fd[WRITE_FD]), cmd->fd[READ_FD]);
@@ -96,7 +93,7 @@ int	main(int argc, char **argv, char **envp)
 	t_mini	*mini;
 	int		ret;
 
-	g_status = 0;
+	g_signal = 0;
 	mini = ft_calloc(1, sizeof(t_mini));
 	mini->argc = argc;
 	mini->argv = argv;
@@ -113,7 +110,7 @@ int	main(int argc, char **argv, char **envp)
 	freelist(*mini->quotestmps);
 	if (ret != -1)
 		return (free(mini->quotestmps), free(mini), ret);
-	if (g_status != -1)
-		return (free(mini->quotestmps), free(mini), g_status);
+	if (g_signal != -1)
+		return (free(mini->quotestmps), free(mini), g_signal);
 	return (free(mini->quotestmps), free(mini), 0);
 }

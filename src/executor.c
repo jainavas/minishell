@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/29 14:21:20 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/20 20:10:09 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/24 14:03:54 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	run_cmd_list(t_mini *mini, t_cmd **head)
 	while (curr)
 	{
 		mini->status = 0;
-		g_status = 0;
+		g_signal = -1;
 		fdret = selectinflim(curr, mini);
 		if (fdret == -1)
 		{
@@ -97,4 +97,7 @@ void	postexec(t_cmd **head, t_mini *mini)
 		mini->status = WEXITSTATUS(curr->pidstatus);
 	if ((cmdlast(*head)->ifouts == 0) && mini->status == 0)
 		fdtofd(cmdlast(*head)->fd[READ_FD], STDOUT_FILENO);
+	if (g_signal == 130)
+		mini->status = 130;
+	g_signal = 0;
 }

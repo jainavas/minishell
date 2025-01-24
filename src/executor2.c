@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 18:49:38 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/20 20:06:10 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/24 13:56:26 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,4 +79,14 @@ void	openoutferrinf(t_cmd *cmd, t_mini *mini)
 		tmp = tmp->next;
 	}
 	freeoutfiles(cmd->outfiles);
+}
+
+void	set_status(int status, t_mini **mini)
+{
+	char	*temp;
+
+	(*mini)->status = status;
+	temp = ft_itoa(status);
+	add_envar((*mini), "?", temp, 2);
+	free (temp);
 }

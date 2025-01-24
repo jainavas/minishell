@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 00:52:59 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/20 22:14:24 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/24 13:58:34 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	checkkill(char *buf)
 	if (ft_strcmpspace(buf, "exit") == 0)
 	{
 		if (!ft_strchr(buf, ' '))
-			return (g_status = 1, -1);
+			return (g_signal = 1, -1);
 		else
 		{
 			parsed_line = ft_split(buf, ' ');
@@ -60,7 +60,7 @@ int	checkkill(char *buf)
 			exit_status = ft_atoi(parsed_line[1]);
 			while (exit_status > 256)
 				exit_status = exit_status - 256;
-			g_status = exit_status;
+			g_signal = exit_status;
 			return (-1);
 		}
 	}

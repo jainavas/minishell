@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 02:16:09 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/20 23:28:19 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/24 13:56:58 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@
 # include <sys/stat.h>
 # include <dirent.h>
 
-extern int					g_status;
+extern int					g_signal;
 
 typedef struct sigaction	t_sig;
 
@@ -196,6 +196,7 @@ void	fileunlinker(char *file);
 void	closecmdsfd(t_cmd **head);
 int		selectinflim(t_cmd *cmd, t_mini *mini);
 void	openoutferrinf(t_cmd *cmd, t_mini *mini);
+void	set_status(int status, t_mini **mini);
 /* evaluator.c */
 t_cmd	*evaluate_commands(char **args);
 void	assign_outfile(t_cmd **current, char **args, int *begin, int app);
