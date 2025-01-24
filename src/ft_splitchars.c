@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 18:45:49 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/10 18:54:33 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/24 14:05:59 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,15 +106,3 @@ char	**ft_splitchars(char *str, char *charset)
 	}
 	return (split);
 }
-
-// int main(void)
-// {
-// 	int	i = -1;
-// 	char **buf = ft_splitchars("grep a << lim | wc", "<>|");
-// 	while(buf[++i])
-// 	{
-// 		printf("|%s|", buf[i]);
-// 		free(buf[i]);
-// 	}
-// 	free(buf);
-// }

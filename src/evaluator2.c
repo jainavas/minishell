@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 18:52:43 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/20 20:14:32 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/24 14:06:25 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,42 +34,6 @@ int	check_operator_syntax(char **args)
 	(void)args;
 	return (0);
 }
-
-// void	print_cmd_list(t_cmd *head)
-// {
-// 	t_cmd	*current;
-// 	t_fout	*outf;
-// 	int		i;
-
-// 	printf("Printing cmd list: %p\n", head);
-// 	current = head;
-// 	while (current)
-// 	{
-// 		if (current)
-// 		{
-// 			outf = *current->outfiles;
-// 			if (!current->cmd)
-// 				return ;
-// 			printf("Cmd: %s\n", current->cmd);
-// 			printf("Argv: {");
-// 			i = -1;
-// 			while (current->argv[++i])
-// 				printf("%s, ", current->argv[i]);
-// 			if (current->argv[i] == NULL)
-// 				printf("(nil)");
-// 			printf("}\n");
-// 			printf("Argc: %d\n", current->argc);
-// 			printf("Lim: %s\n", current->lim);
-// 			while (outf)
-// 			{
-// 				printf("Outfile: %s\n", outf->file);
-// 				outf = outf->next;
-// 			}
-// 			printf("Infile: %s\n", current->infile);
-// 		}
-// 		current = current->next;
-// 	}
-// }
 
 void	free_cmd_list(t_cmd **head)
 {
