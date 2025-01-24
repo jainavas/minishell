@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 12:14:17 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/20 20:01:31 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/24 19:28:00 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 int	docd(t_cmd *cmd, t_mini *mini)
 {
-	t_env	*tmp;
-	char	*path;
+	t_env		*tmp;
+	char		*path;
 
 	tmp = NULL;
 	path = checkenvvars(cmd->argv[1], mini);
@@ -29,8 +29,11 @@ int	docd(t_cmd *cmd, t_mini *mini)
 		return (tildecasecd(tmp, mini, path));
 	else if (!ft_strcmpalnum(path, ".."))
 		return (chdirandoldpwd(prevpath(path), mini), 0);
-	else if (access(path, F_OK) == 0)
+	else if (access(path, F_OK) == 0 && access(path, X_OK) == 0)
 		return (chdirandoldpwd(ft_strdup(path), mini), 0);
+	else if (access(path, F_OK) == 0)
+		return (ft_putstr_fd("cd: Permission denied\n", 2),
+			mini->status = 1, 1);
 	else
 		return (ft_putstr_fd("cd: no such file or directory\n", 2),
 			mini->status = 1, 1);
