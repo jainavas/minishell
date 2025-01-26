@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 01:58:02 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/24 17:52:26 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2025/01/26 19:41:37 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int	recread(t_mini **mini)
 	head = evaluate_commands(buf);
 	freedoublepointer(buf);
 	if (!head)
-		return (set_status(2, mini), free(buf2), 0);
+		return (set_status(0, mini), free(buf2), 0);
 	(*mini)->header = &head;
 	run_cmd_list(*mini, &head);
 	free(buf2);
