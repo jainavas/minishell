@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 17:07:05 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/20 19:19:51 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/26 21:02:54 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ char	*pathseekenv(char **args, char **envp)
 {
 	int			fd[2];
 	int			pid;
+	int			status;
 	char		*tmp;
 	char *const	argv[] = {"which", args[0], NULL};
 
@@ -31,12 +32,11 @@ char	*pathseekenv(char **args, char **envp)
 	else
 	{
 		close(fd[WRITE_FD]);
-		wait(NULL);
+		waitpid(pid, &status, 0);
 		tmp = get_next_line(fd[READ_FD]);
 		if (!tmp)
 			return (close(fd[READ_FD]), NULL);
-		tmp[ft_strlen(tmp) - 1] = '\0';
-		return (close(fd[READ_FD]), tmp);
+		return (close(fd[READ_FD]), tmp[ft_strlen(tmp) - 1] = '\0', tmp);
 	}
 	return (NULL);
 }
