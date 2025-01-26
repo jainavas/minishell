@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 18:39:14 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/26 19:42:16 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/26 20:23:28 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,7 @@ int	tildecasecd(t_env *tmp, t_mini *mini, char *path)
 	tmp = get_env_var(&mini->env, "HOME");
 	if (!tmp)
 		return (1);
-	str = ft_strinsertdup(strdup(path + spacesindex(path + 2) + 2), "",
-			tmp->content, '~');
-	chdirandoldpwd(ft_strdup(str), mini);
+	str = ft_strjoin(tmp->content, ft_strchr(path, '~') + 1);
+	chdirandoldpwd(str, mini);
 	return (0);
 }
