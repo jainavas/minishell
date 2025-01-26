@@ -21,7 +21,7 @@ int	ft_isalnum(int c)
 
 int	ft_isbashprotected(int c)
 {
-	if (c == '=' || c == '|' || c == '<' || c == '>')
+	if (c == '|' || c == '<' || c == '>')
 		return (1);
 	return (0);
 }
