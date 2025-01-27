@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 18:05:55 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/20 23:10:10 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/27 16:55:44 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,9 @@ t_cmd	*evaluate_commands(char **args)
 	{
 		if (args[i][0] == '|')
 			current = NULL;
-		if (!is_operator(args[i]) && !current)
+		if (!is_operator(args[i]) && !current && !is_in_out_file(args, i))
 			current = caseisopevals(&head, args, &i, &tmp);
-		else if (!is_operator(args[i]))
+		else if (!is_operator(args[i]) && !is_in_out_file(args, i))
 			assignarg(&current, args, &i);
 		else
 			casenoopevals(args, &i, &current, &tmp);

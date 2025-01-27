@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 02:16:09 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/27 15:57:01 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2025/01/27 16:55:58 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,6 +206,7 @@ void	assignarg(t_cmd **cmd, char **args, int *begin);
 t_cmd	*get_current_cmd(char **args, int *begin);
 /* evaluator2.c */
 int		is_operator(char *buf);
+int		is_in_out_file(char **args, int i);
 int		check_operator_syntax(char **args);
 void	print_cmd_list(t_cmd *head);
 void	free_cmd(t_cmd *cmd);

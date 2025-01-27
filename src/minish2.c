@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 15:56:12 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/26 19:04:25 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/27 16:08:45 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int	cmdexistence(char *cmd, t_mini *mini)
 	DIR		*dr;
 
 	if (!cmd)
-		return (ft_putstr_fd(cmd, 2), ft_putstr_fd(": not exists\n", 2),
+		return (ft_putstr_fd(cmd, 2), ft_putstr_fd(": does not exist\n", 2),
 			mini->status = 127, -1);
 	dr = opendir(cmd);
 	tmp2 = envtodoublechar(mini->env);
