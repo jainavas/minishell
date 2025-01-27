@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 02:16:09 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/24 13:56:58 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2025/01/27 15:57:01 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,6 +167,7 @@ int		tildecasecd(t_env *tmp, t_mini *mini, char *path);
 /* builtins4.c */
 int		doexit(t_cmd *cmd);
 int		donewvarent(t_cmd *cmd, t_mini *mini);
+int		is_valid_directory(char *path, t_mini *mini);
 /* environment1.c */
 t_env	*envarlast(t_env *lst);
 char	*checkenvlist(t_mini *mini, char **buf, char *tmp);
