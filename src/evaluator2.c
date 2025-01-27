@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 18:52:43 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/27 17:21:29 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2025/01/27 17:57:10 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ int	check_operator_syntax(char **args)
 	{
 		if (is_operator(args[i]))
 		{
-			if (!args[i + 1] || is_operator(args[i + 1]))
+			if (!args[i + 1])
 				return (ft_putstr_fd("Syntax error\n", 2), 2);
 		}
 	}
