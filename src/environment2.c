@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 12:40:23 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/20 20:19:28 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/28 19:04:52 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,23 +30,20 @@ t_env	*init_env_vars(char **envp)
 	int		i;
 	t_env	*head_env;
 	t_env	*env;
-	char	**aux_buffs;
 
 	i = -1;
 	head_env = NULL;
 	while (envp[++i])
 	{
 		env = ft_calloc(1, sizeof(t_env));
-		aux_buffs = ft_split(envp[i], '=');
-		env->name = ft_strdup(aux_buffs[0]);
-		env->content = ft_strdup(aux_buffs[1]);
+		env->name = ft_strndup(envp[i], ft_strchr(envp[i], '=') - envp[i]);
+		env->content = ft_strdup(ft_strchr(envp[i], '=') + 1);
 		env->is_temp = 0;
 		env->next = NULL;
 		env->prev = head_env;
 		if (head_env)
 			head_env->next = env;
 		head_env = env;
-		freedoublepointer(aux_buffs);
 	}
 	return (get_env_head(head_env));
 }
