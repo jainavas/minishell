@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/24 18:22:58 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/28 15:27:42 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2025/01/28 17:00:58 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ char	**split_operators(int count, char *buf)
 			if (temp < buf + i[0])
 				split[i[2]++] = ft_strndup(temp, buf + i[0] - temp);
 			if (buf[i[0]] != '\0')
-				cases_split_operators(&i[0], &i[2], buf, split);
+				cases_split_operators(&i[0], &i[2], buf, &split);
 			temp = buf + i[0] + 1;
 		}
 	}
