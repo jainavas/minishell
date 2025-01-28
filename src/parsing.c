@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/24 18:22:58 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/27 17:48:59 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2025/01/28 15:27:42 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,6 @@ char	**process_input(t_mini *mini, char *buf)
 	i = -1;
 	while (cmd[++i])
 		cmd[i] = process_vars(mini, cmd[i]);
-	//TESTING
-	// i = -1;
-	// while (cmd[++i])
-	// 	printf("cmd[%d] = %s\n", i, cmd[i]);
-	//TESTING
 	return (cmd);
 }
 
@@ -54,30 +49,7 @@ int	count_operators(char *buf)
 		is_in_quotes(&i[1], buf[i[0]]);
 		if (i[1] == 0 && (buf[i[0]] == '<' || buf[i[0]] == '>'
 				|| buf[i[0]] == '|' || buf[i[0]] == '\0'))
-		{
-			if (buf[i[0]] == '<')
-			{
-				if (i[0] + 1 < (int)ft_strlen(buf) && buf[i[0] + 1] == '<')
-				{
-					i[2]++;
-					i[0]++;
-				}
-				else
-					i[2]++;
-			}
-			else if (buf[i[0]] == '>')
-			{
-				if (i[0] + 1 < (int)ft_strlen(buf) && buf[i[0] + 1] == '>')
-				{
-					i[2]++;
-					i[0]++;
-				}
-				else
-					i[2]++;
-			}
-			else
-				i[2]++;
-		}
+			increment_operators(&i[2], &i[0], buf);
 	}
 	return (i[2]);
 }
@@ -112,22 +84,7 @@ char	**split_operators(int count, char *buf)
 			if (temp < buf + i[0])
 				split[i[2]++] = ft_strndup(temp, buf + i[0] - temp);
 			if (buf[i[0]] != '\0')
-			{
-				if (buf[i[0]] == '<' && i[0] + 1 < (int)ft_strlen(buf)
-					&& buf[i[0] + 1] == '<')
-				{
-					split[i[2]++] = ft_strndup(buf + i[0], 2);
-					i[0]++;
-				}
-				else if (buf[i[0]] == '>' && i[0] + 1 < (int)ft_strlen(buf)
-					&& buf[i[0] + 1] == '>')
-				{
-						split[i[2]++] = ft_strndup(buf + i[0], 2);
-						i[0]++;
-				}
-				else
-					split[i[2]++] = ft_strndup(buf + i[0], 1);
-			}
+				cases_split_operators(&i[0], &i[2], buf, split);
 			temp = buf + i[0] + 1;
 		}
 	}
