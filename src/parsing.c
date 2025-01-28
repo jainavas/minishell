@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/24 18:22:58 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/27 17:48:59 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2025/01/28 15:27:42 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,22 +46,10 @@ int	count_operators(char *buf)
 	i[0] = -1;
 	while ((size_t)++i[0] <= ft_strlen(buf))
 	{
-		if (i[1] == 0 && buf[i[0]] == '"')
-			i[1] = 1;
-		else if (i[1] == 0 && buf[i[0]] == '\'')
-			i[1] = 2;
-		else if ((i[1] == 1 && buf[i[0]] == '"')
-			|| (i[1] == 2 && buf[i[0]] == '\''))
-			i[1] = 0;
-		else if (i[1] == 0 && (buf[i[0]] == '<' || buf[i[0]] == '>'
+		is_in_quotes(&i[1], buf[i[0]]);
+		if (i[1] == 0 && (buf[i[0]] == '<' || buf[i[0]] == '>'
 				|| buf[i[0]] == '|' || buf[i[0]] == '\0'))
-		{
-			if (i[0] > 0 && buf[i[0] - 1] != '<' && buf[i[0] - 1] != '>'
-				&& buf[i[0] - 1] != '|' && buf[i[0] - 1] != '\0')
-				i[2]++;
-			if (buf[i[0]] != '\0')
-				i[2]++;
-		}
+			increment_operators(&i[2], &i[0], buf);
 	}
 	return (i[2]);
 }
@@ -96,7 +84,7 @@ char	**split_operators(int count, char *buf)
 			if (temp < buf + i[0])
 				split[i[2]++] = ft_strndup(temp, buf + i[0] - temp);
 			if (buf[i[0]] != '\0')
-				split[i[2]++] = ft_strndup(buf + i[0], 1);
+				cases_split_operators(&i[0], &i[2], buf, split);
 			temp = buf + i[0] + 1;
 		}
 	}

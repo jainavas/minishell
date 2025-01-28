@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 19:02:43 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/20 19:03:05 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/28 15:27:46 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,4 +66,40 @@ char	**cleannulls(char **prev)
 	res[ct2] = NULL;
 	freedoublepointer(prev);
 	return (res);
+}
+
+void	cases_split_operators(int *i, int *pos, char *buf, char **split)
+{
+	if (buf[*i] == '<' && *i + 1 < (int)ft_strlen(buf)
+		&& buf[*i + 1] == '<')
+	{
+		split[*pos++] = ft_strndup(buf + *i, 2);
+		*i = *i + 1;
+	}
+	else if (buf[*i] == '>' && *i + 1 < (int)ft_strlen(buf)
+		&& buf[*i + 1] == '>')
+	{
+		split[*pos++] = ft_strndup(buf + *i, 2);
+		*i = *i + 1;
+	}
+	else
+		split[*pos++] = ft_strndup(buf + *i, 1);
+}
+
+void	increment_operators(int *amount, int *index, char *buffer)
+{
+	if (buffer[*index] == '<')
+	{
+		if (*index + 1 < (int)ft_strlen(buffer) && buffer[*index + 1] == '<')
+			*index = *index + 1;
+		*amount = *amount + 1;
+	}
+	else if (buffer[*index] == '>')
+	{
+		if (*index + 1 < (int)ft_strlen(buffer) && buffer[*index + 1] == '>')
+			*index = *index + 1;
+		*amount = *amount + 1;
+	}
+	else
+		*amount = *amount + 1;
 }
