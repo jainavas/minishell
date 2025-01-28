@@ -81,14 +81,14 @@ char	*caseargsearch(t_ffdr *var, char *tp2, char *file, char *tmp3)
 
 void	casenoopevals(char **args, int *i, t_cmd **current, int *tmp)
 {
-	if (!ft_strncmp(args[*i], "<", 1))
+	if (!ft_strncmp(args[*i], "<", 2) || !ft_strncmp(args[*i], "<<", 3))
 	{
 		if (*current)
 			assign_infile(current, args, i);
 		else
 			*tmp = *i++;
 	}
-	else if (!ft_strcmpspace(args[*i], ">"))
+	else if (!ft_strcmpspace(args[*i], ">") || !ft_strcmpspace(args[*i], ">>"))
 	{
 		if (*current)
 			assign_outfile(current, args, i, 0);

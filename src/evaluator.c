@@ -48,11 +48,8 @@ void	assign_outfile(t_cmd **current, char **args, int *begin, int app)
 	i = *begin;
 	if (!args[++i])
 		return ;
-	if (!ft_strncmp(args[i], ">", 2))
-	{
+	if (args[i] && !ft_strncmp(args[i - 1], ">>", 3))
 		app = 1;
-		i++;
-	}
 	if (args[i] && !is_operator(args[i]))
 		newfileout((*current)->outfiles, ft_strdup(args[i]), app, i);
 	*begin = i;
@@ -67,14 +64,14 @@ void	assign_infile(t_cmd **current, char **args, int *begin)
 	i = *begin;
 	if (!args[++i])
 		return ;
-	if (args[i] && !is_operator(args[i]))
+	if (args[i] && !ft_strncmp(args[i - 1], "<", 2))
 	{
 		if ((*current)->infile)
 			free((*current)->infile);
 		(*current)->infile = ft_strdup(args[i]);
 		(*current)->priorinflim = 1;
 	}
-	else if (args[++i])
+	else if (args[i] && !ft_strncmp(args[i - 1], "<<", 3))
 	{
 		if ((*current)->lim)
 			free((*current)->lim);

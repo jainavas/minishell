@@ -34,6 +34,11 @@ char	**process_input(t_mini *mini, char *buf)
 	i = -1;
 	while (cmd[++i])
 		cmd[i] = process_vars(mini, cmd[i]);
+	//TESTING
+	// i = -1;
+	// while (cmd[++i])
+	// 	printf("cmd[%d] = %s\n", i, cmd[i]);
+	//TESTING
 	return (cmd);
 }
 
@@ -46,20 +51,31 @@ int	count_operators(char *buf)
 	i[0] = -1;
 	while ((size_t)++i[0] <= ft_strlen(buf))
 	{
-		if (i[1] == 0 && buf[i[0]] == '"')
-			i[1] = 1;
-		else if (i[1] == 0 && buf[i[0]] == '\'')
-			i[1] = 2;
-		else if ((i[1] == 1 && buf[i[0]] == '"')
-			|| (i[1] == 2 && buf[i[0]] == '\''))
-			i[1] = 0;
-		else if (i[1] == 0 && (buf[i[0]] == '<' || buf[i[0]] == '>'
+		is_in_quotes(&i[1], buf[i[0]]);
+		if (i[1] == 0 && (buf[i[0]] == '<' || buf[i[0]] == '>'
 				|| buf[i[0]] == '|' || buf[i[0]] == '\0'))
 		{
-			if (i[0] > 0 && buf[i[0] - 1] != '<' && buf[i[0] - 1] != '>'
-				&& buf[i[0] - 1] != '|' && buf[i[0] - 1] != '\0')
-				i[2]++;
-			if (buf[i[0]] != '\0')
+			if (buf[i[0]] == '<')
+			{
+				if (i[0] + 1 < (int)ft_strlen(buf) && buf[i[0] + 1] == '<')
+				{
+					i[2]++;
+					i[0]++;
+				}
+				else
+					i[2]++;
+			}
+			else if (buf[i[0]] == '>')
+			{
+				if (i[0] + 1 < (int)ft_strlen(buf) && buf[i[0] + 1] == '>')
+				{
+					i[2]++;
+					i[0]++;
+				}
+				else
+					i[2]++;
+			}
+			else
 				i[2]++;
 		}
 	}
@@ -96,7 +112,22 @@ char	**split_operators(int count, char *buf)
 			if (temp < buf + i[0])
 				split[i[2]++] = ft_strndup(temp, buf + i[0] - temp);
 			if (buf[i[0]] != '\0')
-				split[i[2]++] = ft_strndup(buf + i[0], 1);
+			{
+				if (buf[i[0]] == '<' && i[0] + 1 < (int)ft_strlen(buf)
+					&& buf[i[0] + 1] == '<')
+				{
+					split[i[2]++] = ft_strndup(buf + i[0], 2);
+					i[0]++;
+				}
+				else if (buf[i[0]] == '>' && i[0] + 1 < (int)ft_strlen(buf)
+					&& buf[i[0] + 1] == '>')
+				{
+						split[i[2]++] = ft_strndup(buf + i[0], 2);
+						i[0]++;
+				}
+				else
+					split[i[2]++] = ft_strndup(buf + i[0], 1);
+			}
 			temp = buf + i[0] + 1;
 		}
 	}

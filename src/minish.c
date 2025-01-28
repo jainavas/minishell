@@ -55,7 +55,7 @@ int	recread(t_mini **mini)
 	add_history(buf2);
 	buf = cleannulls(process_input((*mini), ft_strdup(buf2)));
 	head = evaluate_commands(buf);
-	/*print_cmd_list(head);*/
+	print_cmd_list(head);
 	freedoublepointer(buf);
 	if (!head)
 		return (set_status(0, mini), free(buf2), 0);
