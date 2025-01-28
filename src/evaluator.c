@@ -6,35 +6,36 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 18:05:55 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/27 16:55:44 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2025/01/28 18:04:48 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-t_cmd	*evaluate_commands(char **args)
+t_cmd	*evaluate_commands(char **args, t_mini *mini)
 {
 	t_cmd	*head;
 	t_cmd	*current;
-	int		tmp;
-	int		i;
+	int		**i;
 
 	if (check_operator_syntax(args) != 0)
 		return (NULL);
+	i = ft_calloc(2, sizeof(int));
 	head = NULL;
 	current = NULL;
-	i = -1;
-	tmp = -1;
-	while (args[++i])
+	*i[0] = -1;
+	*i[1] = -1;
+	while (args[++(*i[0])])
 	{
-		if (args[i][0] == '|')
+		if (args[*i[0]][0] == '|')
 			current = NULL;
-		if (!is_operator(args[i]) && !current && !is_in_out_file(args, i))
-			current = caseisopevals(&head, args, &i, &tmp);
-		else if (!is_operator(args[i]) && !is_in_out_file(args, i))
-			assignarg(&current, args, &i);
+		if (!is_operator(args[*i[0]]) && !current
+			&& !is_in_out_file(args, *i[0]))
+			current = caseisopevals(&head, args, i, mini);
+		else if (!is_operator(args[*i[0]]) && !is_in_out_file(args, *i[0]))
+			assignarg(&current, args, i[0], mini);
 		else
-			casenoopevals(args, &i, &current, &tmp);
+			casenoopevals(args, i, &current, mini);
 	}
 	return (putcmdn(&head), argsfilesearcher(&head), head);
 }
@@ -55,7 +56,7 @@ void	assign_outfile(t_cmd **current, char **args, int *begin, int app)
 	*begin = i;
 }
 
-void	assign_infile(t_cmd **current, char **args, int *begin)
+void	assign_infile(t_cmd **current, char **args, int *begin, t_mini *mini)
 {
 	int		i;
 
@@ -68,21 +69,21 @@ void	assign_infile(t_cmd **current, char **args, int *begin)
 	{
 		if ((*current)->infile)
 			free((*current)->infile);
-		(*current)->infile = ft_strdup(args[i]);
+		(*current)->infile = ft_strdup(process_vars(mini, args[i]));
 		(*current)->priorinflim = 1;
 	}
 	else if (args[i] && !ft_strncmp(args[i - 1], "<<", 3))
 	{
 		if ((*current)->lim)
 			free((*current)->lim);
-		(*current)->lim = ft_strdup(args[i]);
+		(*current)->lim = ft_strdup(process_vars(mini, args[i]));
 		(*current)->priorinflim = 2;
 	}
 	(*current)->priorinfout = i;
 	*begin = i;
 }
 
-t_cmd	*get_current_cmd(char **args, int *begin)
+t_cmd	*get_current_cmd(char **args, int *begin, t_mini *mini)
 {
 	t_cmd	*cmd;
 	int		argc;
@@ -97,18 +98,18 @@ t_cmd	*get_current_cmd(char **args, int *begin)
 	cmd->priorinflim = 0;
 	cmd->infile = NULL;
 	cmd->outfiles = ft_calloc(1, sizeof(t_fout *));
-	cmd->cmd = ft_strdup(args[*begin]);
+	cmd->cmd = ft_strdup(process_vars(mini, args[*begin]));
 	cmd->path = NULL;
 	cmd->argv = ft_calloc(argc + 1, sizeof(char *));
 	i = -1;
 	while (++i < argc && args[*begin + i])
-		cmd->argv[i] = ft_strdup(args[*begin + i]);
+		cmd->argv[i] = ft_strdup(process_vars(mini, args[*begin + i]));
 	cmd->argv[i] = NULL;
 	*begin = *begin + argc - 1;
 	return (cmd->next = NULL, cmd->prev = NULL, cmd->lim = NULL, cmd);
 }
 
-void	assignarg(t_cmd **cmd, char **args, int *begin)
+void	assignarg(t_cmd **cmd, char **args, int *begin, t_mini *mini)
 {
 	char	**newargv;
 	int		argc;
@@ -125,7 +126,8 @@ void	assignarg(t_cmd **cmd, char **args, int *begin)
 	i = -1;
 	while (++i < argc + (*cmd)->argc && args[*begin + i]
 		&& !is_operator(args[*begin + i]))
-		newargv[i + (*cmd)->argc] = ft_strdup(args[*begin + i]);
+		newargv[i + (*cmd)->argc] = ft_strdup(process_vars(mini, 
+													 args[*begin + i]));
 	newargv[i + (*cmd)->argc] = NULL;
 	(*cmd)->argv = newargv;
 	(*cmd)->argc = i + (*cmd)->argc;

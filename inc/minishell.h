@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 02:16:09 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/28 16:31:11 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2025/01/28 18:05:48 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,11 +199,11 @@ int		selectinflim(t_cmd *cmd, t_mini *mini);
 void	openoutferrinf(t_cmd *cmd, t_mini *mini);
 void	set_status(int status, t_mini **mini);
 /* evaluator.c */
-t_cmd	*evaluate_commands(char **args);
+t_cmd	*evaluate_commands(char **args, t_mini *mini);
 void	assign_outfile(t_cmd **current, char **args, int *begin, int app);
-void	assign_infile(t_cmd **current, char **args, int *begin);
-void	assignarg(t_cmd **cmd, char **args, int *begin);
-t_cmd	*get_current_cmd(char **args, int *begin);
+void	assign_infile(t_cmd **current, char **args, int *begin, t_mini *mini);
+void	assignarg(t_cmd **cmd, char **args, int *begin, t_mini *mini);
+t_cmd	*get_current_cmd(char **args, int *begin, t_mini *mini);
 /* evaluator2.c */
 int		is_operator(char *buf);
 int		is_in_out_file(char **args, int i);
@@ -215,8 +215,8 @@ void	free_cmd_list(t_cmd **head);
 char	*argsearch(char *file);
 void	argsfilesearcher(t_cmd **head);
 char	*caseargsearch(t_ffdr *var, char *tp2, char *file, char *tmp3);
-void	casenoopevals(char **args, int *i, t_cmd **current, int *tmp);
-t_cmd	*caseisopevals(t_cmd **head, char **args, int *i, int *tmp);
+void	casenoopevals(char **args, int **i, t_cmd **current, t_mini *mini);
+t_cmd	*caseisopevals(t_cmd **head, char **args, int **i, t_mini *mini);
 /* parsing.c */
 char	**process_input(t_mini *mini, char *buf);
 int		count_splitted_operators(char *buf);

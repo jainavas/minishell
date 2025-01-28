@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/24 18:22:58 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/28 17:00:58 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2025/01/28 17:54:58 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,15 @@ char	**process_input(t_mini *mini, char *buf)
 		free (temp);
 	}
 	process_operators(&cmd);
-	i = -1;
-	while (cmd[++i])
-		cmd[i] = process_vars(mini, cmd[i]);
+	(void)mini;
+	// TESTING
+	/*i = -1;*/
+	/*while (cmd[++i])*/
+	/*	printf("cmd[%d] = %s\n", i, cmd[i]);*/
+	// TESTING
+	/*i = -1;*/
+	/*while (cmd[++i])*/
+	/*	cmd[i] = process_vars(mini, cmd[i]);*/
 	return (cmd);
 }
 

@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 18:53:08 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/27 16:54:51 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2025/01/28 18:06:02 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,37 +79,38 @@ char	*caseargsearch(t_ffdr *var, char *tp2, char *file, char *tmp3)
 		return (free(tp2), free(file), tmp3);
 }
 
-void	casenoopevals(char **args, int *i, t_cmd **current, int *tmp)
+void	casenoopevals(char **args, int **i, t_cmd **current, t_mini *mini)
 {
-	if (!ft_strncmp(args[*i], "<", 2) || !ft_strncmp(args[*i], "<<", 3))
+	if (!ft_strncmp(args[*i[0]], "<", 2) || !ft_strncmp(args[*i[0]], "<<", 3))
 	{
 		if (*current)
-			assign_infile(current, args, i);
+			assign_infile(current, args, i[0], mini);
 		else
-			*tmp = *i++;
+			*i[1] = (*i[0])++;
 	}
-	else if (!ft_strcmpspace(args[*i], ">") || !ft_strcmpspace(args[*i], ">>"))
+	else if (!ft_strcmpspace(args[*i[0]], ">")
+		|| !ft_strcmpspace(args[*i[0]], ">>"))
 	{
 		if (*current)
-			assign_outfile(current, args, i, 0);
+			assign_outfile(current, args, i[0], 0);
 		else
-			*tmp = *i++;
+			*i[1] = (*i[0])++;
 	}
 }
 
-t_cmd	*caseisopevals(t_cmd **head, char **args, int *i, int *tmp)
+t_cmd	*caseisopevals(t_cmd **head, char **args, int **i, t_mini *mini)
 {
 	t_cmd	*current;
 
-	cmdadd_back(head, get_current_cmd(args, i));
+	cmdadd_back(head, get_current_cmd(args, i[0], mini));
 	current = cmdlast(*head);
-	if (*tmp != -1)
+	if (*i[1] != -1)
 	{
-		if (!ft_strncmp(args[*tmp], "<", 1))
-			assign_infile(&current, args, tmp);
-		if (!ft_strncmp(args[*tmp], ">", 1))
-			assign_outfile(&current, args, tmp, 0);
-		*tmp = -1;
+		if (!ft_strncmp(args[*i[1]], "<", 1))
+			assign_infile(&current, args, i[1], mini);
+		if (!ft_strncmp(args[*i[1]], ">", 1))
+			assign_outfile(&current, args, i[1], 0);
+		*i[1] = -1;
 	}
 	return (current);
 }
