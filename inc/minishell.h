@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 02:16:09 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/28 16:31:11 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2025/01/28 19:35:46 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,7 +199,7 @@ int		selectinflim(t_cmd *cmd, t_mini *mini);
 void	openoutferrinf(t_cmd *cmd, t_mini *mini);
 void	set_status(int status, t_mini **mini);
 /* evaluator.c */
-t_cmd	*evaluate_commands(char **args);
+t_cmd	*evaluate_commands(char **args, t_mini *mini);
 void	assign_outfile(t_cmd **current, char **args, int *begin, int app);
 void	assign_infile(t_cmd **current, char **args, int *begin);
 void	assignarg(t_cmd **cmd, char **args, int *begin);
@@ -207,7 +207,7 @@ t_cmd	*get_current_cmd(char **args, int *begin);
 /* evaluator2.c */
 int		is_operator(char *buf);
 int		is_in_out_file(char **args, int i);
-int		check_operator_syntax(char **args);
+int		check_operator_syntax(char **args, t_mini *mini);
 void	print_cmd_list(t_cmd *head);
 void	free_cmd(t_cmd *cmd);
 void	free_cmd_list(t_cmd **head);
@@ -234,7 +234,7 @@ char	*replace_content(char *str, char *content, char *start, int len);
 int		get_namelen(char *name);
 char	**cleannulls(char **prev);
 void	increment_operators(int *amount, int *index, char *buffer);
-void	cases_split_operators(int *i, int *pos, char *buf, char ***split);
+void	cases_split_operators(int *i, int *pos, char *buf, char **split);
 /* cmdlisthandle.c */
 void	cmdadd_back(t_cmd **lst, t_cmd *new);
 t_cmd	*cmdlast(t_cmd *lst);
