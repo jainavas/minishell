@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 18:45:28 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/20 19:23:14 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/28 20:12:56 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,6 @@ void	remove_envar(t_mini *mini, char *varname)
 			free (aux_env->name);
 		free (aux_env);
 	}
-	(void)aux_env;
-	(void)env;
 }
 
 void	print_temp_env(t_env *env, int fd)

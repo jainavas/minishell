@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 12:40:23 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/28 19:04:52 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/28 20:22:05 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,14 +48,15 @@ t_env	*init_env_vars(char **envp)
 	return (get_env_head(head_env));
 }
 
-t_env	*get_env_var(t_env	**head, char *varname)
+t_env	*get_env_var(t_env **head, char *varname)
 {
 	t_env	*aux_env;
 
 	aux_env = *head;
 	while (aux_env)
 	{
-		if (!ft_strcmpalnum(aux_env->name, varname))
+		if (!ft_strncmp(aux_env->name, varname, ft_strlen(aux_env->name))
+			&& !ft_strncmp(aux_env->name, varname, ft_strlen(varname)))
 			return (aux_env);
 		aux_env = aux_env->next;
 	}
