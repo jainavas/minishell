@@ -6,20 +6,20 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 18:05:55 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/27 16:55:44 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2025/01/28 19:36:05 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-t_cmd	*evaluate_commands(char **args)
+t_cmd	*evaluate_commands(char **args, t_mini *mini)
 {
 	t_cmd	*head;
 	t_cmd	*current;
 	int		tmp;
 	int		i;
 
-	if (check_operator_syntax(args) != 0)
+	if (check_operator_syntax(args, mini) != 0)
 		return (NULL);
 	head = NULL;
 	current = NULL;

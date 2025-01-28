@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 18:52:43 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/28 18:55:39 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/28 19:35:23 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ int	is_in_out_file(char **args, int i)
 // 		current = current->next;
 // 	}
 // }
-int	check_operator_syntax(char **args)
+int	check_operator_syntax(char **args, t_mini *mini)
 {
 	int	i;
 
@@ -82,7 +82,7 @@ int	check_operator_syntax(char **args)
 			if (!args[i + 1] || (is_operator(args[i + 1])
 					&& (ft_strncmp(args[i], "|", 2)
 						&& ft_strncmp(args[i + 1], "|", 2))))
-				return (ft_putstr_fd("Syntax error\n", 2), 2);
+				return (ft_putstr_fd("Syntax error\n", 2), mini->status = 2, 2);
 		}
 	}
 	return (0);
