@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 02:16:09 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/28 19:35:46 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2025/01/29 19:15:10 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,7 +203,8 @@ t_cmd	*evaluate_commands(char **args, t_mini *mini);
 void	assign_outfile(t_cmd **current, char **args, int *begin, int app);
 void	assign_infile(t_cmd **current, char **args, int *begin);
 void	assignarg(t_cmd **cmd, char **args, int *begin);
-t_cmd	*get_current_cmd(char **args, int *begin);
+void	assign_cmd(t_cmd **current, char **args, int *begin);
+t_cmd	*get_new_cmd();
 /* evaluator2.c */
 int		is_operator(char *buf);
 int		is_in_out_file(char **args, int i);
@@ -215,8 +216,7 @@ void	free_cmd_list(t_cmd **head);
 char	*argsearch(char *file);
 void	argsfilesearcher(t_cmd **head);
 char	*caseargsearch(t_ffdr *var, char *tp2, char *file, char *tmp3);
-void	casenoopevals(char **args, int *i, t_cmd **current, int *tmp);
-t_cmd	*caseisopevals(t_cmd **head, char **args, int *i, int *tmp);
+void	casenoopevals(char **args, int *i, t_cmd **current);
 /* parsing.c */
 char	**process_input(t_mini *mini, char *buf);
 int		count_splitted_operators(char *buf);

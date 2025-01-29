@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 18:53:08 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/27 16:54:51 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2025/01/29 19:16:52 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,37 +79,10 @@ char	*caseargsearch(t_ffdr *var, char *tp2, char *file, char *tmp3)
 		return (free(tp2), free(file), tmp3);
 }
 
-void	casenoopevals(char **args, int *i, t_cmd **current, int *tmp)
+void	casenoopevals(char **args, int *i, t_cmd **current)
 {
-	if (!ft_strncmp(args[*i], "<", 2) || !ft_strncmp(args[*i], "<<", 3))
-	{
-		if (*current)
-			assign_infile(current, args, i);
-		else
-			*tmp = *i++;
-	}
-	else if (!ft_strcmpspace(args[*i], ">") || !ft_strcmpspace(args[*i], ">>"))
-	{
-		if (*current)
-			assign_outfile(current, args, i, 0);
-		else
-			*tmp = *i++;
-	}
-}
-
-t_cmd	*caseisopevals(t_cmd **head, char **args, int *i, int *tmp)
-{
-	t_cmd	*current;
-
-	cmdadd_back(head, get_current_cmd(args, i));
-	current = cmdlast(*head);
-	if (*tmp != -1)
-	{
-		if (!ft_strncmp(args[*tmp], "<", 1))
-			assign_infile(&current, args, tmp);
-		if (!ft_strncmp(args[*tmp], ">", 1))
-			assign_outfile(&current, args, tmp, 0);
-		*tmp = -1;
-	}
-	return (current);
+	if (*current && (!ft_strncmp(args[*i], "<", 2) || !ft_strncmp(args[*i], "<<", 3)))
+		assign_infile(current, args, i);
+	else if (*current && (!ft_strcmpspace(args[*i], ">") || !ft_strcmpspace(args[*i], ">>")))
+		assign_outfile(current, args, i, 0);
 }
