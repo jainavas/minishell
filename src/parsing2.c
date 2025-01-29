@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mpenas-z <mpenas-z@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 19:00:12 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/20 22:09:09 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/29 18:25:06 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,8 @@ char	*expand_var(t_mini *mini, char *str, char *name)
 		node = mini->env;
 		while (node)
 		{
-			if (ft_strncmp(name + 1, node->name, len - 1) == 0)
+			if (ft_strncmp(name + 1, node->name, len - 1) == 0
+				&& ft_strncmp(name + 1, node->name, ft_strlen(node->name)) == 0)
 			{
 				str = replace_content(str, node->content, name, len);
 				break ;

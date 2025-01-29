@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 12:14:17 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/27 15:56:54 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2025/01/28 20:20:33 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ int	doexport(t_mini *mini, t_cmd *cmd, int fd)
 			if (!parsed_line[1])
 				add_temp_envar(mini, parsed_line[0]);
 			else
-				add_envar(mini, parsed_line[0], parsed_line[1], 1);
+				add_envar(mini, parsed_line[0], parsed_line[1], 0);
 			freedoublepointer(parsed_line);
 		}
 	}

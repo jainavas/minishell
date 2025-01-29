@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 12:27:04 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/20 20:19:37 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/28 20:22:31 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,8 @@ int	exists_env_var(t_mini *mini, char *varname)
 	aux_env = mini->env;
 	while (aux_env)
 	{
-		if (!ft_strncmp(aux_env->name, varname, ft_strlen(varname)))
+		if (!ft_strncmp(aux_env->name, varname, ft_strlen(aux_env->name))
+			&& !ft_strncmp(aux_env->name, varname, ft_strlen(varname)))
 			return (1);
 		aux_env = aux_env->next;
 	}
