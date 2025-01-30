@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/29 14:21:20 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/24 14:03:54 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2025/01/30 17:20:29 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,12 @@ int	execute_command(t_mini *mini, t_cmd *cmd, int infd)
 	int	tmpfd;
 	int	tmp;
 
+	if (!cmd->cmd)
+	{
+		if (infd > 2)
+			close(infd);
+		return (infd);
+	}
 	if (isbuiltin(cmd))
 		return (builtins(mini, cmd));
 	tmp = cmdexistence(cmd->cmd, mini);

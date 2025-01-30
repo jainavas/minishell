@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 18:05:55 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/29 19:15:44 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/30 17:06:44 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ void	assign_cmd(t_cmd **current, char **args, int *begin)
 	(*current)->cmd = ft_strdup(args[*begin]);
 	(*current)->argv = ft_calloc(argc + 1, sizeof(char *));
 	i = -1;
-	while (++i < argc && args[*begin + i])
+	while (++i < argc && args[*begin + i] && !is_operator(args[*begin + i]))
 		(*current)->argv[i] = ft_strdup(args[*begin + i]);
 	(*current)->argv[i] = NULL;
 	*begin = *begin + argc - 1;

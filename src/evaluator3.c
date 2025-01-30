@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 18:53:08 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/29 19:16:52 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/30 16:43:13 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	argsfilesearcher(t_cmd **head)
 	while (tmp)
 	{
 		i = -1;
-		while (tmp->argv[++i])
+		while (tmp->argv && tmp->argv[++i])
 		{
 			if (tmp->argv[i] && !strncmp("./", tmp->argv[i], 2))
 				tmp->argv[i] = argsearch(tmp->argv[i]);
@@ -81,8 +81,8 @@ char	*caseargsearch(t_ffdr *var, char *tp2, char *file, char *tmp3)
 
 void	casenoopevals(char **args, int *i, t_cmd **current)
 {
-	if (*current && (!ft_strncmp(args[*i], "<", 2) || !ft_strncmp(args[*i], "<<", 3)))
+	if ((!ft_strncmp(args[*i], "<", 2) || !ft_strncmp(args[*i], "<<", 3)))
 		assign_infile(current, args, i);
-	else if (*current && (!ft_strcmpspace(args[*i], ">") || !ft_strcmpspace(args[*i], ">>")))
+	if ((!ft_strncmp(args[*i], ">", 2) || !ft_strncmp(args[*i], ">>", 3)))
 		assign_outfile(current, args, i, 0);
 }
