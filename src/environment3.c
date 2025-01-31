@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   environment3.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mpenas-z <mpenas-z@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 18:45:28 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/29 18:04:29 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2025/01/31 17:59:38 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,28 +100,22 @@ int	envsize(t_env *env)
 
 char	**envtodoublechar(t_env *env)
 {
-	int		tmpfd;
 	int		i;
-	char	*tmp;
 	char	**res;
 
 	i = -1;
-	tmpfd = open("tmpenv", O_CREAT, O_RDWR);
-	print_envfd(env, tmpfd);
-	tmpfd = open("tmpenv", O_RDWR);
-	tmp = get_next_line(tmpfd);
 	res = ft_calloc(envsize(env) + 1, sizeof(char *));
-	while (tmp)
+	while (env)
 	{
-		res[++i] = tmp;
-		printf("%s", res[i]);
-		tmp = get_next_line(tmpfd);
+		if (env->is_temp != 0)
+		{
+			env = env->next;
+			continue ;
+		}
+		res[++i] = ft_strjoin(env->name, "=");
+		res[i] = ft_strjoin_gnl(res[i], env->content);
+		env = env->next;
 	}
 	res[++i] = NULL;
-	if (tmpfd != -1)
-		close(tmpfd);
-	tmp = ft_strjoin_gnl(getcwd(NULL, 0), "/tmpenv");
-	unlink(tmp);
-	free(tmp);
 	return (res);
 }

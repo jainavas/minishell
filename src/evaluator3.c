@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 18:53:08 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/31 12:13:34 by mpzamora         ###   ########.fr       */
+/*   Updated: 2025/01/31 19:00:06 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ char	*caseargsearch(t_ffdr *var, char *tp2, char *file, char *tmp3)
 		else
 			return (tmp3 = ft_strjoin_gnl(tmp3,
 					&tp2[(ft_strrchr(tp2, '/') - tp2) + 1]),
-				free(tp2), tmp3);
+				free(tp2), free(file), tmp3);
 	}
 	else
 		return (free(tp2), free(file), tmp3);
