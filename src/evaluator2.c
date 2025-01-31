@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 18:52:43 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/28 19:35:23 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2025/01/30 17:24:36 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,14 +48,12 @@ int	is_in_out_file(char **args, int i)
 // 		if (current)
 // 		{
 // 			outf = *current->outfiles;
-// 			if (!current->cmd)
-// 				return ;
 // 			printf("Cmd: %s\n", current->cmd);
 // 			printf("Argv: {");
 // 			i = -1;
-// 			while (current->argv[++i])
+// 			while (current->argv && current->argv[++i])
 // 				printf("%s, ", current->argv[i]);
-// 			if (current->argv[i] == NULL)
+// 			if (current->argv && current->argv[i] == NULL)
 // 				printf("(nil)");
 // 			printf("}\n");
 // 			printf("Argc: %d\n", current->argc);

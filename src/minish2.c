@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 15:56:12 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/27 16:08:45 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2025/01/30 18:03:36 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,8 @@ void	fdtofd(int fdin, int fdout)
 	char	*buf;
 
 	buf = NULL;
+	if (fdin == 0)
+		return ;
 	if (read(fdin, buf, 0) == -1)
 		return ;
 	buf = get_next_line(fdin);
