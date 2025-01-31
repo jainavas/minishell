@@ -6,8 +6,8 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 02:16:09 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/31 12:11:52 by mpzamora         ###   ########.fr       */
-/*                                                                            */
+/*   Updated: 2025/01/31 12:23:13 by mpzamora         ###   ########.fr       */
+/*                                                                           */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
@@ -119,6 +119,8 @@ void	closeanddupinput(int fd[2]);
 void	closeanddupoutput(int fd[2]);
 void	limmitator(char *lim, int fdin, struct mini *mini);
 void	freelist(t_env *lst);
+int		path_exists(t_mini *mini, t_cmd *cmd);
+int		cmd_in_path(char *cmd_path, char *path, char **envp);
 /* fileshandle.c */
 int		anyfdtofile(int fd, t_fout *out, t_cmd *cmd, t_mini *mini);
 void	fdtomfiles(t_fout **head, int fd, t_mini *mini, t_cmd *cmd);

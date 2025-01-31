@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/29 14:21:20 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/30 18:09:46 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/31 12:23:03 by mpzamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,11 +53,18 @@ int	execute_command(t_mini *mini, t_cmd *cmd, int infd)
 	}
 	if (isbuiltin(cmd))
 		return (builtins(mini, cmd));
-	tmp = cmdexistence(cmd->cmd, mini);
-	if (tmp == -1)
-		return (-1);
-	tmpfd = alonecmdcall(infd, cmd, envtodoublechar(mini->env), mini);
-	return (tmpfd);
+	else if (path_exists(mini, cmd))
+	{
+		tmp = cmdexistence(cmd->cmd, mini);
+		if (tmp == -1)
+			return (-1);
+		tmpfd = alonecmdcall(infd, cmd, envtodoublechar(mini->env), mini);
+		return (tmpfd);
+	}
+	else
+		return (ft_putstr_fd(cmd->cmd, 2), 
+			ft_putendl_fd(": Not such file or directory", 2), 
+			mini->status = 127, -1);
 }
 
 int	cmdcount(t_cmd **head)
