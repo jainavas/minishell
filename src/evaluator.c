@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 18:05:55 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/30 17:06:44 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/31 11:40:13 by mpzamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,20 +122,3 @@ void	assignarg(t_cmd **cmd, char **args, int *begin)
 	(*cmd)->argc = i + (*cmd)->argc;
 	*begin = *begin + i - 1;
 }
-
-t_cmd	*get_new_cmd()
-{
-	t_cmd	*cmd;
-
-	cmd = ft_calloc(1, sizeof(t_cmd));
-	cmd->argc = 0;
-	cmd->ifouts = 0;
-	cmd->priorinflim = 0;
-	cmd->infile = NULL;
-	cmd->outfiles = ft_calloc(1, sizeof(t_fout *));
-	cmd->cmd = NULL;
-	cmd->path = NULL;
-	cmd->argv = NULL;
-	return (cmd->next = NULL, cmd->prev = NULL, cmd->lim = NULL, cmd);
-}
-

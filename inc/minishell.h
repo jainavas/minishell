@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 02:16:09 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/29 19:15:10 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/31 11:40:00 by mpzamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,7 +204,6 @@ void	assign_outfile(t_cmd **current, char **args, int *begin, int app);
 void	assign_infile(t_cmd **current, char **args, int *begin);
 void	assignarg(t_cmd **cmd, char **args, int *begin);
 void	assign_cmd(t_cmd **current, char **args, int *begin);
-t_cmd	*get_new_cmd();
 /* evaluator2.c */
 int		is_operator(char *buf);
 int		is_in_out_file(char **args, int i);
@@ -217,6 +216,7 @@ char	*argsearch(char *file);
 void	argsfilesearcher(t_cmd **head);
 char	*caseargsearch(t_ffdr *var, char *tp2, char *file, char *tmp3);
 void	casenoopevals(char **args, int *i, t_cmd **current);
+t_cmd	*get_new_cmd(void);
 /* parsing.c */
 char	**process_input(t_mini *mini, char *buf);
 int		count_splitted_operators(char *buf);

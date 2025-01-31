@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 18:53:08 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/30 16:43:13 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/31 11:39:47 by mpzamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,4 +85,20 @@ void	casenoopevals(char **args, int *i, t_cmd **current)
 		assign_infile(current, args, i);
 	if ((!ft_strncmp(args[*i], ">", 2) || !ft_strncmp(args[*i], ">>", 3)))
 		assign_outfile(current, args, i, 0);
+}
+
+t_cmd	*get_new_cmd(void)
+{
+	t_cmd	*cmd;
+
+	cmd = ft_calloc(1, sizeof(t_cmd));
+	cmd->argc = 0;
+	cmd->ifouts = 0;
+	cmd->priorinflim = 0;
+	cmd->infile = NULL;
+	cmd->outfiles = ft_calloc(1, sizeof(t_fout *));
+	cmd->cmd = NULL;
+	cmd->path = NULL;
+	cmd->argv = NULL;
+	return (cmd->next = NULL, cmd->prev = NULL, cmd->lim = NULL, cmd);
 }
