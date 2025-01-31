@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 17:07:05 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/26 21:02:54 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/01/31 12:26:15 by mpzamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,4 +69,28 @@ void	putoutfn(t_fout **head)
 		tmp->foutn = ++i;
 		tmp = tmp->next;
 	}
+}
+
+int	cmd_in_path(char *cmd_path, char *path, char **envp)
+{
+	char	**path_dirs;
+	char	*aux_cmd;
+	int		i;
+
+	cmd_path = pathseekenv(&cmd_path, envp);
+	if (!cmd_path)
+		return (freedoublepointer(envp), 1);
+	aux_cmd = ft_strrchr(cmd_path, '/');
+	*aux_cmd = '\0';
+	path_dirs = ft_split(path, ':');
+	if (!path_dirs)
+		return (free(cmd_path), freedoublepointer(envp), 1);
+	i = -1;
+	while (path_dirs[++i])
+		if (!ft_strncmp(path_dirs[i], cmd_path, ft_strlen(path_dirs[i]))
+			&& !ft_strncmp(path_dirs[i], cmd_path, ft_strlen(cmd_path)))
+			return (free(cmd_path), freedoublepointer(path_dirs),
+				freedoublepointer(envp), 1);
+	return (free (cmd_path), freedoublepointer(path_dirs),
+		freedoublepointer(envp), 0);
 }

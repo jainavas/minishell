@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/29 14:21:20 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/31 12:23:03 by mpzamora         ###   ########.fr       */
+/*   Updated: 2025/01/31 12:26:54 by mpzamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,8 @@ int	execute_command(t_mini *mini, t_cmd *cmd, int infd)
 		return (tmpfd);
 	}
 	else
-		return (ft_putstr_fd(cmd->cmd, 2), 
-			ft_putendl_fd(": Not such file or directory", 2), 
+		return (ft_putstr_fd(cmd->cmd, 2),
+			ft_putendl_fd(": Not such file or directory", 2),
 			mini->status = 127, -1);
 }
 
