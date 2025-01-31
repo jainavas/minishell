@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/29 14:21:20 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/30 14:41:36 by mpzamora         ###   ########.fr       */
+/*   Updated: 2025/01/31 12:23:03 by mpzamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,12 @@ int	execute_command(t_mini *mini, t_cmd *cmd, int infd)
 	int	tmpfd;
 	int	tmp;
 
+	if (!cmd->cmd)
+	{
+		if (infd > 2)
+			close(infd);
+		return (pipe(cmd->fd), close(cmd->fd[WRITE_FD]), infd);
+	}
 	if (isbuiltin(cmd))
 		return (builtins(mini, cmd));
 	else if (path_exists(mini, cmd))
