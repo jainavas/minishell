@@ -144,6 +144,8 @@ int		cmd_in_path(char *cmd_path, char *path, char **envp);
 /* minish8.c */
 char	*checktmpslist(t_mini *mini, char **buf, char *tmp);
 int		checkprepaths(char **cmd, t_mini *mini);
+int		isthereanystdinnotreader(t_cmd *head);
+int		isstdinreader(char *cmd);
 /* signals.c */
 void	set_signals(void);
 void	handle_sigint(int sig);

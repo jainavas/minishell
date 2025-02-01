@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 01:58:02 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/31 17:55:15 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/02/01 20:04:18 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ int	alonecmdcall(int fdin, t_cmd *cmd, char **env, t_mini *mini)
 	if (cmd->pid == 0)
 	{
 		alonecmdcallutils(cmd, fdin);
-		if (cmdcount(mini->header) != 1 || *cmd->outfiles != NULL)
+		if (*cmd->outfiles != NULL || cmdlast(*mini->header) != cmd)
 			dup2(cmd->fd[WRITE_FD], STDOUT_FILENO);
 		closeanddupinput(cmd->fd);
 		execve(cmd->path, cmd->argv, cmd->env);
@@ -83,7 +83,11 @@ int	alonecmdcall(int fdin, t_cmd *cmd, char **env, t_mini *mini)
 	{
 		if (fdin > 2 && fdin != -1)
 			close(fdin);
-		return (close(cmd->fd[WRITE_FD]), cmd->fd[READ_FD]);
+		close(cmd->fd[WRITE_FD]);
+		if (cmd->next && isthereanystdinnotreader(cmd)
+			&& isstdinreader(cmd->cmd))
+			close(cmd->fd[READ_FD]);
+		return (cmd->fd[READ_FD]);
 	}
 	return (0);
 }

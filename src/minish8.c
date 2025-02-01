@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 21:16:21 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/26 21:20:54 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/02/01 19:59:08 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,4 +43,23 @@ int	checkprepaths(char **cmd, t_mini *mini)
 		return (free(aux), 0);
 	else
 		return (1);
+}
+
+int	isthereanystdinnotreader(t_cmd *head)
+{
+	while (head)
+	{
+		if (!isstdinreader(head->cmd))
+			return (1);
+		head = head->next;
+	}
+	return (0);
+}
+
+int	isstdinreader(char *cmd)
+{
+	if (!ft_strncmp(cmd, "ls", 3) || !ft_strncmp(cmd, "pwd", 4)
+		|| !ft_strncmp(cmd, "clear", 6) || !ft_strncmp(cmd, "env", 6))
+		return (0);
+	return (1);
 }
