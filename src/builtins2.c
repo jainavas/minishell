@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 00:52:59 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/31 18:57:20 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/02/02 12:29:33 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	is_valid_identifier(char *buf)
 	int		i;
 
 	i = -1;
-	if (buf[0] == '=' && !buf[1])
+	if (buf[0] == '=')
 		return (0);
 	while (buf[++i])
 		if (buf[i] == '='
