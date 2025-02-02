@@ -6,13 +6,13 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/24 18:22:58 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/28 19:30:32 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2025/02/02 12:11:52 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-char	**process_input(t_mini *mini, char *buf)
+char	**process_input(char *buf)
 {
 	char	**cmd;
 	char	*temp;
@@ -31,9 +31,6 @@ char	**process_input(t_mini *mini, char *buf)
 		free (temp);
 	}
 	process_operators(&cmd);
-	i = -1;
-	while (cmd[++i])
-		cmd[i] = process_vars(mini, cmd[i]);
 	return (cmd);
 }
 

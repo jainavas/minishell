@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 18:53:08 by jainavas          #+#    #+#             */
-/*   Updated: 2025/01/31 19:00:06 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/02/02 11:47:25 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,12 +79,12 @@ char	*caseargsearch(t_ffdr *var, char *tp2, char *file, char *tmp3)
 		return (free(tp2), free(file), tmp3);
 }
 
-void	casenoopevals(char **args, int *i, t_cmd **current)
+void	casenoopevals(char **args, int *i, t_cmd **current, t_mini *mini)
 {
 	if ((!ft_strncmp(args[*i], "<", 2) || !ft_strncmp(args[*i], "<<", 3)))
-		assign_infile(current, args, i);
+		assign_infile(current, args, i, mini);
 	if ((!ft_strncmp(args[*i], ">", 2) || !ft_strncmp(args[*i], ">>", 3)))
-		assign_outfile(current, args, i, 0);
+		assign_outfile(current, args, i, mini);
 }
 
 t_cmd	*get_new_cmd(void)
