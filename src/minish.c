@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 01:58:02 by jainavas          #+#    #+#             */
-/*   Updated: 2025/02/02 13:29:47 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2025/02/02 14:11:46 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ int	recursiva(t_mini **mini)
 {
 	int		x;
 
+	/*add_envar(*mini, "SHLVL",*/
+	/*	   ft_itoa(ft_atoi(get_env_var(&(*mini)->env, "SHLVL")->content) + 1), 2);*/
 	(*mini)->infile = NULL;
 	(*mini)->didcheckenv = 0;
 	x = recread(mini);
