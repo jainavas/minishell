@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 12:14:17 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/01/28 20:20:33 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2025/02/02 14:17:05 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,8 @@ int	doexport(t_mini *mini, t_cmd *cmd, int fd)
 	int		i;
 
 	i = 0;
+	if (cmdcount(mini->header) > 1)
+		return (0);
 	if (cmd->argc == 1)
 		return (print_temp_env(mini->env, fd), 0);
 	closebutstds(fd);
