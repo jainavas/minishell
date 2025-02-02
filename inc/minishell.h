@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 02:16:09 by jainavas          #+#    #+#             */
-/*   Updated: 2025/02/02 12:12:02 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2025/02/02 13:33:57 by mpenas-z         ###   ########.fr       */
 /*                                                                           */
 /* ************************************************************************** */
 
@@ -141,11 +141,13 @@ char	*pathseekenv(char **args, char **envp);
 int		counttmps(t_env *lst);
 void	putoutfn(t_fout **head);
 int		cmd_in_path(char *cmd_path, char *path, char **envp);
+void	check_void_cmd(t_cmd *curr);
 /* minish8.c */
 char	*checktmpslist(t_mini *mini, char **buf, char *tmp);
 int		checkprepaths(char **cmd, t_mini *mini);
 int		isthereanystdinnotreader(t_cmd *head);
 int		isstdinreader(char *cmd);
+void	check_void_aux(t_cmd *curr, char **aux);
 /* signals.c */
 void	set_signals(void);
 void	handle_sigint(int sig);

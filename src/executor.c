@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/29 14:21:20 by mpenas-z          #+#    #+#             */
-/*   Updated: 2025/02/02 11:33:07 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2025/02/02 13:34:42 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ int	run_cmd_list(t_mini *mini, t_cmd **head)
 	fdret = 0;
 	while (curr)
 	{
+		check_void_cmd(curr);
 		mini->status = 0;
 		g_signal = -1;
 		fdret = selectinflim(curr, mini);
@@ -56,8 +57,8 @@ int	execute_command(t_mini *mini, t_cmd *cmd, int infd)
 	else if (path_exists(mini, cmd))
 	{
 		tmp = cmdexistence(cmd->cmd, mini);
-		if (tmp == -1)
-			return (-1);
+		if (tmp < 0)
+			return (tmp);
 		tmpfd = alonecmdcall(infd, cmd, envtodoublechar(mini->env), mini);
 		return (tmpfd);
 	}

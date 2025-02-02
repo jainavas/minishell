@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 15:56:12 by jainavas          #+#    #+#             */
-/*   Updated: 2025/02/02 12:40:06 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2025/02/02 13:04:04 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,9 +80,6 @@ int	cmdexistence(char *cmd, t_mini *mini)
 			return (freedoublepointer(tmp2), closedir(dr), ft_putstr_fd(cmd, 2),
 				ft_putstr_fd(": is a directory\n", 2), g_signal = 0, \
 				mini->status = 126, -1);
-		else if (cmd && ft_strlen(cmd) == 0)
-			return (freedoublepointer(tmp2), closedir(dr),
-				mini->status = 0, -1);
 		return (closedir(dr), freedoublepointer(tmp2), \
 			ft_putstr_fd(cmd, 2), ft_putstr_fd(": does not exist\n", 2), \
 			g_signal = 0, mini->status = 127, -1);

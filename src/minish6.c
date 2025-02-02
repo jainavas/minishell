@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 17:07:05 by jainavas          #+#    #+#             */
-/*   Updated: 2025/02/02 11:33:34 by mpenas-z         ###   ########.fr       */
+/*   Updated: 2025/02/02 13:34:31 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,4 +93,29 @@ int	cmd_in_path(char *cmd_path, char *path, char **envp)
 				freedoublepointer(envp), 1);
 	return (free (cmd_path), freedoublepointer(path_dirs),
 		freedoublepointer(envp), 0);
+}
+
+void	check_void_cmd(t_cmd *curr)
+{
+	char	**aux;
+	int		i;
+	int		empty_cmds;
+	int		new_argc;
+
+	empty_cmds = 0;
+	new_argc = 0;
+	i = -1;
+	if (!curr->argv)
+		return ;
+	while (curr->argv[++i])
+		if (curr->argv[i] && (int)ft_strlen(curr->argv[i]) == 0)
+			empty_cmds++;
+	curr->argc = curr->argc - empty_cmds;
+	aux = ft_calloc(sizeof(char *), curr->argc + 1);
+	i = -1;
+	while (curr->argv[++i])
+		if (curr->argv[i] && ft_strlen(curr->argv[i]) > 0)
+			aux[new_argc++] = ft_strdup(curr->argv[i]);
+	aux[new_argc] = NULL;
+	check_void_aux(curr, aux);
 }

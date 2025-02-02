@@ -6,7 +6,7 @@
 /*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 21:16:21 by jainavas          #+#    #+#             */
-/*   Updated: 2025/02/01 19:59:08 by jainavas         ###   ########.fr       */
+/*   Updated: 2025/02/02 13:34:10 by mpenas-z         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,4 +62,21 @@ int	isstdinreader(char *cmd)
 		|| !ft_strncmp(cmd, "clear", 6) || !ft_strncmp(cmd, "env", 6))
 		return (0);
 	return (1);
+}
+
+void	check_void_aux(t_cmd *curr, char **aux)
+{
+	freedoublepointer(curr->argv);
+	free (curr->cmd);
+	if (aux[0])
+	{
+		curr->argv = aux;
+		curr->cmd = ft_strdup(aux[0]);
+	}
+	else
+	{
+		freedoublepointer(aux);
+		curr->argv = NULL;
+		curr->cmd = NULL;
+	}
 }
